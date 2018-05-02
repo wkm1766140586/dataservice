@@ -25,7 +25,8 @@
     }
   },
   "_source": {
-    "includes": ["#fields"]
+    "includes": ["#includes"],
+    "excludes": ["#excludes"]
   },
   "aggs" : "#aggs",
   "stored_fields": [

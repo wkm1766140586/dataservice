@@ -59,7 +59,8 @@ public class ProductController {
         int from = Integer.valueOf(num);
         from = from*10;
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
-        esRequest = esRequest.replaceFirst("\"#fields\"",StaticVariable.searchProductFields);
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"",StaticVariable.productAggsProductName);
         System.out.println(postbody);
@@ -188,7 +189,8 @@ public class ProductController {
         int from = Integer.valueOf(num);
         from = from * 10;
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
-        esRequest = esRequest.replaceFirst("\"#fields\"",StaticVariable.searchProductFields);
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
         esRequest = esRequest.replaceFirst("#query",condition);
 
         if(company_name.equals("") && class_code.equals("")){
@@ -333,7 +335,8 @@ public class ProductController {
         System.out.println("id="+id);
         String esRequest = StaticVariable.esRequest;
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
-        esRequest = esRequest.replaceFirst("#fields","*");
+        esRequest = esRequest.replaceFirst("#includes","*");
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchProductExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String condition = "id:\\\\\""+id+"\\\\\"";
         String postbody = esRequest.replaceFirst("#query",condition);
