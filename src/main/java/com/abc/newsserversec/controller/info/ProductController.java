@@ -334,6 +334,7 @@ public class ProductController {
         String esRequest = StaticVariable.esRequest;
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
         esRequest = esRequest.replaceFirst("#fields","*");
+        esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String condition = "id:\\\\\""+id+"\\\\\"";
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
