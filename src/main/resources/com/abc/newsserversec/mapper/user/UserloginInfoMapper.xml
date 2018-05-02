@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.user.UserloginInfoMapper">
+
+    <insert id="insertUserloginInfo" parameterType="java.util.Map">
+        insert into userlogininfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="userip != null">
+                userip,
+            </if>
+            <if test="userregion != null">
+                userregion,
+            </if>
+            <if test="usercity != null">
+                usercity,
+            </if>
+            <if test="createdate != null">
+                createdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid},
+            </if>
+            <if test="userip != null">
+                #{userip},
+            </if>
+            <if test="userregion != null">
+                #{userregion},
+            </if>
+            <if test="usercity != null">
+                #{usercity},
+            </if>
+            <if test="createdate != null">
+                #{createdate},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
