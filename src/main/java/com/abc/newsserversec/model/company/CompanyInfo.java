@@ -15,6 +15,10 @@ public class CompanyInfo {
     private String manage_type;
     //互联网类型（1:互联网信息服务 2:互联网交易服务）
     private String web_type;
+    //产品数量
+    private String product_count;
+    //中标数量
+    private String tenderbid_count;
 
     public long getId() {
         return id;
@@ -54,5 +58,21 @@ public class CompanyInfo {
 
     public void setWeb_type(String web_type) {
         this.web_type = web_type;
+    }
+
+    public String getProduct_count() {
+        return product_count;
+    }
+
+    public void setProduct_count(String product_count) {
+        this.product_count = product_count;
+    }
+
+    public String getTenderbid_count() {
+        return tenderbid_count;
+    }
+
+    public void setTenderbid_count(String tenderbid_count) {
+        this.tenderbid_count = tenderbid_count;
     }
 }
