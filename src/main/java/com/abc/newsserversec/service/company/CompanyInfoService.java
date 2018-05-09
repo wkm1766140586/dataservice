@@ -10,7 +10,7 @@ import java.util.Map;
 public interface CompanyInfoService {
 
     //根据条件查询企业数量
-    int selectCompanyInfoCountByCondition(String company_name);
+    int selectCompanyInfoCountByCondition(Map<String,Object> map);
 
     //根据条件查询企业列表信息
     ArrayList<CompanyInfo> selectCompanyInfoByCondition(Map<String,Object> map);

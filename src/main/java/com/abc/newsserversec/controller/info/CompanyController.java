@@ -36,23 +36,66 @@ public class CompanyController {
     @RequestMapping("/method/search_company_name")
     public String searchCompanyByName(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
-        String company_name = request.getParameter("company_name");
+
+        String keyword = request.getParameter("keyword");
         String num_string = request.getParameter("num");
-        if(company_name == null || num_string == null) return "fail";
-        if(company_name.equals("") || num_string.equals("")) return "fail";
+        if(keyword == null || num_string == null) return "fail";
+        if(keyword.equals("") || num_string.equals("")) return "fail";
 
         Map<String,Object> dataMap = new HashMap<>();
         Map<String,Object> map = new HashMap<>();
-        int num = Integer.valueOf(num_string);
-        company_name = "%"+company_name+"%";
-        map.put("company_name",company_name);
-        map.put("num",10*num);
-        int count = 0;
+        int num = Integer.valueOf(num_string)*10;
+
+        keyword = "%"+keyword+"%";
+        map.put("company_name",keyword);
+        map.put("num",num);
         if(num == 0) {
-            count = companyInfoService.selectCompanyInfoCountByCondition(company_name);
+            int count = companyInfoService.selectCompanyInfoCountByCondition(map);
+            dataMap.put("matchCount",count);
         }
         ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
-        dataMap.put("matchCount",count);
+        dataMap.put("datas",companyInfos);
+
+        return new GsonBuilder().create().toJson(dataMap);
+    }
+
+    /**
+     * 根据条件筛选企业列表信息
+     */
+    @RequestMapping("/method/search_company_filter_condition")
+    public String searchCompanyFilterCondition(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String keyword = request.getParameter("keyword");
+        String num_string = request.getParameter("num");
+
+        if(keyword == null || num_string == null) return "fail";
+        if(keyword.equals("") || num_string.equals("")) return "fail";
+
+        Map<String,Object> dataMap = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        int num = Integer.valueOf(num_string)*10;
+
+        String production_type = request.getParameter("production_type");
+        String manage_type = request.getParameter("manage_type");
+        String web_type = request.getParameter("web_type");
+
+        keyword = "%"+keyword+"%";
+        if(production_type != null){ production_type = "%"+production_type+"%"; }
+        if(manage_type != null){ manage_type = "%"+manage_type+"%"; }
+        if(web_type != null){ web_type = "%"+web_type+"%"; }
+
+        map.put("company_name",keyword);
+        map.put("num",num);
+        map.put("production_type",production_type);
+        map.put("manage_type",manage_type);
+        map.put("web_type",web_type);
+
+        if(num == 0) {
+            int count = companyInfoService.selectCompanyInfoCountByCondition(map);
+            dataMap.put("matchCount",count);
+        }
+        ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
         dataMap.put("datas",companyInfos);
 
         return new GsonBuilder().create().toJson(dataMap);
@@ -78,10 +121,11 @@ public class CompanyController {
 
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
         esRequest = esRequest.replaceFirst("#includes","*");
-        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchExcludeFields+","+StaticVariable.searchCompanyExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchCompanyExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_company/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){

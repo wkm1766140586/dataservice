@@ -64,13 +64,12 @@ public class ProductController {
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"",StaticVariable.productAggsProductName);
         System.out.println(postbody);
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
-
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
         }
-
         if(from == 0) {
             //计数
             String esCount = StaticVariable.esCount;
@@ -139,16 +138,17 @@ public class ProductController {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         String keyword = request.getParameter("keyword");
+        String num = request.getParameter("num");
+        if(keyword == null || num == null) return "fail";
+        if(keyword.equals("") || num.equals("")) return "fail";
+
         String src_loc = request.getParameter("src_loc");
         String product_state = request.getParameter("product_state");
         String main_class = request.getParameter("main_class");
-        String num = request.getParameter("num");
         String product_name = request.getParameter("product_name");
         String company_name = request.getParameter("company_name");
         String class_code = request.getParameter("class_code");
 
-        if(keyword == null || num == null) return "fail";
-        if(keyword.equals("") || num.equals("")) return "fail";
         if(src_loc == null || src_loc.equals("")) src_loc = "*";
         if(product_state == null || product_state.equals("")) product_state = "*";
         if(main_class == null || main_class.equals("")) main_class = "*";
@@ -317,7 +317,6 @@ public class ProductController {
             }
             productSet.setAggList(aggList);
         }
-        //return ret;
         return new GsonBuilder().create().toJson(productSet);
     }
 
@@ -332,16 +331,20 @@ public class ProductController {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         String id = request.getParameter("id");
+        if(id == null) return "fail";
+        if(id.equals("")) return "fail";
+
         String esRequest = StaticVariable.esRequest;
         SourceSet productSet = new SourceSet();
 
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
         esRequest = esRequest.replaceFirst("#includes","*");
-        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchExcludeFields+","+StaticVariable.searchProductExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchProductExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String condition = "id:\\\\\""+id+"\\\\\"";
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         productSet.setMatchCount(retObj.hits.hits.size());
@@ -378,6 +381,7 @@ public class ProductController {
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         SourceSet productSet = new SourceSet();

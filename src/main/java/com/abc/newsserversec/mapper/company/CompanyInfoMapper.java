@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface CompanyInfoMapper {
 
-    int selectCompanyInfoCountByCondition(String company_name);
+    int selectCompanyInfoCountByCondition(Map<String,Object> map);
 
     ArrayList<CompanyInfo> selectCompanyInfoByCondition(Map<String,Object> map);
 

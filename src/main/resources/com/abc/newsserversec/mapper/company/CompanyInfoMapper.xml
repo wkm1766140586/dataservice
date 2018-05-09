@@ -3,14 +3,32 @@
 
 <mapper namespace="com.abc.newsserversec.mapper.company.CompanyInfoMapper">
 
-    <select id="selectCompanyInfoCountByCondition" resultType="java.lang.Integer" parameterType="java.lang.String">
+    <select id="selectCompanyInfoCountByCondition" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*) from companyinfo where
-          company_name like #{company_name}
+        company_name like #{company_name}
+        <if test="production_type != null">
+            and production_type like #{production_type}
+        </if>
+        <if test="manage_type != null">
+            and manage_type like #{manage_type}
+        </if>
+        <if test="web_type != null">
+            and web_type like #{web_type}
+        </if>
     </select>
 
     <select id="selectCompanyInfoByCondition" resultType="com.abc.newsserversec.model.company.CompanyInfo" parameterType="java.util.Map">
         select * from companyinfo where
         company_name like #{company_name}
+        <if test="production_type != null">
+            and production_type like #{production_type}
+        </if>
+        <if test="manage_type != null">
+            and manage_type like #{manage_type}
+        </if>
+        <if test="web_type != null">
+            and web_type like #{web_type}
+        </if>
         limit #{num},10
     </select>
 

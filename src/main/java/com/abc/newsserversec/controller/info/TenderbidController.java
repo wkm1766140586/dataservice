@@ -26,7 +26,7 @@ public class TenderbidController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/tenderbid/search_tenderbid_name")
+    @RequestMapping("/method/search_tenderbid_name")
     public String searchTenderbidByName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -36,18 +36,19 @@ public class TenderbidController {
         if(num.equals("") || keyword.equals("")) return "fail";
 
         String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
         int from = Integer.valueOf(num);
         from = from*10;
 
         String condition = "web_content:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         esRequest = esRequest.replaceFirst("\"#includes\"","");
-        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchTenderbidExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchTenderbidExcludeFields);
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
-        SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
         }

@@ -17,8 +17,8 @@ public class CompanyInfoServiceImp implements CompanyInfoService {
 
 
     @Override
-    public int selectCompanyInfoCountByCondition(String company_name) {
-        return companyInfoMapper.selectCompanyInfoCountByCondition(company_name);
+    public int selectCompanyInfoCountByCondition(Map<String,Object> map) {
+        return companyInfoMapper.selectCompanyInfoCountByCondition(map);
     }
 
     @Override
