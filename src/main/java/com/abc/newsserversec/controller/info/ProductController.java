@@ -34,7 +34,7 @@ public class ProductController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/product/search_product_name")
+    @RequestMapping("/method/search_product_name")
     public String searchProductByName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -134,7 +134,7 @@ public class ProductController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/product/search_product_filter_condition")
+    @RequestMapping("/method/search_product_filter_condition")
     public String searchProductFilterByCondition(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -164,7 +164,6 @@ public class ProductController {
         String condition = "";
         String postbody = "";
         String ret = "";
-
         if(keyword.indexOf(" ")>0 && !keyword.endsWith(" ")){
             String lkeyword = keyword.split(" ")[0];
             String rkeyword = keyword.split(" ")[1];
@@ -324,28 +323,27 @@ public class ProductController {
 
     /**
      * 根据id来查询产品信息
-     * @param id
+     * @param
      * @return
      * @throws IOException
      */
-    @RequestMapping("/product/search_product_id")
-    public String searchProductById(String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping("/method/search_product_id")
+    public String searchProductById(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        System.out.println("id="+id);
+        String id = request.getParameter("id");
         String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
+
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
         esRequest = esRequest.replaceFirst("#includes","*");
-        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchProductExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchExcludeFields+","+StaticVariable.searchProductExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String condition = "id:\\\\\""+id+"\\\\\"";
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
-        System.out.println("es return:"+ret);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
-        System.out.println("retObj:"+retObj.hits.hits.size());
-        SourceSet productSet = new SourceSet();
         productSet.setMatchCount(retObj.hits.hits.size());
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
@@ -356,28 +354,44 @@ public class ProductController {
 
     /**
      * 根据企业名称查出该企业的产品
-     * @param keyword
+     * @param
      * @return
      * @throws IOException
      */
-    @RequestMapping("/product/search_product_company_name")
-    public String searchProductByCompanyName(String keyword, HttpServletResponse response) throws IOException {
+    @RequestMapping("/method/search_product_company_name")
+    public String searchProductByCompanyName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        System.out.println("keyword="+keyword);
+
+        String num = request.getParameter("num");
+        String keyword = request.getParameter("keyword");
+        if(num == null || keyword == null) return "fail";
+        if(num.equals("") || keyword.equals("")) return "fail";
+
         String esRequest = StaticVariable.esRequest;
-        String condition = "(maker_name_ch:\\\\\""+keyword+"\\\\\") OR (agent:\\\\\""+keyword+"\\\\\")";
+        int from = Integer.valueOf(num);
+        from = from*10;
+
+        String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
+        postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
-            Object source = hit._source;
-            if(((Map) source).get("maker_name_ch").toString().equals(keyword) || ((Map) source).get("agent").toString().equals(keyword)) {
-                productSet.add(source);
-            }
+            productSet.add(hit._source);
         }
-        productSet.setMatchCount(productSet.getDatas().size());
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query", condition);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+        }
         return new GsonBuilder().create().toJson(productSet);
     }
 }

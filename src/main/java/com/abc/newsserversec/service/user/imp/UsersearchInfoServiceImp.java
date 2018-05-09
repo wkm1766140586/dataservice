@@ -1,8 +1,6 @@
 package com.abc.newsserversec.service.user.imp;
 
-import com.abc.newsserversec.mapper.user.UserloginInfoMapper;
 import com.abc.newsserversec.mapper.user.UsersearchInfoMapper;
-import com.abc.newsserversec.service.user.UserloginInfoService;
 import com.abc.newsserversec.service.user.UsersearchInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

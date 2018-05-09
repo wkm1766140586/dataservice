@@ -1,6 +1,7 @@
 package com.abc.newsserversec.controller.info;
 
 import com.abc.newsserversec.common.StaticVariable;
+import com.abc.newsserversec.model.info.ESCount;
 import com.abc.newsserversec.model.info.ESResultRoot;
 import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
@@ -9,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -20,25 +22,43 @@ public class TenderbidController {
 
     /**
      * 根据名称查找招标中标公告
-     * @param keyword
+     * @param
      * @return
      * @throws IOException
      */
     @RequestMapping("/tenderbid/search_tenderbid_name")
-    public String searchTenderbidByName(String keyword, HttpServletResponse response) throws IOException {
+    public String searchTenderbidByName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        System.out.println("keyword="+keyword);
+
+        String num = request.getParameter("num");
+        String keyword = request.getParameter("keyword");
+        if(num == null || keyword == null) return "fail";
+        if(num.equals("") || keyword.equals("")) return "fail";
+
         String esRequest = StaticVariable.esRequest;
+        int from = Integer.valueOf(num);
+        from = from*10;
+
         String condition = "web_content:\\\\\""+keyword+"\\\\\"";
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        esRequest = esRequest.replaceFirst("\"#includes\"","");
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchTenderbidExcludeFields);
         String postbody = esRequest.replaceFirst("#query",condition);
-        System.out.println("postbody="+postbody);
+        postbody = postbody.replaceFirst("\"#aggs\"","{}");
         String ret = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
         }
-        productSet.setMatchCount(productSet.getDatas().size());
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query", condition);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+        }
         return new GsonBuilder().create().toJson(productSet);
     }
 

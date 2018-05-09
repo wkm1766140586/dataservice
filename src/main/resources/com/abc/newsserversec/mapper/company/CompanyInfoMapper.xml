@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.company.CompanyInfoMapper">
+
+    <select id="selectCompanyInfoCountByCondition" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) from companyinfo where
+          company_name like #{company_name}
+    </select>
+
+    <select id="selectCompanyInfoByCondition" resultType="com.abc.newsserversec.model.company.CompanyInfo" parameterType="java.util.Map">
+        select * from companyinfo where
+        company_name like #{company_name}
+        limit #{num},10
+    </select>
+
+</mapper>
