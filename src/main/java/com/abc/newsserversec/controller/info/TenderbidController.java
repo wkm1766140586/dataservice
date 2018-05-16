@@ -35,6 +35,7 @@ public class TenderbidController {
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
 
+        String size = request.getParameter("size");
         String esRequest = StaticVariable.esRequest;
         SourceSet productSet = new SourceSet();
         int from = Integer.valueOf(num);
@@ -42,6 +43,8 @@ public class TenderbidController {
 
         String condition = "web_content:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchTenderbidExcludeFields);
         String postbody = esRequest.replaceFirst("#query",condition);

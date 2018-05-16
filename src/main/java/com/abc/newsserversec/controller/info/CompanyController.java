@@ -120,6 +120,7 @@ public class CompanyController {
         String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
 
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
+        esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("#includes","*");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchCompanyExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
@@ -129,7 +130,9 @@ public class CompanyController {
         String ret = HttpHandler.httpPostCall("http://localhost:9200/second_company/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){
-            productSet.add(hit._source);
+            Map map = (Map)hit._source;
+            map.put("_id",hit._id);
+            productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);
     }

@@ -43,6 +43,7 @@ public class ProductController {
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
 
+        String size = request.getParameter("size");
         String condition = "";
         String esRequest = StaticVariable.esRequest;
         SourceSet productSet = new SourceSet();
@@ -58,7 +59,10 @@ public class ProductController {
         }
         int from = Integer.valueOf(num);
         from = from*10;
+
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
@@ -148,6 +152,7 @@ public class ProductController {
         String product_name = request.getParameter("product_name");
         String company_name = request.getParameter("company_name");
         String class_code = request.getParameter("class_code");
+        String size = request.getParameter("size");
 
         if(src_loc == null || src_loc.equals("")) src_loc = "*";
         if(product_state == null || product_state.equals("")) product_state = "*";
@@ -188,6 +193,8 @@ public class ProductController {
         int from = Integer.valueOf(num);
         from = from * 10;
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         esRequest = esRequest.replaceFirst("#query",condition);
@@ -338,6 +345,7 @@ public class ProductController {
         SourceSet productSet = new SourceSet();
 
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
+        esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("#includes","*");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchProductExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
@@ -349,7 +357,9 @@ public class ProductController {
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         productSet.setMatchCount(retObj.hits.hits.size());
         for(Hit hit:retObj.hits.hits){
-            productSet.add(hit._source);
+            Map map = (Map)hit._source;
+            map.put("_id",hit._id);
+            productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);
     }
@@ -370,12 +380,15 @@ public class ProductController {
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
 
+        String size = request.getParameter("size");
         String esRequest = StaticVariable.esRequest;
         int from = Integer.valueOf(num);
         from = from*10;
 
         String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         String postbody = esRequest.replaceFirst("#query",condition);

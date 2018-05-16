@@ -1,7 +1,7 @@
 {
   "version": true,
   "from": "#from",
-  "size": 10,
+  "size": "#size",
   "sort": [
     {
       "approval_date": {
