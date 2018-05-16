@@ -36,6 +36,10 @@ public class HospitalController {
         if(num.equals("") || keyword.equals("")) return "fail";
 
         String size = request.getParameter("size");
+        String level = request.getParameter("level");
+        String grade = request.getParameter("grade");
+        if(level == null) level = "";
+        if(grade == null) grade = "";
         String esRequest = StaticVariable.esRequest;
         int from = Integer.valueOf(num);
         if(size != null) { from = from * Integer.valueOf(size); }
@@ -43,6 +47,8 @@ public class HospitalController {
 
         String condition = "hospital_name:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(!level.equals("")) condition = condition + "AND hospital_grade:\\\\\""+level+"\\\\\"";
+        if(!grade.equals("")) condition = condition + "AND hospital_grade:\\\\\""+grade+"\\\\\"";
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"","");
