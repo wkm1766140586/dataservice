@@ -58,7 +58,8 @@ public class ProductController {
             condition = "(product_name_ch:\\\\\""+keyword+"\\\\\") OR (product_mode:\\\\\""+keyword+"\\\\\")";
         }
         int from = Integer.valueOf(num);
-        from = from*10;
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
 
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
@@ -191,7 +192,8 @@ public class ProductController {
         if(!class_code.equals("") && !class_code.equals("yes")) condition = condition+ " AND class_code:\\\\\""+class_code+"\\\\\"";
 
         int from = Integer.valueOf(num);
-        from = from * 10;
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
@@ -383,7 +385,8 @@ public class ProductController {
         String size = request.getParameter("size");
         String esRequest = StaticVariable.esRequest;
         int from = Integer.valueOf(num);
-        from = from*10;
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
 
         String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));

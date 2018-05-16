@@ -39,7 +39,8 @@ public class TenderbidController {
         String esRequest = StaticVariable.esRequest;
         SourceSet productSet = new SourceSet();
         int from = Integer.valueOf(num);
-        from = from*10;
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
 
         String condition = "web_content:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
