@@ -15,7 +15,10 @@ public class StaticVariable {
 
     public static String searchProductExcludeFields = "\"diseaseFlags\",\"deptFlags\",\"product_name_agg\",\"company_name_agg\"";
 
-    public static String searchCompanyExcludeFields = "\"administer_level\",\"company_name_agg\"";
+    public static String searchCompanyExcludeFields = "\"administer_level\",\"company_name_agg\",\"quality_manage_person\",\"web_manage_person\"," +
+            "\"product_info\",\"service_comprehensive_info\",\"appro_date_start\",\"current_state\",\"change_content\",\"change_date\",\"approval_form\"," +
+            "\"change_project\",\"cellphone\",\"facsimile\",\"economic_type\",\"province\",\"area\",\"county\",\"region\",\"social_credit_code\"," +
+            "\"others\",\"remarks\",\"attachment\",\"apply_date\",\"accept_date\",\"manage_type\"";
 
     public static String searchTenderbidExcludeFields = "\"month\"";
 

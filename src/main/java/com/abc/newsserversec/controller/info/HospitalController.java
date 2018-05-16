@@ -35,12 +35,16 @@ public class HospitalController {
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
 
+        String size = request.getParameter("size");
         String esRequest = StaticVariable.esRequest;
         int from = Integer.valueOf(num);
-        from = from*10;
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
 
         String condition = "hospital_name:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields);
         String postbody = esRequest.replaceFirst("#query",condition);
@@ -80,6 +84,7 @@ public class HospitalController {
         String esRequest = StaticVariable.esRequest;
         String condition = "id:\\\\\""+id+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
+        esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields);
         String postbody = esRequest.replaceFirst("#query",condition);
