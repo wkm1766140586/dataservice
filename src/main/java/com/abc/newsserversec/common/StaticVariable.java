@@ -10,6 +10,8 @@ public class StaticVariable {
 
     public static String searchProductIncludeFields = "\"id\",\"product_name_ch\",\"maker_name_ch\",\"agent\",\"src_loc\",\"main_class\",\"class_code\",\"product_state\",\"product_mode\",\"register_code\"";
 
+    public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"type_nature\",\"hospital_address\",\"hospital_phone\"";
+
     public static String searchProAndComExcludeFields = "\"record_number\",\"data_source_code\",\"record_main_type\",\"record_sub_type\"," +
             "\"keep_field_first\",\"keep_field_second\",\"keep_field_third\",\"manage_type\",\"import_date\"";
 
@@ -19,6 +21,8 @@ public class StaticVariable {
             "\"product_info\",\"service_comprehensive_info\",\"appro_date_start\",\"current_state\",\"change_content\",\"change_date\",\"approval_form\"," +
             "\"change_project\",\"cellphone\",\"facsimile\",\"economic_type\",\"province\",\"area\",\"county\",\"region\",\"social_credit_code\"," +
             "\"others\",\"remarks\",\"attachment\",\"apply_date\",\"accept_date\",\"manage_type\"";
+
+    public static String searchHospitalExcludeFields = "\"data_source\",\"gain_date\",\"src_class_1st\",\"src_class_2nd\",\"src_class_3rd\"";
 
     public static String searchTenderbidExcludeFields = "\"month\"";
 
