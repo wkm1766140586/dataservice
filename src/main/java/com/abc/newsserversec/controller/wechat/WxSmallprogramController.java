@@ -25,8 +25,7 @@ public class WxSmallprogramController {
     /*
       微信小程序登录
    */
-    @RequestMapping(value = "/wechat/wx_smallprogram_login")
-    @ResponseBody
+    @RequestMapping("/method/wx_smallprogram_login")
     public static String wxSmallprogramLogin(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String result="";//访问返回结果

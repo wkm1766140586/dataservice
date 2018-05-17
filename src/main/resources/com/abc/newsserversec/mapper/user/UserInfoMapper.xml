@@ -41,17 +41,8 @@
             <if test="sex != null">
                 sex,
             </if>
-            <if test="createperson != null">
-                createperson,
-            </if>
             <if test="createdate != null">
                 createdate,
-            </if>
-            <if test="modifyperson != null">
-                modifyperson,
-            </if>
-            <if test="modifydate != null">
-                modifydate,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -70,17 +61,8 @@
             <if test="sex != null">
                 #{sex},
             </if>
-            <if test="createperson != null">
-                #{createperson},
-            </if>
             <if test="createdate != null">
                 #{createdate},
-            </if>
-            <if test="modifyperson != null">
-                #{modifyperson},
-            </if>
-            <if test="modifydate != null">
-                #{modifydate},
             </if>
         </trim>
     </insert>

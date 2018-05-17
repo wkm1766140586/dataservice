@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 医院数据查询控制器
@@ -100,7 +101,9 @@ public class HospitalController {
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
-            productSet.add(hit._source);
+            Map map = (Map)hit._source;
+            map.put("_id",hit._id);
+            productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);
     }

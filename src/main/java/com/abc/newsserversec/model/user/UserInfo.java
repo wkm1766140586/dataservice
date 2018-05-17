@@ -12,6 +12,8 @@ public class UserInfo {
     private String username;
     //密码
     private String password;
+    //openid
+    private String openid;
     //昵称
     private String nickname;
     //手机号
@@ -22,14 +24,8 @@ public class UserInfo {
     private String sex;
     //身份证号
     private String cardid;
-    //创建人
-    private String createperson;
     //创建日期
     private String createdate;
-    //修改人
-    private String modifyperson;
-    //修改日期
-    private String modifydate;
     //vip等级
     private int viplevel;
     //登录次数
@@ -42,6 +38,14 @@ public class UserInfo {
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
 
     public String getPassword() { return password; }
 
@@ -67,21 +71,9 @@ public class UserInfo {
 
     public void setCardid(String cardid) { this.cardid = cardid; }
 
-    public String getCreateperson() { return createperson; }
-
-    public void setCreateperson(String createperson) { this.createperson = createperson; }
-
     public String getCreatedate() { return createdate; }
 
     public void setCreatedate(String createdate) { this.createdate = createdate; }
-
-    public String getModifyperson() { return modifyperson; }
-
-    public void setModifyperson(String modifyperson) { this.modifyperson = modifyperson; }
-
-    public String getModifydate() { return modifydate; }
-
-    public void setModifydate(String modifydate) { this.modifydate = modifydate; }
 
     public int getViplevel() { return viplevel; }
 
@@ -91,23 +83,4 @@ public class UserInfo {
 
     public void setLogincount(long logincount) { this.logincount = logincount; }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", mobilephone='" + mobilephone + '\'' +
-                ", realname='" + realname + '\'' +
-                ", sex='" + sex + '\'' +
-                ", cardid='" + cardid + '\'' +
-                ", createperson='" + createperson + '\'' +
-                ", createdate='" + createdate + '\'' +
-                ", modifyperson='" + modifyperson + '\'' +
-                ", modifydate='" + modifydate + '\'' +
-                ", viplevel=" + viplevel +
-                ", logincount=" + logincount +
-                '}';
-    }
 }

@@ -36,18 +36,15 @@ public class UserInfoController {
      * @param response
      * @return
      */
-    @RequestMapping("/userInfo/commonUserRegister")
+    @RequestMapping("/method/commonUserRegister")
     public String commonUserRegister(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if(username == null || password == null){
-            return "fail";
-        }
-        if(username.equals("") || password.equals("")){
-            return "fail";
-        }
+        if(username == null || password == null){ return "fail"; }
+        if(username.equals("") || password.equals("")){ return "fail"; }
+
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("username",username);
         UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
@@ -55,26 +52,26 @@ public class UserInfoController {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = df.format(new Date());
             dataMap.put("password", password);
-            dataMap.put("createperson", username);
             dataMap.put("createdate", date);
-            dataMap.put("modifyperson", username);
-            dataMap.put("modifydate", date);
 
             int count = userInfoService.insertUserInfo(dataMap);
-            if(count != 1){
-                return "fail";
-            }else{
+            if(count != 1){ return "fail"; }
+            else{
                 Map<String, Object> map = new HashMap<>();
                 map.put("username",username);
                 UserInfo userInfo1 = userInfoService.selectUserInfoByCondition(map);
                 if(userInfo1 != null){
                     long userid = userInfo1.getId();
                     insertUserloginInfo(request, userid);
-                    return userInfo1.getUsername();
+
+                    Map<String,Object> temp = new HashMap<>();
+                    temp.put("userid",userInfo1.getId());
+                    temp.put("username",userInfo1.getUsername());
+                    temp.put("nickname",userInfo1.getNickname());
+                    return new GsonBuilder().create().toJson(temp);
                 }else {
                     return "fail";
                 }
-
             }
 
         }else{
@@ -89,39 +86,30 @@ public class UserInfoController {
      * @param response
      * @return
      */
-    @RequestMapping("/userInfo/commonUserLogin")
+    @RequestMapping("/method/commonUserLogin")
     public String commonUserLogin(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if(username == null || password == null){
-            return "fail";
-        }
-        if(username.equals("") || password.equals("")){
-            return "fail";
-        }
+        if(username == null || password == null){ return "fail"; }
+        if(username.equals("") || password.equals("")){ return "fail"; }
+
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("username", username);
         dataMap.put("password", password);
         UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
 
         if(userInfo != null){
-            String name = "";
-            if(userInfo.getNickname() != null){
-                if(!userInfo.getNickname().equals("")) {
-                    name = userInfo.getNickname();
-                }else{
-                    name = userInfo.getUsername();
-                }
-            }else{
-                name = userInfo.getUsername();
-            }
             long userid = userInfo.getId();
             userInfoService.updateLoginCountById(userid);
             insertUserloginInfo(request, userid);
 
-            return name;
+            Map<String,Object> temp = new HashMap<>();
+            temp.put("userid",userInfo.getId());
+            temp.put("username",userInfo.getUsername());
+            temp.put("nickname",userInfo.getNickname());
+            return new GsonBuilder().create().toJson(temp);
         }else{
             return "fail";
         }
@@ -133,19 +121,15 @@ public class UserInfoController {
      * @param response
      * @return
      */
-    @RequestMapping("/userInfo/wechatUserLogin")
+    @RequestMapping("/method/wechatUserLogin")
     public String wechatUserLogin(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         String openid = request.getParameter("openid");
         String nickname = request.getParameter("nickname");
         String sex = request.getParameter("sex");
-        if(openid == null || nickname == null || sex == null){
-            return "fail";
-        }
-        if(openid.equals("")){
-            return "fail";
-        }
+        if(openid == null || nickname == null || sex == null){ return "fail"; }
+        if(openid.equals("")){ return "fail"; }
 
         if(sex.equals("0")){ sex = "未知"; }
         else if(sex.equals("1")){ sex = "男"; }
@@ -159,10 +143,7 @@ public class UserInfoController {
             String date = df.format(new Date());
             dataMap.put("nickname",nickname);
             dataMap.put("sex",sex);
-            dataMap.put("createperson",nickname);
             dataMap.put("createdate",date);
-            dataMap.put("modifyperson",nickname);
-            dataMap.put("modifydate",date);
             int count = userInfoService.insertUserInfo(dataMap);
             if(count == 1){
                 Map<String, Object> map = new HashMap<>();
@@ -170,9 +151,13 @@ public class UserInfoController {
                 UserInfo userInfo1 = userInfoService.selectUserInfoByCondition(map);
                 if(userInfo1 != null){
                     long userid = userInfo1.getId();
-
                     insertUserloginInfo(request, userid);
-                    return userInfo1.getNickname();
+
+                    Map<String,Object> temp = new HashMap<>();
+                    temp.put("userid",userInfo1.getId());
+                    temp.put("username",userInfo1.getUsername());
+                    temp.put("nickname",userInfo1.getNickname());
+                    return new GsonBuilder().create().toJson(temp);
                 }else {
                     return "fail";
                 }
@@ -183,7 +168,12 @@ public class UserInfoController {
             long userid = userInfo.getId();
             userInfoService.updateLoginCountById(userid);
             insertUserloginInfo(request,userid);
-            return userInfo.getNickname();
+
+            Map<String,Object> temp = new HashMap<>();
+            temp.put("userid",userInfo.getId());
+            temp.put("username",userInfo.getUsername());
+            temp.put("nickname",userInfo.getNickname());
+            return new GsonBuilder().create().toJson(temp);
         }
     }
 

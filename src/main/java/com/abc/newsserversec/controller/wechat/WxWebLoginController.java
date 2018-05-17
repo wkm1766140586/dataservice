@@ -24,8 +24,7 @@ import java.util.Map;
 @RestController
 public class WxWebLoginController {
 
-    @RequestMapping(value = "/wechat/wxtoken", method = RequestMethod.GET)
-    @ResponseBody
+    @RequestMapping("/method/wxtoken")
     public static String wxtoken(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String result="";//访问返回结果
