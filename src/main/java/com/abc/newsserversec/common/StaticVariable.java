@@ -8,7 +8,8 @@ public class StaticVariable {
 
     public static String ExcludeFields = "\"file_id\",\"type\",\"path\",\"@version\",\"host\",\"@timestamp\",\"id\"";
 
-    public static String searchProductIncludeFields = "\"id\",\"product_name_ch\",\"maker_name_ch\",\"agent\",\"src_loc\",\"main_class\",\"class_code\",\"product_state\",\"product_mode\",\"register_code\"";
+    public static String searchProductIncludeFields = "\"id\",\"product_name_ch\",\"maker_name_ch\",\"agent\",\"src_loc\",\"main_class\",\"class_code\",\"product_state\",\"product_mode\",\"register_code\"," +
+            "\"approval_date\",\"approval_complete_mark\",\"vacancy_mark\"";
 
     public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"type_nature\",\"hospital_address\",\"hospital_phone\"";
 
