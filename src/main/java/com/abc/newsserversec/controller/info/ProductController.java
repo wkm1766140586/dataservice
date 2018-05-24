@@ -414,4 +414,55 @@ public class ProductController {
         }
         return new GsonBuilder().create().toJson(productSet);
     }
+
+    /**
+     * 根据产品名称查找同名产品信息
+     * @param
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/method/search_product_same_name")
+    public String searchProductBySameName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String num = request.getParameter("num");
+        String keyword = request.getParameter("keyword");
+        if(num == null || keyword == null) return "fail";
+        if(num.equals("") || keyword.equals("")) return "fail";
+
+        String size = request.getParameter("size");
+        String condition = "";
+        String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
+
+        condition = "(product_name_agg:\\\\\""+keyword+"\\\\\")";
+
+        int from = Integer.valueOf(num);
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 5; }
+
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","5"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        String postbody = esRequest.replaceFirst("#query",condition);
+        postbody = postbody.replaceFirst("\"#aggs\"","{}");
+        System.out.println(postbody);
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        for(Hit hit:retObj.hits.hits){
+            productSet.add(hit._source);
+        }
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query",condition);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+        }
+        return new GsonBuilder().create().toJson(productSet);
+    }
 }
