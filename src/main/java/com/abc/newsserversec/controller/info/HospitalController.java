@@ -56,6 +56,7 @@ public class HospitalController {
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
+        System.out.println(postbody);
 
         String ret = HttpHandler.httpPostCall("http://localhost:9200/new_hospital/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);

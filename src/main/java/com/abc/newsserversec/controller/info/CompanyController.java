@@ -137,5 +137,86 @@ public class CompanyController {
         return new GsonBuilder().create().toJson(productSet);
     }
 
+    /**
+     * 根据企业名称查询该企业的证书
+     * @param
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/method/search_company_like_name")
+    public String searchCompanyByLikeName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String keyword = request.getParameter("keyword");
+        String num = request.getParameter("num");
+        if(keyword == null) return "fail";
+        if(keyword.equals("")) return "fail";
+
+        String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
+        String condition = "company_name:\\\\\""+keyword+"\\\\\"";
+        int from = Integer.valueOf(num);
+
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        esRequest = esRequest.replaceFirst("\"#size\"","10");
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchCompanyIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
+        String postbody = esRequest.replaceFirst("#query",condition);
+        System.out.println("postbody="+postbody);
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/second_company/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        for(Hit hit:retObj.hits.hits){
+            Map map = (Map)hit._source;
+            map.put("_id",hit._id);
+            productSet.add(map);
+        }
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query", condition);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_company/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+        }
+        return new GsonBuilder().create().toJson(productSet);
+    }
+
+    /**
+     * 根据证书id查询证书
+     * @param
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/method/search_company_id")
+    public String searchCompanyById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String id = request.getParameter("id");
+        if(id == null) return "fail";
+        if(id.equals("")) return "fail";
+
+        String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
+        String condition = "id:\\\\\""+id+"\\\\\"";
+
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(0));
+        esRequest = esRequest.replaceFirst("\"#size\"","10");
+        esRequest = esRequest.replaceFirst("#includes","*");
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
+        String postbody = esRequest.replaceFirst("#query",condition);
+        System.out.println("postbody="+postbody);
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/second_company/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        for(Hit hit:retObj.hits.hits){
+            Map map = (Map)hit._source;
+            map.put("_id",hit._id);
+            productSet.add(map);
+        }
+        return new GsonBuilder().create().toJson(productSet);
+    }
 
 }
