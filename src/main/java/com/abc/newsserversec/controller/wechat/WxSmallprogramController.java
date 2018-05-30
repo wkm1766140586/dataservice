@@ -1,7 +1,10 @@
 package com.abc.newsserversec.controller.wechat;
 
 import com.abc.newsserversec.model.wechat.WxaccessToken;
+import com.abc.newsserversec.model.wechat.WxspUserInfo;
+import com.abc.newsserversec.service.wechat.WxspInfoService;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +27,9 @@ import java.util.Map;
  */
 @RestController
 public class WxSmallprogramController {
+
+    @Autowired
+    private WxspInfoService wxspInfoService;
 
     /*
       微信小程序登录
@@ -83,6 +92,61 @@ public class WxSmallprogramController {
         }
 
         return new GsonBuilder().create().toJson(wxaccessToken);
+    }
+
+    /*
+     微信小程序--新增用户信息
+  */
+    @RequestMapping("/method/wxsp_insert_user")
+    public void wxspInsertUser(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String openid = request.getParameter("openid");
+        String nickname = request.getParameter("nickname");
+        String sex = request.getParameter("sex");
+
+        if(sex.equals("0")) sex = "未知";
+        else if(sex.equals("1")) sex = "男";
+        else sex = "女";
+
+        WxspUserInfo user = wxspInfoService.selectWxspUserByOpenid(openid);
+        if(user == null){
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = df.format(new Date());
+            Map<String,String> map = new HashMap<>();
+            map.put("openid",openid);
+            map.put("nickname",nickname);
+            map.put("sex",sex);
+            map.put("createperson",openid);
+            map.put("createdate",date);
+            wxspInfoService.insertWxspUserByMap(map);
+        }
+
+    }
+
+    /*
+     微信小程序--新增查询信息
+  */
+    @RequestMapping("/method/wxsp_insert_usersearch")
+    public void wxspInsertUserSearch(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String openid = request.getParameter("openid");
+        String classtype = request.getParameter("classtype");
+        String keyword = request.getParameter("keyword");
+        String resultcount = request.getParameter("resultcount");
+
+        WxspUserInfo user = wxspInfoService.selectWxspUserByOpenid(openid);
+        if(user != null){
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = df.format(new Date());
+            Map<String,Object> map = new HashMap<>();
+            map.put("userid",user.getId());
+            map.put("classtype",classtype);
+            map.put("keyword",keyword);
+            map.put("resultcount",resultcount);
+            map.put("createdate",date);
+            wxspInfoService.insertWxspUserSearchByMap(map);
+        }
+
     }
 
 }
