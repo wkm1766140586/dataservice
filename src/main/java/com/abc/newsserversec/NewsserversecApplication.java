@@ -48,6 +48,7 @@ public class NewsserversecApplication {
     public static void main(String[] args) throws IOException {
         StaticVariable.esRequest = loadEsRequestFile("es_query_template.json");
         StaticVariable.esCount = loadEsRequestFile("es_query_count.json");
+        StaticVariable.acquisitebidChart = loadEsRequestFile("es_query_acquisitebid_chart.json");
         SpringApplication.run(NewsserversecApplication.class, args);
     }
 }

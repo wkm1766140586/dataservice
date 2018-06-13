@@ -1,0 +1,53 @@
+{
+  "version": true,
+  "size": 0,
+  "sort": [
+    {
+      "publish_date": {
+        "order": "desc",
+        "unmapped_type": "boolean"
+      }
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "query_string": {
+              "analyze_wildcard": true,
+              "query":"#query",
+              "phrase_slop":5
+          }
+        }
+      ],
+      "filter": ["#filter"]
+    }
+  },
+  "_source": {
+    "includes": [""]
+  },
+  "aggs" : {
+    "prices":{
+      "terms":{
+        "field":"publish_date_agg"
+      },
+      "aggs":{
+        "max_price":{
+          "max":{
+            "field":"price_agg"
+          }
+        },
+        "min_price":{
+          "min":{
+            "field":"price_agg"
+          }
+        }
+      }
+    },
+    "provinces": {
+      "terms": {
+        "field": "province_agg"
+      }
+    }
+  }
+}

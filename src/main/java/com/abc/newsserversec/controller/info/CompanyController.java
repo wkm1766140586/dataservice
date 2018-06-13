@@ -123,6 +123,7 @@ public class CompanyController {
         esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("#includes","*");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchCompanyExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
@@ -161,6 +162,7 @@ public class CompanyController {
         esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchCompanyIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
@@ -176,6 +178,7 @@ public class CompanyController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_company/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
@@ -205,6 +208,7 @@ public class CompanyController {
         esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("#includes","*");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);

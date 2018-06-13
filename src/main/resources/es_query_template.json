@@ -21,6 +21,7 @@
           }
         }
       ],
+      "filter": ["#filter"],
       "must_not": []
     }
   },

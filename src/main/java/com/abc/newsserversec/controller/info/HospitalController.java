@@ -54,6 +54,7 @@ public class HospitalController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchHospitalIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println(postbody);
@@ -68,6 +69,7 @@ public class HospitalController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/new_hospital/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
@@ -95,6 +97,7 @@ public class HospitalController {
         esRequest = esRequest.replaceFirst("\"#size\"","10");
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchHospitalExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
 

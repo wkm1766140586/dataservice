@@ -48,6 +48,7 @@ public class TenderbidController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchTenderbidExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
 
@@ -60,6 +61,7 @@ public class TenderbidController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);

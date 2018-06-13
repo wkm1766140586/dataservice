@@ -66,6 +66,7 @@ public class ProductController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"",StaticVariable.productAggsProductName);
         System.out.println(postbody);
@@ -79,6 +80,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query",condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
@@ -199,6 +201,7 @@ public class ProductController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         esRequest = esRequest.replaceFirst("#query",condition);
 
         if(company_name.equals("") && class_code.equals("")){
@@ -222,6 +225,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query",condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
@@ -351,6 +355,7 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("#includes","*");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchProAndComExcludeFields+","+StaticVariable.searchProductExcludeFields);
         esRequest = esRequest.replaceFirst("\"#aggs\"","{}");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String condition = "id:\\\\\""+id+"\\\\\"";
         String postbody = esRequest.replaceFirst("#query",condition);
         System.out.println("postbody="+postbody);
@@ -394,6 +399,7 @@ public class ProductController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
@@ -408,6 +414,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
@@ -446,6 +453,7 @@ public class ProductController {
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println(postbody);
@@ -459,6 +467,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query",condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);

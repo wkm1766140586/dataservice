@@ -10,6 +10,8 @@ public class SourceSet {
     private int matchCount = 0;
     private List<Object> datas = new ArrayList<>();
     private List<Object> aggList = new ArrayList<>();
+    private List<Object> provinceList = new ArrayList<>();
+    private List<Object> priceList = new ArrayList<>();
 
     public void add(Object prd){
         datas.add(prd);
@@ -37,5 +39,21 @@ public class SourceSet {
 
     public void setAggList(List<Object> aggList) {
         this.aggList = aggList;
+    }
+
+    public List<Object> getProvinceList() {
+        return provinceList;
+    }
+
+    public void setProvinceList(List<Object> provinceList) {
+        this.provinceList = provinceList;
+    }
+
+    public List<Object> getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(List<Object> priceList) {
+        this.priceList = priceList;
     }
 }
