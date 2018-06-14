@@ -17,6 +17,9 @@ public class StaticVariable {
 
     public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"type_nature\",\"hospital_address\",\"hospital_phone\"";
 
+    public static String searchAcquisitebidIncludeFields = "\"bid_price\",\"unit_account\",\"prodcut_specification\",\"product_model\",\"product_name\"," +
+            "\"product_company\",\"declare_company\",\"province\",\"price_type\"";
+
     public static String searchProAndComExcludeFields = "\"record_number\",\"data_source_code\",\"record_main_type\",\"record_sub_type\"," +
             "\"keep_field_first\",\"keep_field_second\",\"keep_field_third\",\"manage_type\",\"import_date\"";
 
