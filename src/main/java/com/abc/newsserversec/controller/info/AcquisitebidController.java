@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -58,7 +59,6 @@ public class AcquisitebidController {
         else{ from = from * 10; }
 
         String esRequest = StaticVariable.esRequest;
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         ArrayList<Object> aggList = new ArrayList<>();
         String condition = "";
         String postbody = "";
@@ -108,64 +108,52 @@ public class AcquisitebidController {
             productSet.setMatchCount(esCt.count);
             if(!product_name.equals("")) {
                 //图表数据
-                List<Object> provinceList = new ArrayList<>();
-                List<Object> priceList = new ArrayList<>();
-
-                String acquisitebidChart = StaticVariable.acquisitebidChart;
-                acquisitebidChart = acquisitebidChart.replaceFirst("#query", condition);
-                acquisitebidChart = acquisitebidChart.replaceFirst("\"#filter\"", filter);
-                String retChart = HttpHandler.httpPostCall("http://localhost:9200/acquisitebid/_search", acquisitebidChart);
-                ESResultRoot retObjChart = new GsonBuilder().create().fromJson(retChart, ESResultRoot.class);
-
-                ArrayList<Map> provinceBuckets = (ArrayList<Map>) ((Map) retObjChart.aggregations.get("provinces")).get("buckets");
-                for (Map map : provinceBuckets) {
-                    String province_name = (String) map.get("key");
-                    int province_count = (new Double((Double) map.get("doc_count"))).intValue();
-                    Map<String,Object> temp = new HashMap<>();
-                    temp.put("province_name",province_name);
-                    temp.put("province_count",province_count);
-                    provinceList.add(temp);
-                }
-
-                ArrayList<Map> priceBuckets = (ArrayList<Map>) ((Map) retObjChart.aggregations.get("prices")).get("buckets");
-                for (Map map : priceBuckets) {
-                    String date = (String) map.get("key");
-                    Double max_price = (Double) ((Map) map.get("max_price")).get("value");
-                    Double min_price = (Double) ((Map) map.get("min_price")).get("value");
-                    Map<String,Object> temp = new HashMap<>();
-                    temp.put("date",date);
-                    temp.put("max_price",max_price);
-                    temp.put("min_price",min_price);
-                    priceList.add(temp);
-                }
-                productSet.setProvinceList(provinceList);
-                productSet.setPriceList(priceList);
+//                List<Object> provinceList = new ArrayList<>();
+//                List<Object> priceList = new ArrayList<>();
+//
+//                String acquisitebidChart = StaticVariable.acquisitebidChart;
+//                acquisitebidChart = acquisitebidChart.replaceFirst("#query", condition);
+//                acquisitebidChart = acquisitebidChart.replaceFirst("\"#filter\"", filter);
+//                String retChart = HttpHandler.httpPostCall("http://localhost:9200/acquisitebid/_search", acquisitebidChart);
+//                ESResultRoot retObjChart = new GsonBuilder().create().fromJson(retChart, ESResultRoot.class);
+//
+//                ArrayList<Map> provinceBuckets = (ArrayList<Map>) ((Map) retObjChart.aggregations.get("provinces")).get("buckets");
+//                for (Map map : provinceBuckets) {
+//                    String province_name = (String) map.get("key");
+//                    int province_count = (new Double((Double) map.get("doc_count"))).intValue();
+//                    Map<String,Object> temp = new HashMap<>();
+//                    temp.put("province_name",province_name);
+//                    temp.put("province_count",province_count);
+//                    provinceList.add(temp);
+//                }
+//
+//                ArrayList<Map> priceBuckets = (ArrayList<Map>) ((Map) retObjChart.aggregations.get("prices")).get("buckets");
+//                for (Map map : priceBuckets) {
+//                    String date = (String) map.get("key");
+//                    Double max_price = (Double) ((Map) map.get("max_price")).get("value");
+//                    Double min_price = (Double) ((Map) map.get("min_price")).get("value");
+//                    Map<String,Object> temp = new HashMap<>();
+//                    temp.put("date",date);
+//                    temp.put("max_price",max_price);
+//                    temp.put("min_price",min_price);
+//                    priceList.add(temp);
+//                }
+//                productSet.setProvinceList(provinceList);
+//                productSet.setPriceList(priceList);
             }
 
             //聚合
             ArrayList<Map> productBuckets = (ArrayList<Map>) ((Map) retObj.aggregations.get("tags")).get("buckets");
-            Date max_date = null;
-            Date min_date = null;
-            Calendar max_c = Calendar.getInstance();
-            Calendar min_c = Calendar.getInstance();
+            DecimalFormat df = new DecimalFormat("#.000");
             if(company_name.equals("")) {
                 for (Map map : productBuckets) {
                     Map<String, Object> aggMap = new HashMap<>();
                     String name = (String) map.get("key");
                     int product_count = (new Double((Double) map.get("doc_count"))).intValue();
 
-                    Map max_date_map = (Map) map.get("max_date");
-                    Map min_date_map = (Map) map.get("min_date");
-                    try {
-                        max_date = df.parse(String.valueOf(max_date_map.get("value_as_string")));
-                        min_date = df.parse(String.valueOf(min_date_map.get("value_as_string")));
-                        max_c.setTime(max_date);
-                        min_c.setTime(min_date);
-                        max_date = max_c.getTime();
-                        min_date = min_c.getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    Double max_price = (Double) ((Map) map.get("max_price")).get("value");
+                    Double min_price = (Double) ((Map) map.get("min_price")).get("value");
+                    Double avg_price = (Double) ((Map) map.get("avg_price")).get("value");
 
                     Map company_name_map = (Map) map.get("company_name");
                     ArrayList company_name_list = (ArrayList) company_name_map.get("buckets");
@@ -174,8 +162,9 @@ public class AcquisitebidController {
                     aggMap.put("product_name", name);
                     aggMap.put("product_count", product_count);
                     aggMap.put("company_count", company_count);
-                    aggMap.put("new_date", df.format(max_date));
-                    aggMap.put("old_date", df.format(min_date));
+                    aggMap.put("max_price", max_price);
+                    aggMap.put("min_price", min_price);
+                    aggMap.put("avg_price", df.format(avg_price));
 
                     aggList.add(aggMap);
                 }
@@ -186,22 +175,15 @@ public class AcquisitebidController {
                     String company_agg_name = (String) map.get("key");
                     int product_count = (new Double((Double) map.get("doc_count"))).intValue();
 
-                    Map max_date_map = (Map) map.get("max_date");
-                    Map min_date_map = (Map) map.get("min_date");
-                    try {
-                        max_date = df.parse(String.valueOf(max_date_map.get("value_as_string")));
-                        min_date = df.parse(String.valueOf(min_date_map.get("value_as_string")));
-                        max_c.setTime(max_date);
-                        min_c.setTime(min_date);
-                        max_date = max_c.getTime();
-                        min_date = min_c.getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    Double max_price = (Double) ((Map) map.get("max_price")).get("value");
+                    Double min_price = (Double) ((Map) map.get("min_price")).get("value");
+                    Double avg_price = (Double) ((Map) map.get("avg_price")).get("value");
+
                     aggMap.put("company_name", company_agg_name);
                     aggMap.put("product_count", product_count);
-                    aggMap.put("new_date", df.format(max_date));
-                    aggMap.put("old_date", df.format(min_date));
+                    aggMap.put("max_price", max_price);
+                    aggMap.put("min_price", min_price);
+                    aggMap.put("avg_price", df.format(avg_price));
                     aggList.add(aggMap);
                 }
             }

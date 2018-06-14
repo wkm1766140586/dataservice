@@ -8,7 +8,7 @@ public class StaticVariable {
 
     public static String acquisitebidChart = "";
 
-    public static String ExcludeFields = "\"file_id\",\"type\",\"path\",\"@version\",\"host\",\"@timestamp\",\"id\"";
+    public static String ExcludeFields = "\"file_id\",\"type\",\"path\",\"@version\",\"host\",\"@timestamp\"";
 
     public static String searchProductIncludeFields = "\"id\",\"product_name_ch\",\"maker_name_ch\",\"agent\",\"src_loc\",\"main_class\",\"class_code\",\"product_state\",\"product_mode\",\"register_code\"," +
             "\"approval_date\",\"approval_complete_mark\",\"vacancy_mark\",\"picture_addr\"";
@@ -41,10 +41,10 @@ public class StaticVariable {
             "\"min_date\":{ \"min\":{ \"field\":\"approval_date\" } } } } }";
 
     public static String acquisitebidAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\" } }," +
-            "\"max_date\":{ \"max\":{ \"field\":\"publish_date\" } }, \"min_date\":{ \"min\":{ \"field\":\"publish_date\" } } } } }";
+            "\"max_price\":{ \"max\":{ \"field\":\"price_agg\" } }, \"min_price\":{ \"min\":{ \"field\":\"price_agg\" } }, \"avg_price\":{ \"avg\":{ \"field\":\"price_agg\" } } } } }";
 
-    public static String acquisitebidAggsCompanyName = "{ \"tags\":{ \"terms\":{ \"field\":\"company_name_agg\" }, \"aggs\":{ \"max_date\":{ \"max\":{ \"field\":\"publish_date\" } }," +
-            "\"min_date\":{ \"min\":{ \"field\":\"publish_date\" } } } } }";
+    public static String acquisitebidAggsCompanyName = "{ \"tags\":{ \"terms\":{ \"field\":\"company_name_agg\" }, \"aggs\":{ \"max_price\":{ \"max\":{ \"field\":\"price_agg\" } }," +
+            "\"min_price\":{ \"min\":{ \"field\":\"price_agg\" } }, \"avg_price\":{ \"avg\":{ \"field\":\"price_agg\" } } } } }";
 
 
 }
