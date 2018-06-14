@@ -44,6 +44,7 @@ public class AcquisitebidController {
         String start_time = request.getParameter("start_time");
         String end_time = request.getParameter("end_time");
         String province = request.getParameter("province");
+        String city = request.getParameter("city");
         String product_name = request.getParameter("product_name");
         String company_name = request.getParameter("company_name");
         String size = request.getParameter("size");
@@ -52,6 +53,7 @@ public class AcquisitebidController {
         if(start_time == null) start_time = "";
         if(end_time == null) end_time = "";
         if(province == null) province = "";
+        if(city == null) city = "";
         if(product_name == null) product_name = "";
         if(company_name == null) company_name = "";
         int from = Integer.valueOf(num);
@@ -67,6 +69,7 @@ public class AcquisitebidController {
         if(!keyword.equals("")) condition = "product_name:\\\\\""+keyword+"\\\\\"";
         if(!declare_company.equals("")) condition += " AND declare_company:\\\\\""+ declare_company + "\\\\\"";
         if(!province.equals("")) condition += " AND province:\\\\\""+ province + "\\\\\"";
+        if(!city.equals("")) condition += " AND city:\\\\\""+ city + "\\\\\"";
         if(!product_name.equals("")) condition += " AND product_name_agg:\\\\\"" + product_name + "\\\\\"";
         if(!company_name.equals("") && !company_name.equals("yes")) condition = condition+ " AND company_name_agg:\\\\\""+company_name+"\\\\\"";
 
