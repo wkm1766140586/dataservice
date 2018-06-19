@@ -18,7 +18,7 @@ public class StaticVariable {
     public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"type_nature\",\"hospital_address\",\"hospital_phone\"";
 
     public static String searchAcquisitebidIncludeFields = "\"bid_price\",\"unit_account\",\"prodcut_specification\",\"product_model\",\"product_name\"," +
-            "\"product_company\",\"declare_company\",\"province\",\"price_type\"";
+            "\"product_company\",\"declare_company\",\"province\",\"price_type\",\"id\"";
 
     public static String searchProAndComExcludeFields = "\"record_number\",\"data_source_code\",\"record_main_type\",\"record_sub_type\"," +
             "\"keep_field_first\",\"keep_field_second\",\"keep_field_third\",\"manage_type\",\"import_date\"";
@@ -34,7 +34,7 @@ public class StaticVariable {
 
     public static String searchTenderbidExcludeFields = "\"month\"";
 
-    public static String productAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\" } }," +
+    public static String productAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\",\"size\":50 } }," +
             "\"class_code\":{ \"terms\":{ \"field\":\"class_code\" } }, \"max_date\":{ \"max\":{ \"field\":\"approval_date\" } }, \"min_date\":{ \"min\":{ \"field\":\"approval_date\" } } } } }";
 
     public static String productAggsCompanyName = "{ \"tags\":{ \"terms\":{ \"field\":\"company_name_agg\" }, \"aggs\":{ \"max_date\":{ \"max\":{ \"field\":\"approval_date\" } }," +
@@ -43,7 +43,7 @@ public class StaticVariable {
     public static String productAggsClassCode = "{ \"tags\":{ \"terms\":{ \"field\":\"class_code\" }, \"aggs\":{ \"max_date\":{ \"max\":{ \"field\":\"approval_date\" } }," +
             "\"min_date\":{ \"min\":{ \"field\":\"approval_date\" } } } } }";
 
-    public static String acquisitebidAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\" } }," +
+    public static String acquisitebidAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\",\"size\":50 } }," +
             "\"max_price\":{ \"max\":{ \"field\":\"price_agg\" } }, \"min_price\":{ \"min\":{ \"field\":\"price_agg\" } }, \"avg_price\":{ \"avg\":{ \"field\":\"price_agg\" } } } } }";
 
     public static String acquisitebidAggsCompanyName = "{ \"tags\":{ \"terms\":{ \"field\":\"company_name_agg\" }, \"aggs\":{ \"max_price\":{ \"max\":{ \"field\":\"price_agg\" } }," +

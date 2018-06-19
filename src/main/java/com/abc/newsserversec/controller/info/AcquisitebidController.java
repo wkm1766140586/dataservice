@@ -37,8 +37,8 @@ public class AcquisitebidController {
 
         String keyword = request.getParameter("keyword");
         String num = request.getParameter("num");
-        if(num == null || keyword == null) return "fail";
-        if(num.equals("") || keyword.equals("")) return "fail";
+        if(num == null) return "fail";
+        if(num.equals("")) return "fail";
 
         String declare_company = request.getParameter("declare_company");
         String start_time = request.getParameter("start_time");
@@ -49,6 +49,7 @@ public class AcquisitebidController {
         String company_name = request.getParameter("company_name");
         String size = request.getParameter("size");
 
+        if(keyword == null) keyword = "";
         if(declare_company == null) declare_company = "";
         if(start_time == null) start_time = "";
         if(end_time == null) end_time = "";
@@ -67,7 +68,10 @@ public class AcquisitebidController {
         String filter = "";
 
         if(!keyword.equals("")) condition = "product_name:\\\\\""+keyword+"\\\\\"";
-        if(!declare_company.equals("")) condition += " AND declare_company:\\\\\""+ declare_company + "\\\\\"";
+        if(!declare_company.equals("")){
+            if(keyword.equals("")) condition += "declare_company:\\\\\""+ declare_company + "\\\\\"";
+            else condition += " AND declare_company:\\\\\""+ declare_company + "\\\\\"";
+        }
         if(!province.equals("")) condition += " AND province:\\\\\""+ province + "\\\\\"";
         if(!city.equals("")) condition += " AND city:\\\\\""+ city + "\\\\\"";
         if(!product_name.equals("")) condition += " AND product_name_agg:\\\\\"" + product_name + "\\\\\"";
@@ -147,7 +151,7 @@ public class AcquisitebidController {
 
             //聚合
             ArrayList<Map> productBuckets = (ArrayList<Map>) ((Map) retObj.aggregations.get("tags")).get("buckets");
-            DecimalFormat df = new DecimalFormat("#.000");
+            DecimalFormat df = new DecimalFormat("#.00");
             if(company_name.equals("")) {
                 for (Map map : productBuckets) {
                     Map<String, Object> aggMap = new HashMap<>();
