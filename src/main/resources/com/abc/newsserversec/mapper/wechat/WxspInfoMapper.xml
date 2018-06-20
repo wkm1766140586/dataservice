@@ -19,9 +19,6 @@
             <if test="sex != null">
                 sex,
             </if>
-            <if test="createperson != null">
-                createperson,
-            </if>
             <if test="createdate != null">
                 createdate,
             </if>
@@ -35,9 +32,6 @@
             </if>
             <if test="sex != null">
                 #{sex},
-            </if>
-            <if test="createperson != null">
-                #{createperson},
             </if>
             <if test="createdate != null">
                 #{createdate},

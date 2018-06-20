@@ -116,7 +116,6 @@ public class WxSmallprogramController {
             map.put("openid",openid);
             map.put("nickname",nickname);
             map.put("sex",sex);
-            map.put("createperson",openid);
             map.put("createdate",date);
             wxspInfoService.insertWxspUserByMap(map);
         }
