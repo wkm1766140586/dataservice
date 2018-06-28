@@ -42,17 +42,17 @@ public class TenderbidController {
         if(size != null) { from = from * Integer.valueOf(size); }
         else{ from = from * 10; }
 
-        String condition = "web_content:\\\\\""+keyword+"\\\\\"";
+        String condition = "content:\\\\\""+keyword+"\\\\\" OR title:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("\"#includes\"","");
-        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.ExcludeFields+","+StaticVariable.searchTenderbidExcludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchTenderbidExcludeFields);
         esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
 
-        String ret = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_search", postbody);
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/newtenderbid/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
@@ -62,7 +62,7 @@ public class TenderbidController {
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
             esCount = esCount.replaceFirst("\"#filter\"","");
-            String countRet = HttpHandler.httpPostCall("http://localhost:9200/tenderbid/_count", esCount);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/newtenderbid/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
         }

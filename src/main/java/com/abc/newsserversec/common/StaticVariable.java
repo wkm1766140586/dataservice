@@ -32,7 +32,7 @@ public class StaticVariable {
 
     public static String searchHospitalExcludeFields = "\"data_source\",\"gain_date\",\"src_class_1st\",\"src_class_2nd\",\"src_class_3rd\"";
 
-    public static String searchTenderbidExcludeFields = "\"month\"";
+    public static String searchTenderbidExcludeFields = "\"month\",\"year\",\"path\",\"@version\",\"host\",\"@timestamp\"";
 
     public static String productAggsProductName = "{ \"tags\":{ \"terms\":{ \"field\":\"product_name_agg\" }, \"aggs\":{ \"company_name\":{ \"terms\":{ \"field\":\"company_name_agg\",\"size\":50 } }," +
             "\"class_code\":{ \"terms\":{ \"field\":\"class_code\" } }, \"max_date\":{ \"max\":{ \"field\":\"approval_date\" } }, \"min_date\":{ \"min\":{ \"field\":\"approval_date\" } } } } }";
