@@ -91,7 +91,7 @@ public class UserInfoController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
+        System.out.println(username+"*************"+password);
         if(username == null || password == null){ return "fail"; }
         if(username.equals("") || password.equals("")){ return "fail"; }
 
