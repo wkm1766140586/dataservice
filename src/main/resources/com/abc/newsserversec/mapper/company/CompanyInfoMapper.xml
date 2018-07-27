@@ -29,6 +29,7 @@
         <if test="web_type != null">
             and web_type like #{web_type}
         </if>
+        ORDER BY product_count DESC,tenderbid_count DESC
         limit #{num},10
     </select>
 

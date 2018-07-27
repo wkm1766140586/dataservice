@@ -46,12 +46,12 @@ public class TenderbidController {
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("approval_date","date");
         esRequest = esRequest.replaceFirst("\"#includes\"","");
         esRequest = esRequest.replaceFirst("\"#excludes\"",StaticVariable.searchTenderbidExcludeFields);
         esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
-
         String ret = HttpHandler.httpPostCall("http://localhost:9200/newtenderbid/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){
@@ -68,6 +68,4 @@ public class TenderbidController {
         }
         return new GsonBuilder().create().toJson(productSet);
     }
-
-
 }

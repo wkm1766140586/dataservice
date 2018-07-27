@@ -40,7 +40,8 @@ public class UserurljumpInfoController {
         String beforeurl = request.getParameter("beforeurl");
         String afterurl = request.getParameter("afterurl");
         String clickname = request.getParameter("clickname");
-
+        System.out.println("beforeURL------------"+beforeurl);
+        System.out.println("afterURL-------------"+afterurl);
         long userid = Long.valueOf(userid_string);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
