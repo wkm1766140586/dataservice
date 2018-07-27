@@ -15,7 +15,7 @@ public class StaticVariable {
 
     public static String searchCompanyIncludeFields = "\"id\",\"company_name\",\"register_code\",\"regulation_type\",\"regulation_way\",\"mode\"";
 
-    public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"type_nature\",\"hospital_address\",\"hospital_phone\"";
+    public static String searchHospitalIncludeFields = "\"id\",\"hospital_name\",\"hospital_grade\",\"hospital_nature\",\"hospital_address\",\"hospital_phone\"";
 
     public static String searchAcquisitebidIncludeFields = "\"bid_price\",\"unit_account\",\"prodcut_specification\",\"product_model\",\"product_name\"," +
             "\"product_company\",\"declare_company\",\"province\",\"price_type\",\"id\"";
@@ -30,7 +30,7 @@ public class StaticVariable {
             "\"change_project\",\"cellphone\",\"facsimile\",\"economic_type\",\"province\",\"area\",\"county\",\"region\",\"social_credit_code\"," +
             "\"others\",\"remarks\",\"attachment\",\"apply_date\",\"accept_date\",\"manage_type\"";
 
-    public static String searchHospitalExcludeFields = "\"data_source\",\"gain_date\",\"src_class_1st\",\"src_class_2nd\",\"src_class_3rd\"";
+    public static String searchHospitalExcludeFields = "\"fileName\",\"date\",\"url\",\"hospital_sort\"";
 
     public static String searchTenderbidExcludeFields = "\"month\",\"year\",\"path\",\"@version\",\"host\",\"@timestamp\"";
 
