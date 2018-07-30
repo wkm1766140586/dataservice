@@ -175,12 +175,12 @@ public class ProductController {
         if(keyword.indexOf(" ")>0 && !keyword.endsWith(" ")){
             String lkeyword = keyword.split(" ")[0];
             String rkeyword = keyword.split(" ")[1];
-            condition =  "(maker_name_ch:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\")))" +
+            condition =  "(maker_name_ch:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))" +
                     " AND (src_loc:" + src_loc + ") AND (product_state:" + product_state + ") AND (main_class:" + main_class + ")";
             if(!product_name.equals("")){
-                condition = condition + " AND ((product_name_agg:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))";
+                condition = condition + " AND (product_name_agg:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))";
             }else {
-                condition = condition + " AND ((product_name_ch:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))";
+                condition = condition + " AND (product_name_ch:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))";
             }
         }else{
             condition = "(src_loc:" + src_loc + ") AND (product_state:" + product_state + ") AND (main_class:" + main_class + ")";
