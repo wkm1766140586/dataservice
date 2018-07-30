@@ -84,6 +84,7 @@ public class AcquisitebidController {
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("approval_date","publish_date");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchAcquisitebidIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         esRequest = esRequest.replaceFirst("\"#filter\"",filter);
