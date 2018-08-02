@@ -64,6 +64,7 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("approval_date","end_date");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
         esRequest = esRequest.replaceFirst("\"#filter\"","");
@@ -71,7 +72,7 @@ public class ProductController {
         postbody = postbody.replaceFirst("\"#aggs\"",StaticVariable.productAggsProductName);
         System.out.println(postbody);
 
-        String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){
             productSet.add(hit._source);
@@ -81,7 +82,7 @@ public class ProductController {
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query",condition);
             esCount = esCount.replaceFirst("\"#filter\"","");
-            String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
 
