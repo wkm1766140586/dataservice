@@ -44,6 +44,7 @@ public class TenderbidController {
 
         String condition = "content:\\\\\""+keyword+"\\\\\" OR title:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        esRequest = esRequest.replaceFirst("approval_date","date");
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
         esRequest = esRequest.replaceFirst("approval_date","date");
