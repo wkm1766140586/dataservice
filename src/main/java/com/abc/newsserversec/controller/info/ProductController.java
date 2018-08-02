@@ -27,6 +27,113 @@ import java.util.*;
 public class ProductController {
 
     /**
+     * 根据产品名称查找产品信息
+     * 1.单关键词，在产品名称和型号中查找该关键词
+     * 2.输入的关键词有空格的话，拆成两个关键字在产品名称和型号中查找
+     * @param
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/method/search_product_name")
+    public String searchProductByName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String num = request.getParameter("num");
+        String keyword = request.getParameter("keyword");
+        if(num == null || keyword == null) return "fail";
+        if(num.equals("") || keyword.equals("")) return "fail";
+
+        String size = request.getParameter("size");
+        String condition = "";
+        String esRequest = StaticVariable.esRequest;
+        SourceSet productSet = new SourceSet();
+        ArrayList<Object> aggList = new ArrayList<>();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        if(keyword.indexOf(" ")>0 && !keyword.endsWith(" ")){
+            String lkeyword = keyword.split(" ")[0];
+            String rkeyword = keyword.split(" ")[1];
+            condition = "(product_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\")) AND (maker_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\"))";
+        }else{
+            condition = "(product_name_ch:\\\\\""+keyword+"\\\\\") OR (product_mode:\\\\\""+keyword+"\\\\\")";
+        }
+        int from = Integer.valueOf(num);
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
+
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        esRequest = esRequest.replaceFirst("\"#filter\"","");
+        String postbody = esRequest.replaceFirst("#query",condition);
+        postbody = postbody.replaceFirst("\"#aggs\"",StaticVariable.productAggsProductName);
+        System.out.println(postbody);
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/second_product/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        for(Hit hit:retObj.hits.hits){
+            productSet.add(hit._source);
+        }
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query",condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/second_product/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+
+            //聚合
+            ArrayList<Map> productBuckets = (ArrayList<Map>) ((Map) retObj.aggregations.get("tags")).get("buckets");
+            for (Map map : productBuckets) {
+                Map<String, Object> aggMap = new HashMap<>();
+                String product_name = (String) map.get("key");
+                int product_count = (new Double((Double) map.get("doc_count"))).intValue();
+
+                Map max_date_map = (Map) map.get("max_date");
+                Map min_date_map = (Map) map.get("min_date");
+                Date max_date = null;
+                Date min_date = null;
+                Calendar max_c = Calendar.getInstance();
+                Calendar min_c = Calendar.getInstance();
+                try {
+                    max_date = df.parse(String.valueOf(max_date_map.get("value_as_string")));
+                    min_date = df.parse(String.valueOf(min_date_map.get("value_as_string")));
+                    max_c.setTime(max_date);
+                    min_c.setTime(min_date);
+                    max_c.add(Calendar.DAY_OF_MONTH, 1);
+                    min_c.add(Calendar.DAY_OF_MONTH, 1);
+                    max_date = max_c.getTime();
+                    min_date = min_c.getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Map company_name_map = (Map) map.get("company_name");
+                ArrayList company_name_list = (ArrayList) company_name_map.get("buckets");
+                int company_count = company_name_list.size();
+
+                Map class_code_map = (Map) map.get("class_code");
+                ArrayList class_code_list = (ArrayList) class_code_map.get("buckets");
+                int code_count = class_code_list.size();
+
+                aggMap.put("product_name", product_name);
+                aggMap.put("product_count", product_count);
+                aggMap.put("company_count", company_count);
+                aggMap.put("code_count", code_count);
+                aggMap.put("new_date", df.format(max_date));
+                aggMap.put("old_date", df.format(min_date));
+
+                aggList.add(aggMap);
+            }
+            productSet.setAggList(aggList);
+        }
+        return new GsonBuilder().create().toJson(productSet);
+    }
+
+    /**
      * 对产品信息进行筛选查询
      * @param request
      * @param response
