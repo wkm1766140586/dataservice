@@ -29,4 +29,9 @@ public class UserInfoServiceImp implements UserInfoService {
         return userInfoMapper.insertUserInfo(map);
     }
 
+    @Override
+    public int updateUserInfo(Map<String, Object> map) {
+        return userInfoMapper.updateUserInfo(map);
+    }
+
 }

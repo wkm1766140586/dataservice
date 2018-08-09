@@ -41,8 +41,8 @@ public class WxSmallprogramController {
         BufferedReader read=null;//读取访问结果
         WxaccessToken wxaccessToken = null;
 
-        String appid = "wxb447b4ac481750b1";
-        String secret = "0b9bb6070e561dd1e62ec3e067242cba";
+        String appid = "wxfa5b20c93499db27";
+        String secret = "26bf61eee9181d83f03e4640de01c6bc";
         String code = request.getParameter("code");
         System.out.println(code);
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code="+code+"&grant_type=authorization_code";

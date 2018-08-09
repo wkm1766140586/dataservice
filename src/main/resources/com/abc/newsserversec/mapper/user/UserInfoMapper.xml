@@ -5,11 +5,18 @@
 
     <select id="selectUserInfoByCondition" resultType="com.abc.newsserversec.model.user.UserInfo" parameterType="java.util.Map">
         select * from userinfo where
+
         <if test="username != null">
             username = #{username}
         </if>
         <if test="username == null">
             username is null
+        </if>
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="email != null">
+            and email = #{email}
         </if>
         <if test="password != null">
             and password = #{password}
@@ -28,6 +35,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="username != null">
                 username,
+            </if>
+            <if test="email != null">
+                email,
             </if>
             <if test="password != null">
                 password,
@@ -49,6 +59,9 @@
             <if test="username != null">
                 #{username},
             </if>
+            <if test="email != null">
+                #{email},
+            </if>
             <if test="password != null">
                 #{password},
             </if>
@@ -66,5 +79,31 @@
             </if>
         </trim>
     </insert>
-
+    <update id="updateUserInfo" parameterType="java.util.Map">
+        update userinfo
+        <set>
+            <if test="password != null">
+               password = #{password},
+            </if>
+            <if test="realname != null">
+                realname = #{realname},
+            </if>
+            <if test="mobilephone != null">
+                mobilephone = #{mobilephone},
+            </if>
+            <if test="companyname != null">
+                companyname = #{companyname},
+            </if>
+            <if test="companyaddress != null">
+                companyaddress = #{companyaddress},
+            </if>
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

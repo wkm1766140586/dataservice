@@ -18,4 +18,5 @@ public interface UserInfoService {
     //新增用户信息
     int insertUserInfo(Map<String, Object> map);
 
+    int updateUserInfo(Map<String, Object> map);
 }

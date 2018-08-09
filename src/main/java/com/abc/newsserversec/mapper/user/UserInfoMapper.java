@@ -14,4 +14,6 @@ public interface UserInfoMapper {
     int updateLoginCountById(long id);
 
     int insertUserInfo(Map<String, Object> map);
+
+    int updateUserInfo(Map<String,Object> map);
 }
