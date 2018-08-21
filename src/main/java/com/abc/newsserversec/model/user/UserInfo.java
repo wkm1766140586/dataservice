@@ -26,6 +26,10 @@ public class UserInfo {
     private String sex;
     //身份证号
     private String cardid;
+    //头像
+    private String headimg;
+    //微信号
+    private String wechatnum;
     //公司名称
     private String companyname;
     //公司地址
@@ -52,6 +56,22 @@ public class UserInfo {
     public String getEmail() {return email;}
 
     public void setEmail(String email) {this.email = email;}
+
+    public String getHeadimg() {
+        return headimg;
+    }
+
+    public void setHeadimg(String headimg) {
+        this.headimg = headimg;
+    }
+
+    public String getWechatnum() {
+        return wechatnum;
+    }
+
+    public void setWechatnum(String wechatnum) {
+        this.wechatnum = wechatnum;
+    }
 
     public String getOpenid() {
         return openid;

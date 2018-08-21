@@ -4,13 +4,10 @@
 <mapper namespace="com.abc.newsserversec.mapper.user.UserInfoMapper">
 
     <select id="selectUserInfoByCondition" resultType="com.abc.newsserversec.model.user.UserInfo" parameterType="java.util.Map">
-        select * from userinfo where
+        select * from userinfo where 1=1
 
         <if test="username != null">
-            username = #{username}
-        </if>
-        <if test="username == null">
-            username is null
+            and username = #{username}
         </if>
         <if test="id != null">
             and id = #{id}
@@ -23,6 +20,9 @@
         </if>
         <if test="openid != null">
             and openid = #{openid}
+        </if>
+        <if test="unionid != null">
+            and unionid = #{unionid}
         </if>
     </select>
 
@@ -44,6 +44,12 @@
             </if>
             <if test="openid != null">
                 openid,
+            </if>
+            <if test="unionid != null">
+                unionid,
+            </if>
+            <if test="headimg != null">
+                headimg,
             </if>
             <if test="nickname != null">
                 nickname,
@@ -68,6 +74,12 @@
             <if test="openid != null">
                 #{openid},
             </if>
+            <if test="unionid != null">
+                #{unionid},
+            </if>
+            <if test="headimg != null">
+                #{headimg},
+            </if>
             <if test="nickname != null">
                 #{nickname},
             </if>
@@ -91,6 +103,27 @@
             <if test="mobilephone != null">
                 mobilephone = #{mobilephone},
             </if>
+            <if test="headimg != null">
+                headimg = #{headimg},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="unionid != null">
+                unionid = #{unionid},
+            </if>
+            <if test="openid != null">
+                openid = #{openid},
+            </if>
+            <if test="wechatnum != null">
+                wechatnum = #{wechatnum},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
             <if test="companyname != null">
                 companyname = #{companyname},
             </if>
@@ -106,4 +139,7 @@
         </set>
         where id = #{id}
     </update>
+    <delete id="deleteUserById" parameterType="long">
+        DELETE FROM userinfo WHERE id = #{id}
+    </delete>
 </mapper>

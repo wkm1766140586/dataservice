@@ -19,4 +19,6 @@ public interface UserInfoService {
     int insertUserInfo(Map<String, Object> map);
 
     int updateUserInfo(Map<String, Object> map);
+
+    void deleteUserById(long id);
 }
