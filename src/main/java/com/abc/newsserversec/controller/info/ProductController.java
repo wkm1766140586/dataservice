@@ -415,6 +415,9 @@ public class ProductController {
 
         String num = request.getParameter("num");
         String keyword = request.getParameter("keyword");
+
+        String product_state = request.getParameter("product_state");
+        if(product_state == null) product_state = "";
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
         Calendar current = Calendar.getInstance();
@@ -427,6 +430,10 @@ public class ProductController {
         if(size != null) { from = from * Integer.valueOf(size); }
         else{ from = from * 10; }
 
+        String filter = "";//名片中选择公司有效的产品
+        if(product_state.equals("有效")) filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
+        else if(product_state.equals("无效")) filter = "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
+
         String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
@@ -434,7 +441,11 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("approval_date","end_date");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
-        esRequest = esRequest.replaceFirst("\"#filter\"","");
+        if(filter == ""){
+            esRequest = esRequest.replaceFirst("\"#filter\"","");
+        }else{
+            esRequest = esRequest.replaceFirst("\"#filter\"",filter);
+        }
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
@@ -460,7 +471,12 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
-            esCount = esCount.replaceFirst("\"#filter\"","");
+            if(filter == ""){
+                esCount = esCount.replaceFirst("\"#filter\"","");
+            }else{
+                esCount = esCount.replaceFirst("\"#filter\"",filter);
+            }
+
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);

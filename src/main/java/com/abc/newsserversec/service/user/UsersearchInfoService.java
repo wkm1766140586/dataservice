@@ -9,4 +9,6 @@ public interface UsersearchInfoService {
     //新增数据
     int insertUsersearchInfo(Map<String, Object> map);
 
+    int updateidById(Map<String, Object> map);
+
 }

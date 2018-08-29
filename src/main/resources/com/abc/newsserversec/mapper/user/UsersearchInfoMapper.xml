@@ -40,5 +40,7 @@
             </if>
         </trim>
     </insert>
-
+    <update id="updateidById" parameterType="map">
+        UPDATE usersearchinfo SET userid = #{val} WHERE userid=#{userid}
+    </update>
 </mapper>

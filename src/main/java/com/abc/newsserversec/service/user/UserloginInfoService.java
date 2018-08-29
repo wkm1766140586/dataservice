@@ -11,4 +11,5 @@ public interface UserloginInfoService {
     //新增数据
     int insertUserloginInfo(Map<String, Object> map);
 
+    int updateIdById(Map<String, Object> map);
 }

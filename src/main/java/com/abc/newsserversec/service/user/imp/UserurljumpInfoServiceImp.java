@@ -24,4 +24,9 @@ public class UserurljumpInfoServiceImp implements UserurljumpInfoService {
     public ArrayList<UserurljumpInfo> selectUserurljumpInfoById(long userid) {
         return userurljumpInfoMapper.selectUserurljumpInfoById(userid);
     }
+
+    @Override
+    public int updateIdById(Map<String, Object> map) {
+        return userurljumpInfoMapper.updateIdById(map);
+    }
 }

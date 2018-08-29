@@ -14,4 +14,6 @@ public interface UserurljumpInfoService {
 
     //根据用户id查询数据
     ArrayList<UserurljumpInfo> selectUserurljumpInfoById(long userid);
+
+    int updateIdById(Map<String, Object> map);
 }

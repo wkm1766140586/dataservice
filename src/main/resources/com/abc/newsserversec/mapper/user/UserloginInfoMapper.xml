@@ -40,5 +40,7 @@
             </if>
         </trim>
     </insert>
-
+<update id="updateIdById" parameterType="map">
+    UPDATE userlogininfo SET userid=#{val} WHERE userid=#{userid}
+</update>
 </mapper>

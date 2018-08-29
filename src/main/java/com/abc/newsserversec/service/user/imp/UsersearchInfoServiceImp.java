@@ -17,4 +17,9 @@ public class UsersearchInfoServiceImp implements UsersearchInfoService {
     public int insertUsersearchInfo(Map<String, Object> map) {
         return usersearchInfoMapper.insertUsersearchInfo(map);
     }
+
+    @Override
+    public int updateidById(Map<String, Object> map) {
+        return usersearchInfoMapper.updateidById(map);
+    }
 }

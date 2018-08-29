@@ -18,4 +18,9 @@ public class UserloginInfoServiceImp implements UserloginInfoService {
     public int insertUserloginInfo(Map<String, Object> map) {
         return userloginInfoMapper.insertUserloginInfo(map);
     }
+
+    @Override
+    public int updateIdById(Map<String, Object> map) {
+        return userloginInfoMapper.updateIdById(map);
+    }
 }

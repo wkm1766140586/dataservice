@@ -5,6 +5,9 @@ import com.abc.newsserversec.model.common.IpGeograAddress;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.service.user.UserInfoService;
 import com.abc.newsserversec.service.user.UserloginInfoService;
+import com.abc.newsserversec.service.user.UsersearchInfoService;
+import com.abc.newsserversec.service.user.UserurljumpInfoService;
+import com.abc.newsserversec.service.wechat.WxOperCardService;
 import com.google.gson.GsonBuilder;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,16 @@ public class UserInfoController {
     private UserInfoService userInfoService;
 
     @Autowired
+    private WxOperCardService wxOperCardService;
+
+    @Autowired
     private UserloginInfoService userloginInfoService;
+
+    @Autowired
+    private UsersearchInfoService usersearchInfoService;
+
+    @Autowired
+    private UserurljumpInfoService userurljumpInfoService;
 
     //@ModelAttribute("user") User user
     @InitBinder({"user"})
@@ -137,17 +149,17 @@ public class UserInfoController {
      * @return
      */
     @RequestMapping("/method/checkUserExist")
-    public String checkUserExist(HttpServletRequest request, HttpServletResponse response) {
+    public long checkUserExist(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String username = request.getParameter("username");
-        if(username == null){ return "fail"; }
+        if(username == null){ return 0; }
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("email",username);
         UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
         if(userInfo != null){
-            return "exist";
+            return userInfo.getId();
         }else{
-            return "not exist";
+            return 0;
         }
     }
 
@@ -186,6 +198,7 @@ public class UserInfoController {
             temp.put("userid",userInfo.getId());
             temp.put("username",userInfo.getUsername());
             temp.put("email",userInfo.getEmail());
+            temp.put("openid",userInfo.getOpenid());
             temp.put("nickname",userInfo.getNickname());
             return new GsonBuilder().create().toJson(temp);
         }else{
@@ -291,7 +304,6 @@ public class UserInfoController {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("id", Long.parseLong(userid));
         UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
-        System.out.println(new GsonBuilder().create().toJson(userInfo));
         if (userInfo != null){
             return new GsonBuilder().create().toJson(userInfo);
         }else{
@@ -347,6 +359,47 @@ public class UserInfoController {
     }
 
     /**
+     * 用于账户绑定微信时，更新信息。
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/updateInfo")
+    public String updateInfo(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String binduserid = request.getParameter("binduserid");
+        String wxuserid = request.getParameter("wxuserid");//需要修改
+        Map<String, Object> map = new HashMap<>();
+        map.put("id",binduserid);
+        UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("id", Integer.parseInt(wxuserid));
+        dataMap.put("email",userInfo.getEmail());
+        dataMap.put("username",userInfo.getUsername());
+        dataMap.put("password",userInfo.getPassword());
+        dataMap.put("logincount",userInfo.getLogincount());
+        userInfoService.updateUserInfo(dataMap);
+
+        userInfoService.deleteUserById(Long.parseLong(binduserid));
+
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("userid", binduserid);
+        map1.put("val",wxuserid);
+        usersearchInfoService.updateidById(map1);
+        userloginInfoService.updateIdById(map1);
+        userurljumpInfoService.updateIdById(map1);
+
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("userid",wxuserid);
+        temp.put("username",userInfo.getUsername());
+        temp.put("nickname",userInfo.getNickname());
+        temp.put("email",userInfo.getEmail());
+        return new GsonBuilder().create().toJson(temp);
+    }
+
+    /**
      * 微信方式：登录
      * @param request
      * @param response
@@ -396,6 +449,7 @@ public class UserInfoController {
                         temp.put("userid",userInfo1.getId());
                         temp.put("username",userInfo1.getUsername());
                         temp.put("nickname",userInfo1.getNickname());
+                        temp.put("email",userInfo1.getEmail());
                         return new GsonBuilder().create().toJson(temp);
                     }else {
                         return "fail";
@@ -403,7 +457,7 @@ public class UserInfoController {
                 }else{
                     return "fail";
                 }
-            }else{//老的微信用户
+            }else{//老的微信用户、先微信登录，未授权小程序
                 long userid = userInfoO.getId();
                 userInfoService.updateLoginCountById(userid);
                 updateUserInfo(nickname,sex,headimgurl,unionid,openid,userid);
@@ -412,20 +466,22 @@ public class UserInfoController {
                 temp.put("userid",userInfoO.getId());
                 temp.put("username",userInfoO.getUsername());
                 temp.put("nickname",userInfoO.getNickname());
+                temp.put("email",userInfoO.getEmail());
                 return new GsonBuilder().create().toJson(temp);
             }
         }else{
-            if(userInfoO == null){//仅是小程序用户
+            if(userInfoO == null){//仅是小程序用户，未微信登录过
                 long userid = userInfoU.getId();
-                //userInfoService.updateLoginCountById(userid);
+                userInfoService.updateLoginCountById(userid);
                 updateUserInfo(nickname,sex,headimgurl,unionid,openid,userid);
                 insertUserloginInfo(request,userid);
                 Map<String,Object> temp = new HashMap<>();
                 temp.put("userid",userInfoU.getId());
                 temp.put("username",userInfoU.getUsername());
                 temp.put("nickname",userInfoU.getNickname());
+                temp.put("email",userInfoU.getEmail());
                 return new GsonBuilder().create().toJson(temp);
-            }else{
+            }else{//
                 long useridO = userInfoO.getId();
                 long useridU = userInfoU.getId();
                 if(useridO == useridU){//既是小程序用户也是微信登录用户
@@ -436,16 +492,19 @@ public class UserInfoController {
                     temp.put("userid",userInfoU.getId());
                     temp.put("username",userInfoU.getUsername());
                     temp.put("nickname",userInfoU.getNickname());
+                    temp.put("email",userInfoU.getEmail());
                     return new GsonBuilder().create().toJson(temp);
                 }else{
                     userInfoService.updateLoginCountById(useridO);
-                    updateUserInfo(nickname,sex,headimgurl,unionid,openid,useridO);
+                    updateUserAllInfo(nickname,sex,headimgurl,unionid,openid,useridO,userInfoU);
                     insertUserloginInfo(request,useridO);
+                    updateCardRecord(useridU,useridO);
                     userInfoService.deleteUserById(useridU);
                     Map<String,Object> temp = new HashMap<>();
                     temp.put("userid",userInfoO.getId());
                     temp.put("username",userInfoO.getUsername());
                     temp.put("nickname",userInfoO.getNickname());
+                    temp.put("email",userInfoO.getEmail());
                     return new GsonBuilder().create().toJson(temp);
                 }
             }
@@ -526,5 +585,36 @@ public class UserInfoController {
         dataMap.put("sex",sex);
         dataMap.put("id",userid);
         userInfoService.updateUserInfo(dataMap);
+    }
+
+    private void updateUserAllInfo(String nickname,String sex,String headimgurl,String unionid,String openid,long userid,UserInfo userInfo){
+        Map<String,Object> dataMap = new HashMap<>();
+        dataMap.put("unionid",unionid);
+        dataMap.put("openid",openid);
+        dataMap.put("nickname",nickname);
+        dataMap.put("headimg",headimgurl);
+        dataMap.put("sex",sex);
+        dataMap.put("email",userInfo.getEmail());
+        dataMap.put("mobilephone",userInfo.getMobilephone());
+        dataMap.put("realname",userInfo.getRealname());
+        dataMap.put("wechatnum",userInfo.getWechatnum());
+        dataMap.put("companyname",userInfo.getCompanyname());
+        dataMap.put("companyaddress",userInfo.getCompanyaddress());
+        dataMap.put("department",userInfo.getDepartment());
+        dataMap.put("job",userInfo.getJob());
+        dataMap.put("id",userid);
+        userInfoService.updateUserInfo(dataMap);
+    }
+
+    private void updateCardRecord(long oldid,long newid){
+        Map<String ,Object> map = new HashMap<String,Object>();
+        map.put("viewid",oldid);
+        map.put("val",newid);
+
+        Map<String ,Object> map1 = new HashMap<String,Object>();
+        map1.put("viewedid",oldid);
+        map1.put("val",newid);
+        wxOperCardService.updateAllID(map);
+        wxOperCardService.updateAllID(map1);
     }
 }

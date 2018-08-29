@@ -9,4 +9,6 @@ import java.util.Map;
 public interface UserloginInfoMapper {
 
     int insertUserloginInfo(Map<String, Object> map);
+
+    int updateIdById(Map<String, Object> map);
 }

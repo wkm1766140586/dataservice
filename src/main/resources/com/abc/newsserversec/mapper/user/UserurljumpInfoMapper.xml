@@ -44,5 +44,7 @@
     <select id="selectUserurljumpInfoById" parameterType="java.lang.Long" resultType="com.abc.newsserversec.model.user.UserurljumpInfo">
         select clickname,createdate from userurljumpinfo where userid = #{userid} order by createdate desc limit 0,5
     </select>
-
+<update id="updateIdById" parameterType="map">
+    UPDATE userurljumpinfo SET userid=#{val} WHERE userid=#{userid}
+</update>
 </mapper>

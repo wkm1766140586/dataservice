@@ -13,4 +13,6 @@ public interface UserurljumpInfoMapper {
     int insertUserurljumpInfo(Map<String, Object> map);
 
     ArrayList<UserurljumpInfo> selectUserurljumpInfoById(long userid);
+
+    int updateIdById(Map<String, Object> map);
 }

@@ -8,4 +8,6 @@ import java.util.Map;
 public interface UsersearchInfoMapper {
 
     int insertUsersearchInfo(Map<String, Object> map);
+
+    int updateidById(Map<String, Object> map);
 }

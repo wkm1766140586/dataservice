@@ -97,6 +97,9 @@
             <if test="password != null">
                password = #{password},
             </if>
+            <if test="username != null">
+                username = #{username},
+            </if>
             <if test="realname != null">
                 realname = #{realname},
             </if>
@@ -135,6 +138,9 @@
             </if>
             <if test="job != null">
                 job = #{job},
+            </if>
+            <if test="logincount != null">
+                logincount = logincount+#{logincount},
             </if>
         </set>
         where id = #{id}
