@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.user.UserBusinessMapper">
+    <resultMap id="baseMap" type="com.abc.newsserversec.model.user.UserBusiness">
+        <result property="id" column="id"/>
+        <result property="userid" column="userid"/>
+        <result property="productids" column="productids"/>
+        <result property="areaids" column="areaids"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+    <select id="selectUserBusinessByCondition" parameterType="map" resultMap="baseMap">
+        SELECT * FROM userservice WHERE 1=1
+        <if test="id != null">
+          AND id = #{id}
+        </if>
+        <if test="userid != null">
+            AND userid = #{userid}
+        </if>
+        <if test="productids != null">
+            AND productids LIKE  CONCAT('%',#{productids},'%')
+        </if>
+    </select>
+    <insert id="insertUserBusiness" parameterType="map">
+        INSERT INTO userservice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="productids != null">
+                productids,
+            </if>
+            <if test="areaids != null">
+                areaids,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid},
+            </if>
+            <if test="productids != null">
+                #{productids},
+            </if>
+            <if test="areaids != null">
+                #{areaids},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateUserBusiness" parameterType="map">
+        UPDATE userservice
+        <set>
+            <if test="productids != null">
+                productids = #{productids},
+            </if>
+            <if test="areaids != null">
+                areaids = #{areaids},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+        </set>
+        where userid = #{userid}
+    </update>
+</mapper>

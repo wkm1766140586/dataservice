@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.abc.newsserversec.mapper.wechat.WxOperCardMapper">
+    <resultMap id="baseMap" type="com.abc.newsserversec.model.wechat.WxOperCard">
+        <result column="viewid" property="viewid" />
+        <result column="viewedid" property="viewedid" />
+        <result column="opercount" property="opercount" />
+        <result column="createtime" property="createtime" />
+    </resultMap>
+    <select id="selectOperCardsById" parameterType="map" resultMap="baseMap">
+        SELECT * FROM zhixie_viewcard WHERE 1=1
+        <if test="viewid != null">
+            AND viewid = #{viewid}
+        </if>
+        <if test="viewedid != null">
+           AND viewedid = #{viewedid}
+        </if>
+        <if test="opertype != null">
+            AND opertype = #{opertype}
+        </if>
+        ORDER BY createtime DESC
+    </select>
+    <select id="selectCountById" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM zhixie_viewcard WHERE 1=1
+        <if test="viewid != null">
+            AND viewid = #{viewid}
+        </if>
+        <if test="viewedid != null">
+            AND viewedid = #{viewedid}
+        </if>
+        <if test="opertype != null">
+            AND opertype = #{opertype}
+        </if>
+    </select>
+    <select id="selectDistinctCountById">
+        SELECT
+        <if test="viewid != null">
+            COUNT(DISTINCT(viewedid))
+        </if>
+        <if test="viewedid != null">
+            COUNT(DISTINCT(viewid))
+        </if>
+        FROM zhixie_viewcard WHERE
+        <if test="viewid != null">
+            viewid = #{viewid}
+        </if>
+        <if test="viewedid != null">
+            viewedid = #{viewedid}
+        </if>
+        <if test="opertype != null">
+            AND opertype = #{opertype}
+        </if>
+    </select>
+    <insert id="insertWxOperCardByMap" parameterType="map">
+        INSERT INTO zhixie_viewcard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="viewid != null">
+                viewid,
+            </if>
+            <if test="viewedid != null">
+                viewedid,
+            </if>
+            <if test="opertype != null">
+                opertype,
+            </if>
+            <if test="opercount != null">
+                opercount,
+            </if>
+            <if test="createtime != null">
+              createtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="viewid != null">
+                #{viewid},
+            </if>
+            <if test="viewedid != null">
+                #{viewedid},
+            </if>
+            <if test="opertype != null">
+                #{opertype},
+            </if>
+            <if test="opercount != null">
+                #{opercount},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteWxOperCardByMap" parameterType="map">
+        DELETE FROM zhixie_viewcard WHERE
+        viewid=#{viewid} AND viewedid=#{viewedid} AND opertype=#{opertype}
+    </delete>
+    <update id="updateAllID" parameterType="map">
+        UPDATE zhixie_viewcard SET
+        <if test="viewid != null">
+            viewid=#{val}
+        </if>
+        <if test="viewedid != null">
+            viewedid=#{val}
+        </if>
+        WHERE
+        <if test="viewid != null">
+            viewid=#{viewid}
+        </if>
+        <if test="viewedid != null">
+            viewedid=#{viewedid}
+        </if>
+    </update>
+    <update id="updateWxOperCardByMap" parameterType="map">
+        UPDATE zhixie_viewcard SET opercount=opercount+1,createtime=#{createtime}
+        WHERE viewid=#{viewid} AND viewedid=#{viewedid} AND opertype=#{opertype}
+    </update>
+</mapper>
