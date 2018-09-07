@@ -484,6 +484,103 @@ public class ProductController {
         return new GsonBuilder().create().toJson(productSet);
     }
 
+    @RequestMapping("/method/queryMLByProduct_name")
+    public String queryMLByProduct_name(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String num = request.getParameter("num");
+        String keyword = request.getParameter("keyword");
+
+        String product_state = request.getParameter("product_state");
+        if(product_state == null) product_state = "";
+        if(num == null || keyword == null) return "fail";
+        if(num.equals("") || keyword.equals("")) return "fail";
+        Calendar current = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date current_date = current.getTime();
+
+        String size = request.getParameter("size");
+        String esRequest = StaticVariable.esRequest;
+        int from = Integer.valueOf(num);
+        if(size != null) { from = from * Integer.valueOf(size); }
+        else{ from = from * 10; }
+
+        String filter = "";//名片中选择公司有效的产品
+        if(product_state.equals("有效")) filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
+        else if(product_state.equals("无效")) filter = "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
+
+        String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
+        esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
+        if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
+        else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
+        esRequest = esRequest.replaceFirst("approval_date","end_date");
+        esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
+        esRequest = esRequest.replaceFirst("\"#excludes\"","");
+        if(filter == ""){
+            esRequest = esRequest.replaceFirst("\"#filter\"","");
+        }else{
+            esRequest = esRequest.replaceFirst("\"#filter\"",filter);
+        }
+        String postbody = esRequest.replaceFirst("#query",condition);
+        postbody = postbody.replaceFirst("\"#aggs\"","{}");
+        System.out.println("postbody="+postbody);
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        SourceSet productSet = new SourceSet();
+        for(Hit hit:retObj.hits.hits){
+            Map<String, Object> source = (Map<String, Object>) hit._source;
+            try {
+                Date end_date = df.parse(String.valueOf(source.get("end_date")));
+                if (current_date.getTime() > end_date.getTime()){
+                    source.put("product_state", "无效");
+                }else{
+                    source.put("product_state", "有效");
+                }
+                List<Object> mlList = queryMLByProduct_name(source.get("product_name_ch").toString());
+                source.put("mlList",mlList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            productSet.add(source);
+        }
+        if(from == 0) {
+            //计数
+            String esCount = StaticVariable.esCount;
+            esCount = esCount.replaceFirst("#query", condition);
+            if(filter == ""){
+                esCount = esCount.replaceFirst("\"#filter\"","");
+            }else{
+                esCount = esCount.replaceFirst("\"#filter\"",filter);
+            }
+
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            productSet.setMatchCount(esCt.count);
+        }
+        return new GsonBuilder().create().toJson(productSet);
+    }
+
+    /**
+     * 通过产品名称查看分类目录的六位编号
+     * @return
+     * @throws Exception
+     */
+    public List<Object> queryMLByProduct_name(String name) throws  Exception{
+        String postbody = "{\"size\":100,\"sort\":[{\"flow_number\":{\"order\":\"asc\"}}],\"query\":{\"bool\":{\"must\":[{\"query_string\":{" +
+                "\"analyze_wildcard\":true,\"query\":\"product_example:\\\""+name+"\\\"\",\"phrase_slop\":0}}]}},\"_source\":{\"include\":[\"directory_number\"," +
+                "\"first_product_number\",\"second_product_number\"]}}";
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/catalogs/catalog/_search", postbody);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        List<Object> ll = new ArrayList<>();
+        for(Hit hit:retObj.hits.hits){
+            Map<String, Object> source = (Map<String, Object>) hit._source;
+            ll.add(source);
+        }
+
+        return ll;
+    }
+
     /**
      * 根据产品名称查找同名产品信息
      * @param

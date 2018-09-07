@@ -45,6 +45,9 @@ public class UserInfo {
     //登录次数
     private long logincount;
 
+    /*当前用户信息的状态*/
+    private int status;
+
     public long getId() { return id; }
 
     public void setId(long id) { this.id = id; }
@@ -133,4 +136,11 @@ public class UserInfo {
 
     public void setLogincount(long logincount) { this.logincount = logincount; }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
