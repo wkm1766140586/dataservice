@@ -13,5 +13,6 @@ import java.util.Map;
 public interface UserBusinessMapper {
     int insertUserBusiness(Map<String, Object> map);
     int updateUserBusiness(Map<String, Object> map);
+    int selectCountByUserId(Map<String, Object> map);
     ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map);
 }

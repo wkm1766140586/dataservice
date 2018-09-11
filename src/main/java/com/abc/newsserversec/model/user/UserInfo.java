@@ -35,9 +35,9 @@ public class UserInfo {
     //公司地址
     private String companyaddress;
     //部门
-    private int department;
+    private String department;
     //职位
-    private int job;
+    private String job;
     //创建日期
     private String createdate;
     //vip等级
@@ -116,13 +116,13 @@ public class UserInfo {
 
     public void setCompanyaddress(String companyaddress) { this.companyaddress = companyaddress; }
 
-    public int getDepartment() { return department; }
+    public String getDepartment() { return department; }
 
-    public void setDepartment(int department) { this.department = department; }
+    public void setDepartment(String department) { this.department = department; }
 
-    public int getJob() {  return job; }
+    public String getJob() {  return job; }
 
-    public void setJob(int job) { this.job = job; }
+    public void setJob(String job) { this.job = job; }
 
     public String getCreatedate() { return createdate; }
 

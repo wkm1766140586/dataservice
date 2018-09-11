@@ -39,10 +39,12 @@ public class UserBusinessController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String userid = request.getParameter("userid");
         String productids = request.getParameter("productids");
+        String companyname = request.getParameter("companyname");
         if(userid == null || productids == null){return -1;}
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("userid",userid);
         ArrayList<UserBusiness> userBusiness = userBusinessService.selectUserBusinessByCondition(dataMap);
+        dataMap.put("companyname",companyname);
         dataMap.put("productids",productids);
         dataMap.put("createtime",queryCurrentTime());
         if(userBusiness.size() == 0){
@@ -51,6 +53,13 @@ public class UserBusinessController {
             return userBusinessService.updateUserBusiness(dataMap);
         }
     }
+
+    /**
+     * 更新负责的区域
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/method/updateBusiness")
     public int updateInfo(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -62,7 +71,22 @@ public class UserBusinessController {
         dataMap.put("areaids",areaids);
         return userBusinessService.updateUserBusiness(dataMap);
     }
-
+    @RequestMapping("method/selectInfoById")
+    public String selectInfoById(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("userid",userid);
+        ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
+        return new GsonBuilder().create().toJson(userBusinesses);
+    }
+    /**
+     * 查找负责的产品
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/method/selectInfo")
     public String selectInfo(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -74,7 +98,6 @@ public class UserBusinessController {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("userid",userid);
         ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
-       // return new GsonBuilder().create().toJson(userBusinesses);
         if(userBusinesses.size() > 0){
             String productids = userBusinesses.get(0).getProductids();
             String[] productidArr = productids.split(",");

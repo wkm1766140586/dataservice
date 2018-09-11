@@ -5,6 +5,7 @@ package com.abc.newsserversec.model.user;
 public class UserBusiness {
     private int id;
     private int userid;
+    private String companyname;
     private String productids;
     private String areaids;
     private String createtime;
@@ -25,6 +26,12 @@ public class UserBusiness {
         this.userid = userid;
     }
 
+    public String getCompanyname() {
+        return companyname;
+    }
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
     public String getProductids() {
         return productids;
     }
