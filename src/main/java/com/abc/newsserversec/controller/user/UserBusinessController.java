@@ -136,8 +136,11 @@ public class UserBusinessController {
         ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
         if(userBusinesses.size() > 0){
             String areaids = userBusinesses.get(0).getAreaids();
+            if(areaids == null || "".equals(areaids)){
+                return "fail";
+            }
+            System.out.println("地区："+areaids);
             String[] areaidArr = areaids.split(",");
-
             for(int i = 0;i < areaidArr.length;i++){
                 arr.add(wxcardInfoService.selectRegionById(Integer.parseInt(areaidArr[i])));
             }

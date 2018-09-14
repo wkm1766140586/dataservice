@@ -5,6 +5,8 @@ public class WxspUserInfo {
     private long id;
     //openid
     private String openid;
+    //unionid标识
+    private String unionid;
     //昵称
     private String nickname;
     //性别
@@ -26,6 +28,12 @@ public class WxspUserInfo {
         this.openid = openid;
     }
 
+    public String getUnionid() {
+        return unionid;
+    }
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
     public String getNickname() {
         return nickname;
     }

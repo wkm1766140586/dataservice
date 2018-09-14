@@ -13,6 +13,9 @@
             <if test="openid != null">
                 openid,
             </if>
+            <if test="unionid != null">
+                unionid,
+            </if>
             <if test="nickname != null">
                 nickname,
             </if>
@@ -26,6 +29,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="openid != null">
                 #{openid},
+            </if>
+            <if test="unionid != null">
+                #{unionid},
             </if>
             <if test="nickname != null">
                 #{nickname},
@@ -76,5 +82,7 @@
             </if>
         </trim>
     </insert>
-
+    <update id="updateWxspUserByMap" parameterType="map">
+        UPDATE wxsp_userinfo SET unionid = #{unionid} WHERE openid=#{openid}
+    </update>
 </mapper>

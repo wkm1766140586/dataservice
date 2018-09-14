@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 企业数据查询控制器
@@ -98,6 +97,53 @@ public class CompanyController {
         ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
         dataMap.put("datas",companyInfos);
 
+        return new GsonBuilder().create().toJson(dataMap);
+    }
+
+    /**
+     * 查询公司+有效产品的数量
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/searchUsedPoduct")
+    public String searchUsedPoduct(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String keyword = request.getParameter("keyword");
+        String num_string = request.getParameter("num");
+        if(keyword == null || num_string == null) return "fail";
+        if(keyword.equals("") || num_string.equals("")) return "fail";
+
+        Map<String,Object> dataMap = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        int num = Integer.valueOf(num_string)*10;
+        keyword = "%"+keyword+"%";
+        map.put("company_name",keyword);
+        map.put("num",num);
+        if(num == 0) {
+            int count = companyInfoService.selectCompanyInfoCountByCondition(map);
+            dataMap.put("matchCount",count);
+        }
+        ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
+
+        for(CompanyInfo companyInfo : companyInfos){
+            Calendar current = Calendar.getInstance();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date current_date = current.getTime();
+
+            String esCount = StaticVariable.esCount;
+            String condition = "company_name_agg:\\\\\""+companyInfo.getCompany_name()+"\\\\\"";
+
+            String filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
+            esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"",filter);
+
+            String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            companyInfo.setProduct_count(String.valueOf(esCt.count));
+        }
+        dataMap.put("datas",companyInfos);
+        System.out.println();
         return new GsonBuilder().create().toJson(dataMap);
     }
 

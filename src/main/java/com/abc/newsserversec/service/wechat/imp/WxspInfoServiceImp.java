@@ -8,6 +8,7 @@ import com.abc.newsserversec.service.wechat.WxspInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Service
@@ -17,7 +18,7 @@ public class WxspInfoServiceImp implements WxspInfoService {
     private WxspInfoMapper wxspInfoMapper;
 
     @Override
-    public WxspUserInfo selectWxspUserByOpenid(String openid) {
+    public ArrayList<WxspUserInfo> selectWxspUserByOpenid(String openid) {
         return wxspInfoMapper.selectWxspUserByOpenid(openid);
     }
 
@@ -29,5 +30,10 @@ public class WxspInfoServiceImp implements WxspInfoService {
     @Override
     public int insertWxspUserSearchByMap(Map<String, Object> map) {
         return wxspInfoMapper.insertWxspUserSearchByMap(map);
+    }
+
+    @Override
+    public int updateWxspUserByMap(Map<String, String> map) {
+        return wxspInfoMapper.updateWxspUserByMap(map);
     }
 }

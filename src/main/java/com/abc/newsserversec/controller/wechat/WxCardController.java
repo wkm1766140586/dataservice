@@ -1,15 +1,18 @@
 package com.abc.newsserversec.controller.wechat;
 
+import com.abc.newsserversec.model.user.UserBusiness;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.model.wechat.WxOperCard;
 import com.abc.newsserversec.model.wechat.WxaccessToken;
 import com.abc.newsserversec.model.wechat.WxspUserInfo;
+import com.abc.newsserversec.service.user.UserBusinessService;
 import com.abc.newsserversec.service.user.UserInfoService;
 import com.abc.newsserversec.service.wechat.WxOperCardService;
 import com.abc.newsserversec.service.wechat.WxcardInfoService;
 import com.google.gson.GsonBuilder;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +42,9 @@ public class WxCardController {
 
     @Autowired
     private WxOperCardService wxOperCardService;
+
+    @Autowired
+    private UserBusinessService userBusinessService;
 
     /**
      * 登录
@@ -168,9 +174,11 @@ public class WxCardController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String userid = request.getParameter("userid");
         String opertype = request.getParameter("opertype");//操作类型：点赞、查看、转发
+        String num = request.getParameter("num");
+        String size = request.getParameter("size");
         if(userid == null || userid == ""){return "fail";}
         if(opertype == null || opertype == ""){return "fail";}
-        return queryUserByviewId(Long.parseLong(userid),"viewid",Integer.parseInt(opertype));
+        return queryUserByviewId(Long.parseLong(userid),"viewid",Integer.parseInt(opertype),num,size);
     }
 
     /**
@@ -184,9 +192,11 @@ public class WxCardController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String userid = request.getParameter("userid");
         String opertype = request.getParameter("opertype");//操作类型：点赞、查看、转发
+        String num = request.getParameter("num");
+        String size = request.getParameter("size");
         if(userid == null || userid == ""){return "fail";}
         if(opertype == null || opertype == ""){return "fail";}
-        return queryUserByviewId(Long.parseLong(userid),"viewedid",Integer.parseInt(opertype));
+        return queryUserByviewId(Long.parseLong(userid),"viewedid",Integer.parseInt(opertype),num,size);
     }
 
     /**
@@ -194,9 +204,11 @@ public class WxCardController {
      * @param userid  用户的ID
      * @param viewType  viewedid：“操作者”  viewid：“被操作者”
      * @param opertype  0.代表三者 1.点赞 2.查看 3.转发
+     * @param num 第几页
+     * @param size 每页几条
      * @return
      */
-    private String queryUserByviewId(long userid,String viewType,int opertype){
+    private String queryUserByviewId(long userid,String viewType,int opertype,String num,String size){
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put(viewType,userid);
         if(opertype == 0){//返回三个的数量
@@ -214,6 +226,8 @@ public class WxCardController {
             return new GsonBuilder().create().toJson(map);
         }
         dataMap.put("opertype",opertype);
+        dataMap.put("num",Integer.parseInt(num)*Integer.parseInt(size));
+        dataMap.put("size",Integer.parseInt(size));
         ArrayList<WxOperCard> viewCardArray = wxOperCardService.selectOperCardsById(dataMap);
         for(int i = 0;i < viewCardArray.size();i++){
             Map<String, Object> map = new HashMap<>();
@@ -226,7 +240,15 @@ public class WxCardController {
             UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
             viewCardArray.get(i).setUserInfo(userInfo);
         }
-        return new GsonBuilder().create().toJson(viewCardArray);
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("data",viewCardArray);
+        System.out.println("数量num："+num);
+        if(Integer.parseInt(num) == 0){
+            map1.put("matchCount",wxOperCardService.selectCountById(dataMap));
+            System.out.println("数量："+wxOperCardService.selectCountById(dataMap));
+        }
+
+        return new GsonBuilder().create().toJson(map1);
     }
 
     /*判断是否点赞*/
@@ -297,6 +319,33 @@ public class WxCardController {
         dataMap.put("viewedid",viewedid);
         dataMap.put("opertype",opertype);
         return wxOperCardService.deleteWxOperCardByMap(dataMap);
+    }
+
+    /**
+     * 根据产品ID查询出产品的负责人
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/selectUsersByProductId")
+    public String getUseByProductId(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String productid = request.getParameter("productid");
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("productids",productid);
+        ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
+        ArrayList<UserInfo> users = new ArrayList<>();
+        if(userBusinesses.size() > 0){
+            for (UserBusiness userBusiness : userBusinesses){
+                Map<String, Object> map = new HashMap<>();
+                map.put("id",userBusiness.getUserid());
+                UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
+                if(userInfo != null){
+                    users.add(userInfo);
+                }
+            }
+        }
+        return new GsonBuilder().create().toJson(users);
     }
 
     @RequestMapping("/method/selectAllRegions")
