@@ -162,6 +162,35 @@ public class WxSmallprogramController {
         }
     }
 
+    @RequestMapping("/method/insertwxUserInfo")
+    public String queryUserInfo(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String unionid = request.getParameter("unionid");
+        String headimg = request.getParameter("headimg");
+        String nickname = request.getParameter("nickname");
+        String sex = request.getParameter("sex");
+
+        if(unionid == null){return "fail";}
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("unionid", unionid);
+        UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
+        if (userInfo != null){
+            return new GsonBuilder().create().toJson(userInfo);
+        }else{
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = df.format(new Date());
+            dataMap.put("headimg",headimg);
+            dataMap.put("nickname",nickname);
+            dataMap.put("sex",sex);
+            dataMap.put("createdate",date);
+            userInfoService.insertUserInfo(dataMap);
+            Map<String, Object> map = new HashMap<>();
+            map.put("unionid", unionid);
+            UserInfo user = userInfoService.selectUserInfoByCondition(map);
+            return new GsonBuilder().create().toJson(user);
+        }
+    }
+
 
 
     /*
