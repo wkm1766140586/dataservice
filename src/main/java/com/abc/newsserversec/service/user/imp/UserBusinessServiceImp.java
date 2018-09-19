@@ -28,4 +28,9 @@ public class UserBusinessServiceImp implements UserBusinessService {
     public ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map) {
         return userBusinessMapper.selectUserBusinessByCondition(map);
     }
+
+    @Override
+    public int updateidById(Map<String, Object> map) {
+        return userBusinessMapper.updateidById(map);
+    }
 }

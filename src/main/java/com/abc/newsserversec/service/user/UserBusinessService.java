@@ -9,4 +9,5 @@ public interface UserBusinessService {
     int insertUserBusiness(Map<String, Object> map);
     int updateUserBusiness(Map<String, Object> map);
     ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map);
+    int updateidById(Map<String, Object> map);
 }

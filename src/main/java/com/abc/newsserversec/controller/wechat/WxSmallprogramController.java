@@ -169,13 +169,21 @@ public class WxSmallprogramController {
         String headimg = request.getParameter("headimg");
         String nickname = request.getParameter("nickname");
         String sex = request.getParameter("sex");
-
+        if(sex.equals("0")) sex = "未知";
+        else if(sex.equals("1")) sex = "男";
+        else sex = "女";
         if(unionid == null){return "fail";}
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("unionid", unionid);
         UserInfo userInfo = userInfoService.selectUserInfoByCondition(dataMap);
         if (userInfo != null){
-            return new GsonBuilder().create().toJson(userInfo);
+            Map<String,Object> map = new HashMap<>();
+            map.put("nickname",nickname);
+            map.put("sex",sex);
+            map.put("headimg",headimg);
+            map.put("id",userInfo.getId());
+            userInfoService.updateUserInfo(map);
+            return new GsonBuilder().create().toJson(userInfoService.selectUserInfoByCondition(dataMap));
         }else{
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = df.format(new Date());

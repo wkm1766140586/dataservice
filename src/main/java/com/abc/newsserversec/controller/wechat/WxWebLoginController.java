@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +28,26 @@ import java.util.Map;
 @RestController
 public class WxWebLoginController {
 
+    public static String APPID = "wx188b08f403793197";
+    public static String APPSECRET = "81ae587e89025ec5c7d5f89a1d6deb96";
+    public static String LOGIN_TO_URL = "http://www.yixiecha.cn";
+    public static String BIND_USER_URL = "http://www.yixiecha.cn/usercenter.html";
+    @RequestMapping("/method/wxopenCode")
+    public static String wxopenCode(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String url = "https://open.weixin.qq.com/connect/qrconnect?appid="+APPID+"&redirect_uri="+ URLEncoder.encode(LOGIN_TO_URL)+"&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect";
+        return url;
+    }
+
+    @RequestMapping("/method/wxbindopenCode")
+    public static String wxbindopenCode(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        BASE64Encoder base64Encoder = new BASE64Encoder();
+        String url = "https://open.weixin.qq.com/connect/qrconnect?appid="+APPID+"&redirect_uri="+ URLEncoder.encode(BIND_USER_URL)+"&response_type=code&scope=snsapi_login&state="+base64Encoder.encode(userid.getBytes())+"#wechat_redirect";
+        return url;
+    }
+
     @RequestMapping("/method/wxtoken")
     public static String wxtoken(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -31,10 +55,8 @@ public class WxWebLoginController {
         BufferedReader read=null;//读取访问结果
         WxUserInfo wxUserInfo = null;
 
-        String appid = "wx188b08f403793197";
-        String secret = "81ae587e89025ec5c7d5f89a1d6deb96";
         String code = request.getParameter("code");
-        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid+"&secret="+secret+"&code="+code+"&grant_type=authorization_code";
+        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+APPID+"&secret="+APPSECRET+"&code="+code+"&grant_type=authorization_code";
 
         try {
             //创建url

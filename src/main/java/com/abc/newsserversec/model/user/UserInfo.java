@@ -16,8 +16,19 @@ public class UserInfo {
     private String password;
     //openid
     private String openid;
+    //unionid
+    private String unionid;
     //昵称
     private String nickname;
+
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
     //手机号
     private String mobilephone;
     //真实姓名

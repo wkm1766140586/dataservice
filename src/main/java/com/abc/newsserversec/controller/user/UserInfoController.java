@@ -3,10 +3,7 @@ package com.abc.newsserversec.controller.user;
 import com.abc.newsserversec.common.CusAccessObjectUtil;
 import com.abc.newsserversec.model.common.IpGeograAddress;
 import com.abc.newsserversec.model.user.UserInfo;
-import com.abc.newsserversec.service.user.UserInfoService;
-import com.abc.newsserversec.service.user.UserloginInfoService;
-import com.abc.newsserversec.service.user.UsersearchInfoService;
-import com.abc.newsserversec.service.user.UserurljumpInfoService;
+import com.abc.newsserversec.service.user.*;
 import com.abc.newsserversec.service.wechat.WxOperCardService;
 import com.google.gson.GsonBuilder;
 import net.sf.json.JSONObject;
@@ -15,6 +12,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +41,9 @@ public class UserInfoController {
 
     @Autowired
     private UserurljumpInfoService userurljumpInfoService;
+
+    @Autowired
+    private UserBusinessService userBusinessService;
 
     //@ModelAttribute("user") User user
     @InitBinder({"user"})
@@ -359,7 +362,7 @@ public class UserInfoController {
     }
 
     /**
-     * 用于账户绑定微信时，更新信息。
+     * 用于账户绑定微信时，更新信息。删除账号信息
      * @param request
      * @param response
      * @return
@@ -509,45 +512,77 @@ public class UserInfoController {
                 }
             }
         }
-        /*if(userInfo == null){
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = df.format(new Date());
-            dataMap.put("openid",openid);
-            dataMap.put("nickname",nickname);
-            dataMap.put("headimg",headimgurl);
-            dataMap.put("sex",sex);
-            dataMap.put("createdate",date);
-            int count = userInfoService.insertUserInfo(dataMap);
-            if(count == 1){
-                Map<String, Object> map = new HashMap<>();
-                map.put("unionid",unionid);
-                UserInfo userInfo1 = userInfoService.selectUserInfoByCondition(map);
-                if(userInfo1 != null){
-                    long userid = userInfo1.getId();
-                    insertUserloginInfo(request, userid);
+    }
 
-                    Map<String,Object> temp = new HashMap<>();
-                    temp.put("userid",userInfo1.getId());
-                    temp.put("username",userInfo1.getUsername());
-                    temp.put("nickname",userInfo1.getNickname());
-                    return new GsonBuilder().create().toJson(temp);
-                }else {
-                    return "fail";
-                }
-            }else{
-                return "fail";
-            }
-        }else{
-            long userid = userInfo.getId();
-            userInfoService.updateLoginCountById(userid);
-            updateUserInfo(nickname,sex,headimgurl,unionid,userid);
-            insertUserloginInfo(request,userid);
-            Map<String,Object> temp = new HashMap<>();
-            temp.put("userid",userInfo.getId());
-            temp.put("username",userInfo.getUsername());
-            temp.put("nickname",userInfo.getNickname());
-            return new GsonBuilder().create().toJson(temp);
-        }*/
+    /**
+     * 没有微信登录过医械查时，账号绑定微信，信息的整合
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/wxBindUser")
+    public int updateWXUser(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String openid = request.getParameter("openid");
+        String unionid = request.getParameter("unionid");
+        String nickname = request.getParameter("nickname");
+        String sex = request.getParameter("sex");
+        String headimgurl = request.getParameter("headimgurl");
+        String state = request.getParameter("state");
+        BASE64Decoder decoder = new BASE64Decoder();
+        Map<String,Object> dataMap = new HashMap<>();
+        dataMap.put("unionid",unionid);
+        dataMap.put("openid",openid);
+        dataMap.put("nickname",nickname);
+        dataMap.put("headimg",headimgurl);
+        dataMap.put("sex",sex);
+        dataMap.put("id",new String(decoder.decodeBuffer(state)));
+        return userInfoService.updateUserInfo(dataMap);
+    }
+
+    /**
+     * 账号绑定微信的信息整合
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/wxBindUserInfo")
+    public String updateWXUserInfo(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String wxid = request.getParameter("wxid");//微信ID
+        String userid = request.getParameter("state");//用户账号ID
+        String openid = request.getParameter("openid");
+        if(wxid == null || userid == null){return "failed";}
+        BASE64Decoder decoder = new BASE64Decoder();
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", Long.parseLong(wxid));
+        UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
+        Map<String,Object> dataMap = new HashMap<>();
+        dataMap.put("unionid",userInfo.getUnionid());
+        dataMap.put("openid",openid);
+        dataMap.put("nickname",userInfo.getNickname());
+        dataMap.put("headimg",userInfo.getHeadimg());
+        dataMap.put("sex",userInfo.getSex());
+        dataMap.put("mobilephone",userInfo.getMobilephone());
+        dataMap.put("realname",userInfo.getRealname());
+        dataMap.put("wechatnum",userInfo.getWechatnum());
+        dataMap.put("companyname",userInfo.getCompanyname());
+        dataMap.put("companyaddress",userInfo.getCompanyaddress());
+        dataMap.put("department",userInfo.getDepartment());
+        dataMap.put("logincount",userInfo.getLogincount());
+        dataMap.put("job",userInfo.getJob());
+        System.out.println(Long.parseLong(new String(decoder.decodeBuffer(userid))));
+        dataMap.put("id",Long.parseLong(new String(decoder.decodeBuffer(userid))));
+        userInfoService.updateUserInfo(dataMap);
+        userInfoService.deleteUserById(Long.parseLong(wxid));
+        Map<String,Object> map1 = new HashMap<>();
+        map1.put("val",new String(decoder.decodeBuffer(userid)));
+        map1.put("userid",wxid);
+        userBusinessService.updateidById(map1);
+        updateCardRecord(Long.parseLong(wxid),Long.parseLong(new String(decoder.decodeBuffer(userid))));
+        return "";
     }
 
     private int insertUserloginInfo(HttpServletRequest request,long userid){

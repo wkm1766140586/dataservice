@@ -76,4 +76,7 @@
         </set>
         where userid = #{userid}
     </update>
+    <update id="updateidById" parameterType="map">
+        UPDATE userservice SET userid = #{val} WHERE userid=#{userid}
+    </update>
 </mapper>
