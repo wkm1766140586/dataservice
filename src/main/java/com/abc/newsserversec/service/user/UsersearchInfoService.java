@@ -1,6 +1,7 @@
 package com.abc.newsserversec.service.user;
 
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface UsersearchInfoService {
@@ -10,5 +11,8 @@ public interface UsersearchInfoService {
     int insertUsersearchInfo(Map<String, Object> map);
 
     int updateidById(Map<String, Object> map);
+
+    //根据条件获得热搜词
+    ArrayList<String> selectUsersearchWordByCondition(Map<String,Object> map);
 
 }

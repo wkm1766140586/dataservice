@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,4 +55,21 @@ public class UsersearchInfoController {
 
     }
 
+    /**
+     * 根据条件获得热搜词
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/selectUsersearchWordByCondition")
+    public ArrayList<String> selectUsersearchWordByCondition(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String classtype = request.getParameter("classtype");
+        Map<String, Object> temp = new HashMap<>();
+        temp.put("classtype",classtype);
+
+        return usersearchInfoService.selectUsersearchWordByCondition(temp);
+
+    }
 }

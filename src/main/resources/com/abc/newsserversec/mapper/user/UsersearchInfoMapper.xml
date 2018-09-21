@@ -43,4 +43,12 @@
     <update id="updateidById" parameterType="map">
         UPDATE usersearchinfo SET userid = #{val} WHERE userid=#{userid}
     </update>
+
+    <select id="selectUsersearchWordByCondition" resultType="string" parameterType="java.util.Map">
+        select keyword from usersearchinfo where DATEDIFF(createdate,NOW())>-30 and DATEDIFF(createdate,NOW())&lt;=0
+        <if test="classtype != null">
+            and classtype = #{classtype}
+        </if>
+        group by keyword order by count(keyword) desc limit 0,5;
+    </select>
 </mapper>

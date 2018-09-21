@@ -114,7 +114,7 @@ public class AcquisitebidController {
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/acquisitebid/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
             productSet.setMatchCount(esCt.count);
-            if(!product_name.equals("")) {
+//            if(!product_name.equals("")) {
                 //图表数据
 //                List<Object> provinceList = new ArrayList<>();
 //                List<Object> priceList = new ArrayList<>();
@@ -148,7 +148,7 @@ public class AcquisitebidController {
 //                }
 //                productSet.setProvinceList(provinceList);
 //                productSet.setPriceList(priceList);
-            }
+//            }
 
             //聚合
             ArrayList<Map> productBuckets = (ArrayList<Map>) ((Map) retObj.aggregations.get("tags")).get("buckets");
