@@ -2,7 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.abc.newsserversec.mapper.wechat.WxspInfoMapper">
-
+    <resultMap id="baseMap" type="com.abc.newsserversec.model.wechat.WxspUserInfo">
+        <result property="id" column="id"></result>
+        <result property="openid" column="openid"></result>
+        <result property="unionid" column="unionid"></result>
+        <result property="nickname" column="nickname"></result>
+        <result property="sex" column="sex"></result>
+    </resultMap>
     <select id="selectWxspUserByOpenid" parameterType="java.lang.String" resultType="com.abc.newsserversec.model.wechat.WxspUserInfo">
         select * from wxsp_userinfo where openid = #{openid}
     </select>
@@ -85,4 +91,13 @@
     <update id="updateWxspUserByMap" parameterType="map">
         UPDATE wxsp_userinfo SET unionid = #{unionid} WHERE openid=#{openid}
     </update>
+    <update id="updateUserIds" parameterType="map">
+        UPDATE wxsp_usersearchinfo SET userid = #{val} WHERE userid = #{userid}
+    </update>
+    <select id="selectAllUser" resultMap="baseMap">
+        select * from wxsp_userinfo WHERE id > 3648
+    </select>
+    <select id="selectSearchInfoByUserid" parameterType="long" resultType="map">
+        SELECT * FROM wxsp_usersearchinfo WHERE userid = #{userid}
+    </select>
 </mapper>

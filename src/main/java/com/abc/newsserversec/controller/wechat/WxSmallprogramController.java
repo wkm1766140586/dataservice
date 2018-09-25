@@ -107,23 +107,9 @@ public class WxSmallprogramController {
         String headimg = request.getParameter("headimg");
         String nickname = request.getParameter("nickname");
         String sex = request.getParameter("sex");
-
         if(sex.equals("0")) sex = "未知";
         else if(sex.equals("1")) sex = "男";
         else sex = "女";
-
-        ArrayList<WxspUserInfo> users = wxspInfoService.selectWxspUserByOpenid(openid);
-        if(users.size() == 0){
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = df.format(new Date());
-            Map<String,String> map = new HashMap<>();
-            map.put("openid",openid);
-            map.put("unionid",unionid);
-            map.put("nickname",nickname);
-            map.put("sex",sex);
-            map.put("createdate",date);
-            wxspInfoService.insertWxspUserByMap(map);
-        }
 
         Map<String,Object> dataMap = new HashMap<>();
         dataMap.put("unionid",unionid);
@@ -135,13 +121,19 @@ public class WxSmallprogramController {
             dataMap.put("nickname",nickname);
             dataMap.put("sex",sex);
             dataMap.put("createdate",date);
+            dataMap.put("openidCard",openid);
+            dataMap.put("usertype","WXSP");
             userInfoService.insertUserInfo(dataMap);
         }else{//已微信登录的用户
             Map<String,Object> map = new HashMap<>();
             map.put("nickname",nickname);
             map.put("sex",sex);
             map.put("headimg",headimg);
+            map.put("openidCard",openid);
             map.put("id",userInfo.getId());
+            if(null == userInfo.getUsertype() || userInfo.getUsertype() == ""){
+                map.put("usertype","WXSP");
+            }
             userInfoService.updateUserInfo(map);
         }
     }
@@ -166,6 +158,7 @@ public class WxSmallprogramController {
     public String queryUserInfo(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String unionid = request.getParameter("unionid");
+        String openid = request.getParameter("openid");
         String headimg = request.getParameter("headimg");
         String nickname = request.getParameter("nickname");
         String sex = request.getParameter("sex");
@@ -181,21 +174,48 @@ public class WxSmallprogramController {
             map.put("nickname",nickname);
             map.put("sex",sex);
             map.put("headimg",headimg);
+            map.put("openidCard",openid);
+            if(null == userInfo.getUsertype() || userInfo.getUsertype() == ""){
+                map.put("usertype","WXSP");
+            }
             map.put("id",userInfo.getId());
             userInfoService.updateUserInfo(map);
             return new GsonBuilder().create().toJson(userInfoService.selectUserInfoByCondition(dataMap));
         }else{
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = df.format(new Date());
-            dataMap.put("headimg",headimg);
-            dataMap.put("nickname",nickname);
-            dataMap.put("sex",sex);
-            dataMap.put("createdate",date);
-            userInfoService.insertUserInfo(dataMap);
             Map<String, Object> map = new HashMap<>();
-            map.put("unionid", unionid);
+            map.put("openidCard", openid);
             UserInfo user = userInfoService.selectUserInfoByCondition(map);
-            return new GsonBuilder().create().toJson(user);
+            if(user != null){
+                map.put("nickname",nickname);
+                map.put("sex",sex);
+                map.put("headimg",headimg);
+                map.put("unionid",unionid);
+                if(null == user.getUsertype() || user.getUsertype() == ""){
+                    map.put("usertype","WXSP");
+                }
+                map.put("id",user.getId());
+                userInfoService.updateUserInfo(map);
+                Map<String, Object> map1 = new HashMap<>();
+                map1.put("openidCard", openid);
+                UserInfo user1 = userInfoService.selectUserInfoByCondition(map1);
+                return new GsonBuilder().create().toJson(user1);
+
+            }else{
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String date = df.format(new Date());
+                dataMap.put("headimg",headimg);
+                dataMap.put("nickname",nickname);
+                dataMap.put("sex",sex);
+                dataMap.put("openidCard",openid);
+                dataMap.put("createdate",date);
+                dataMap.put("usertype","WXSP");
+                userInfoService.insertUserInfo(dataMap);
+                Map<String, Object> map1 = new HashMap<>();
+                map1.put("unionid", unionid);
+                UserInfo user1 = userInfoService.selectUserInfoByCondition(map1);
+                return new GsonBuilder().create().toJson(user1);
+            }
+
         }
     }
 

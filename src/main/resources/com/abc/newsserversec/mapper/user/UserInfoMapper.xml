@@ -24,6 +24,12 @@
         <if test="unionid != null">
             and unionid = #{unionid}
         </if>
+        <if test="openidCard != null">
+            and openidcard = #{openidCard}
+        </if>
+        <if test="usertype != null">
+            and usertype = #{usertype}
+        </if>
     </select>
 
     <update id="updateLoginCountById" parameterType="java.lang.Long">
@@ -57,6 +63,15 @@
             <if test="sex != null">
                 sex,
             </if>
+            <if test="usertype != null">
+                usertype,
+            </if>
+            <if test="iscard != null">
+                iscard,
+            </if>
+            <if test="openidCard != null">
+                openidcard,
+            </if>
             <if test="createdate != null">
                 createdate,
             </if>
@@ -85,6 +100,15 @@
             </if>
             <if test="sex != null">
                 #{sex},
+            </if>
+            <if test="usertype != null">
+                #{usertype},
+            </if>
+            <if test="iscard != null">
+                #{iscard},
+            </if>
+            <if test="openidCard != null">
+                #{openidCard},
             </if>
             <if test="createdate != null">
                 #{createdate},
@@ -141,6 +165,15 @@
             </if>
             <if test="logincount != null">
                 logincount = logincount+#{logincount},
+            </if>
+            <if test="usertype != null">
+                usertype = #{usertype},
+            </if>
+            <if test="iscard != null">
+                iscard = #{iscard},
+            </if>
+            <if test="openidCard != null">
+                openidcard = #{openidCard},
             </if>
         </set>
         where id = #{id}

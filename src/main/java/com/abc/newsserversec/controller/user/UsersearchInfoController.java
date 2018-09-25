@@ -37,6 +37,7 @@ public class UsersearchInfoController {
         String classtype = request.getParameter("classtype");
         String keyword = request.getParameter("keyword");
         String resultcount = request.getParameter("resultcount");
+        String searchtype = request.getParameter("searchtype");
 
         long userid = Long.valueOf(userid_string);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -46,6 +47,7 @@ public class UsersearchInfoController {
         dataMap.put("classtype",classtype);
         dataMap.put("keyword",keyword);
         dataMap.put("resultcount",resultcount);
+        dataMap.put("searchtype",searchtype);
         dataMap.put("createdate",date);
 
         int count = usersearchInfoService.insertUsersearchInfo(dataMap);

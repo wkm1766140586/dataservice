@@ -16,10 +16,20 @@ public class UserInfo {
     private String password;
     //openid
     private String openid;
+    //cardde
+    private String openidCard;
     //unionid
     private String unionid;
     //昵称
     private String nickname;
+
+    public String getOpenidCard() {
+        return openidCard;
+    }
+
+    public void setOpenidCard(String openidCard) {
+        this.openidCard = openidCard;
+    }
 
     public String getUnionid() {
         return unionid;
@@ -56,8 +66,26 @@ public class UserInfo {
     //登录次数
     private long logincount;
 
-    /*当前用户信息的状态*/
-    private int status;
+    private String usertype;
+
+    /*用户时名片用户*/
+    private int iscard;
+
+    public String getUsertype() {
+        return usertype;
+    }
+
+    public void setUsertype(String usertype) {
+        this.usertype = usertype;
+    }
+
+    public int getIscard() {
+        return iscard;
+    }
+
+    public void setIscard(int iscard) {
+        this.iscard = iscard;
+    }
 
     public long getId() { return id; }
 
@@ -147,11 +175,4 @@ public class UserInfo {
 
     public void setLogincount(long logincount) { this.logincount = logincount; }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

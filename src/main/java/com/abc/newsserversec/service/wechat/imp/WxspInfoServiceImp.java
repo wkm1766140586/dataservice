@@ -36,4 +36,19 @@ public class WxspInfoServiceImp implements WxspInfoService {
     public int updateWxspUserByMap(Map<String, String> map) {
         return wxspInfoMapper.updateWxspUserByMap(map);
     }
+
+    @Override
+    public ArrayList<WxspUserInfo> selectAllUser() {
+        return wxspInfoMapper.selectAllUser();
+    }
+
+    @Override
+    public ArrayList<Map<String, Object>> selectSearchInfoByUserid(long userid) {
+        return wxspInfoMapper.selectSearchInfoByUserid(userid);
+    }
+
+    @Override
+    public int updateUserIds(Map<String, Object> map) {
+        return wxspInfoMapper.updateUserIds(map);
+    }
 }

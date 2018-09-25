@@ -16,4 +16,9 @@ public interface WxspInfoMapper {
     int insertWxspUserSearchByMap(Map<String,Object> map);
 
     int updateWxspUserByMap(Map<String,String> map);
+
+    ArrayList<WxspUserInfo> selectAllUser();
+    ArrayList<Map<String,Object>> selectSearchInfoByUserid (long userid);
+
+    int updateUserIds(Map<String,Object> map);
 }

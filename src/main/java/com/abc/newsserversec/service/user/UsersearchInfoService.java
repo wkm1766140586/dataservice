@@ -1,6 +1,7 @@
 package com.abc.newsserversec.service.user;
 
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface UsersearchInfoService {
@@ -11,4 +12,5 @@ public interface UsersearchInfoService {
 
     int updateidById(Map<String, Object> map);
 
+    ArrayList<Map<String,Object>> selectUserSearch(long userid);
 }
