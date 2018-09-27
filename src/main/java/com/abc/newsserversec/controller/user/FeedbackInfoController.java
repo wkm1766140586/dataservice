@@ -31,22 +31,18 @@ public class FeedbackInfoController {
     public String insertFeedbackInfo(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        String userid_string = request.getParameter("userid");
-        if(userid_string == null) return "fail";
-        if(userid_string.equals("")) return "fail";
-
+        String userid = request.getParameter("userid");
         String weburl = request.getParameter("weburl");
-        String question = request.getParameter("question");
-        String advice = request.getParameter("advice");
+        String content = request.getParameter("content");
+        String contactway = request.getParameter("contactway");
 
-        long userid = Long.valueOf(userid_string);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("userid",userid);
         dataMap.put("weburl",weburl);
-        dataMap.put("question",question);
-        dataMap.put("advice",advice);
+        dataMap.put("content",content);
+        dataMap.put("contactway",contactway);
         dataMap.put("createdate",date);
 
         int count = feedbackInfoService.insertFeedbackInfo(dataMap);

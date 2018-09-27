@@ -55,6 +55,19 @@ public class UserBusinessController {
     }
 
     /**
+     * 解除绑定
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/resetBusiness")
+    public int resetService(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        return userBusinessService.deleteByUserId(Long.parseLong(userid));
+    }
+
+    /**
      * 更新负责的区域
      * @param request
      * @param response

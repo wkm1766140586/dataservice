@@ -79,4 +79,7 @@
     <update id="updateidById" parameterType="map">
         UPDATE userservice SET userid = #{val} WHERE userid=#{userid}
     </update>
+    <delete id="deleteByUserId" parameterType="long">
+       DELETE FROM userservice WHERE userid = #{userid}
+    </delete>
 </mapper>

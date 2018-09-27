@@ -1,11 +1,13 @@
 package com.abc.newsserversec.controller.wechat;
 
 import com.abc.newsserversec.model.user.UserBusiness;
+import com.abc.newsserversec.model.user.UserCard;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.model.wechat.WxOperCard;
 import com.abc.newsserversec.model.wechat.WxaccessToken;
 import com.abc.newsserversec.model.wechat.WxspUserInfo;
 import com.abc.newsserversec.service.user.UserBusinessService;
+import com.abc.newsserversec.service.user.UserCardService;
 import com.abc.newsserversec.service.user.UserInfoService;
 import com.abc.newsserversec.service.wechat.WxOperCardService;
 import com.abc.newsserversec.service.wechat.WxcardInfoService;
@@ -45,6 +47,9 @@ public class WxCardController {
 
     @Autowired
     private UserBusinessService userBusinessService;
+
+    @Autowired
+    private UserCardService userCardService;
 
     /**
      * 登录
@@ -334,14 +339,19 @@ public class WxCardController {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("productids",productid);
         ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
-        ArrayList<UserInfo> users = new ArrayList<>();
+        ArrayList<Object> users = new ArrayList<>();
         if(userBusinesses.size() > 0){
             for (UserBusiness userBusiness : userBusinesses){
                 Map<String, Object> map = new HashMap<>();
                 map.put("id",userBusiness.getUserid());
+                map.put("userid",userBusiness.getUserid());
                 UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
+                UserCard userCard = userCardService.selectUserCardByCondition(map);
+                Map<String, Object> map1 = new HashMap<>();
                 if(userInfo != null){
-                    users.add(userInfo);
+                    map1.put("userinfo",userInfo);
+                    map1.put("userCard",userCard);
+                    users.add(map1);
                 }
             }
         }

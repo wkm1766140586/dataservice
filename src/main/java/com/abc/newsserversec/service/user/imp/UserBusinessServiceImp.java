@@ -33,4 +33,9 @@ public class UserBusinessServiceImp implements UserBusinessService {
     public int updateidById(Map<String, Object> map) {
         return userBusinessMapper.updateidById(map);
     }
+
+    @Override
+    public int deleteByUserId(long userid) {
+        return userBusinessMapper.deleteByUserId(userid);
+    }
 }

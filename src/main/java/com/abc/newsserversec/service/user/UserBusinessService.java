@@ -10,4 +10,5 @@ public interface UserBusinessService {
     int updateUserBusiness(Map<String, Object> map);
     ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map);
     int updateidById(Map<String, Object> map);
+    int deleteByUserId(long userid);
 }

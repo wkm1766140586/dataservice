@@ -12,11 +12,11 @@
             <if test="weburl != null">
                 weburl,
             </if>
-            <if test="question != null">
-                question,
+            <if test="content != null">
+                content,
             </if>
-            <if test="advice != null">
-                advice,
+            <if test="contactway != null">
+                contactway,
             </if>
             <if test="createdate != null">
                 createdate,
@@ -29,11 +29,11 @@
             <if test="weburl != null">
                 #{weburl},
             </if>
-            <if test="question != null">
-                #{question},
+            <if test="content != null">
+                #{content},
             </if>
-            <if test="advice != null">
-                #{advice},
+            <if test="contactway != null">
+                #{contactway},
             </if>
             <if test="createdate != null">
                 #{createdate},
