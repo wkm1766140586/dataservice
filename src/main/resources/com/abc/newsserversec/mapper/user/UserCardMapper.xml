@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.user.UserCardMapper">
+
+    <select id="selectUserCardByCondition" resultType="com.abc.newsserversec.model.user.UserCard" parameterType="java.util.Map">
+        select * from usercard where 1=1
+
+        <if test="userid != null">
+            and userid = #{userid}
+        </if>
+    </select>
+
+    <insert id="insertUserCard" parameterType="java.util.Map">
+        insert into usercard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+
+            <if test="mobilephone != null">
+                mobilephone,
+            </if>
+            <if test="realname != null">
+                realname,
+            </if>
+            <if test="wechatnum != null">
+                wechatnum,
+            </if>
+            <if test="companyname != null">
+                companyname,
+            </if>
+            <if test="companyaddress != null">
+                companyaddress,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="job != null">
+                job,
+            </if>
+            <if test="iscard != null">
+                iscard,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+
+            <if test="mobilephone != null">
+                #{mobilephone},
+            </if>
+            <if test="realname != null">
+                #{realname},
+            </if>
+            <if test="wechatnum != null">
+                #{wechatnum},
+            </if>
+            <if test="companyname != null">
+                #{companyname},
+            </if>
+            <if test="companyaddress != null">
+                #{companyaddress},
+            </if>
+            <if test="department != null">
+                #{department},
+            </if>
+            <if test="job != null">
+                #{job},
+            </if>
+            <if test="iscard != null">
+                #{iscard},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateUserCard" parameterType="java.util.Map">
+        update usercard
+        <set>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="realname != null">
+                realname = #{realname},
+            </if>
+            <if test="mobilephone != null">
+                mobilephone = #{mobilephone},
+            </if>
+            <if test="wechatnum != null">
+                wechatnum = #{wechatnum},
+            </if>
+            <if test="companyname != null">
+                companyname = #{companyname},
+            </if>
+            <if test="companyaddress != null">
+                companyaddress = #{companyaddress},
+            </if>
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="job != null">
+                job = #{job},
+            </if>
+            <if test="iscard != null">
+                iscard = #{iscard},
+            </if>
+        </set>
+        where userid = #{userid}
+    </update>
+    <delete id="deleteUserCardById" parameterType="long">
+        DELETE FROM usercard WHERE userid = #{userid}
+    </delete>
+    <update id="updateidById" parameterType="map">
+        UPDATE usercard SET userid = #{val} WHERE userid=#{userid}
+    </update>
+</mapper>
