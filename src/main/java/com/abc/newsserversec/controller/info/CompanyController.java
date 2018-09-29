@@ -8,6 +8,7 @@ import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
 import com.abc.newsserversec.service.company.CompanyInfoService;
+import com.abc.newsserversec.service.user.UserBusinessService;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,9 @@ public class CompanyController {
 
     @Autowired
     private CompanyInfoService companyInfoService;
+
+    @Autowired
+    private UserBusinessService userBusinessService;
 
     /**
      * 根据企业名称获取企业列表信息
@@ -95,6 +99,12 @@ public class CompanyController {
             dataMap.put("matchCount",count);
         }
         ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
+
+        for(CompanyInfo companyInfo : companyInfos){
+            String companyname = companyInfo.getCompany_name();
+            ArrayList<Map<String,Object>> list = userBusinessService.selectUserheadimgByCompanyName(companyname);
+            companyInfo.setHeadimgList(list);
+        }
         dataMap.put("datas",companyInfos);
 
         return new GsonBuilder().create().toJson(dataMap);

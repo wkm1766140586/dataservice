@@ -1,5 +1,8 @@
 package com.abc.newsserversec.model.company;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * 企业信息类
  */
@@ -19,6 +22,8 @@ public class CompanyInfo {
     private String product_count;
     //中标数量
     private String tenderbid_count;
+
+    private ArrayList<Map<String,Object>> headimgList;
 
     public long getId() {
         return id;
@@ -74,5 +79,13 @@ public class CompanyInfo {
 
     public void setTenderbid_count(String tenderbid_count) {
         this.tenderbid_count = tenderbid_count;
+    }
+
+    public ArrayList<Map<String, Object>> getHeadimgList() {
+        return headimgList;
+    }
+
+    public void setHeadimgList(ArrayList<Map<String, Object>> headimgList) {
+        this.headimgList = headimgList;
     }
 }

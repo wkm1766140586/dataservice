@@ -18,6 +18,7 @@ public interface UserBusinessMapper {
     int updateidById(Map<String, Object> map);
     int deleteByUserId(long userid);
 
-
     ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);
+
+    ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
 }

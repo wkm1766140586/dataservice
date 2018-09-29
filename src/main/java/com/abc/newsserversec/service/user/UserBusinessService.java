@@ -14,4 +14,7 @@ public interface UserBusinessService {
 
     //根据产品ID查询出产品的负责人的头像（产品列表页使用）
     ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);
+
+    //根据企业名称查询该企业名片人员的头像
+    ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
 }
