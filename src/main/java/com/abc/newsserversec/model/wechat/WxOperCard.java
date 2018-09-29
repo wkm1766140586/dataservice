@@ -1,5 +1,6 @@
 package com.abc.newsserversec.model.wechat;
 
+import com.abc.newsserversec.model.user.UserCard;
 import com.abc.newsserversec.model.user.UserInfo;
 
 /**
@@ -18,6 +19,15 @@ public class WxOperCard {
     private String createtime;
     /*用户信息*/
     private UserInfo userInfo;
+    private UserCard userCard;
+
+    public UserCard getUserCard() {
+        return userCard;
+    }
+
+    public void setUserCard(UserCard userCard) {
+        this.userCard = userCard;
+    }
 
     public long getViewid() {
         return viewid;

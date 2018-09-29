@@ -238,16 +238,19 @@ public class WxCardController {
             Map<String, Object> map = new HashMap<>();
             if(viewType.equals("viewid")){
                 map.put("id",viewCardArray.get(i).getViewedid());
+                map.put("userid",viewCardArray.get(i).getViewedid());
             }else if(viewType.equals("viewedid")){
                 map.put("id",viewCardArray.get(i).getViewid());
+                map.put("userid",viewCardArray.get(i).getViewid());
             }
 
             UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
+            UserCard userCard = userCardService.selectUserCardByCondition(map);
             viewCardArray.get(i).setUserInfo(userInfo);
+            viewCardArray.get(i).setUserCard(userCard);
         }
         Map<String,Object> map1 = new HashMap<>();
         map1.put("data",viewCardArray);
-        System.out.println("数量num："+num);
         if(Integer.parseInt(num) == 0){
             map1.put("matchCount",wxOperCardService.selectCountById(dataMap));
             System.out.println("数量："+wxOperCardService.selectCountById(dataMap));

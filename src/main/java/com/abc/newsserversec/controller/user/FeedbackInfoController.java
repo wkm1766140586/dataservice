@@ -30,12 +30,13 @@ public class FeedbackInfoController {
     @RequestMapping("/method/insertFeedbackInfo")
     public String insertFeedbackInfo(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
-
         String userid = request.getParameter("userid");
         String weburl = request.getParameter("weburl");
         String content = request.getParameter("content");
         String contactway = request.getParameter("contactway");
-
+        if(userid == "" || userid == null || weburl == "" || weburl == null || content == "" || content == null || contactway == "" || contactway == null){
+            return "failed";
+        }
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         Map<String, Object> dataMap = new HashMap<>();
