@@ -6,7 +6,9 @@ import com.abc.newsserversec.model.info.ESResultRoot;
 import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
+import com.abc.newsserversec.service.user.UserBusinessService;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +27,9 @@ import java.util.*;
  */
 @RestController
 public class ProductController {
+
+    @Autowired
+    private UserBusinessService userBusinessService;
 
     /**
      * 根据产品名称查找产品信息
@@ -237,6 +242,13 @@ public class ProductController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            //负责产品的名片用户头像
+            Map<String,Object> map = new HashMap<>();
+            String productId = (String) source.get("id");
+            map.put("productids","%"+productId+"%");
+            ArrayList<Map<String,Object>> list = userBusinessService.selectUserheadimgByProductId(map);
+            source.put("headimgList",list);
+
             productSet.add(source);
         }
 
