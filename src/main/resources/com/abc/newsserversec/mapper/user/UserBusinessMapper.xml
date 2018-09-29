@@ -82,4 +82,10 @@
     <delete id="deleteByUserId" parameterType="long">
        DELETE FROM userservice WHERE userid = #{userid}
     </delete>
+
+    <select id="selectUserheadimgByProductId" parameterType="map" resultType="map">
+        select u.headimg as headimg from userinfo u,userservice us
+        where u.id = us.userid and u.id in (select userid from userservice where productids like #{productids})
+        order by us.createtime desc limit 0,3
+    </select>
 </mapper>

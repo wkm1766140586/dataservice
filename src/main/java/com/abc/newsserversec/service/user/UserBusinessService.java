@@ -11,4 +11,7 @@ public interface UserBusinessService {
     ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map);
     int updateidById(Map<String, Object> map);
     int deleteByUserId(long userid);
+
+    //根据产品ID查询出产品的负责人的头像（产品列表页使用）
+    ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);
 }

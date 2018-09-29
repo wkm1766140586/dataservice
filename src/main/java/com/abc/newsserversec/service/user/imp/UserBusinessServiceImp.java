@@ -38,4 +38,10 @@ public class UserBusinessServiceImp implements UserBusinessService {
     public int deleteByUserId(long userid) {
         return userBusinessMapper.deleteByUserId(userid);
     }
+
+
+    @Override
+    public ArrayList<Map<String, Object>> selectUserheadimgByProductId(Map<String, Object> map) {
+        return userBusinessMapper.selectUserheadimgByProductId(map);
+    }
 }

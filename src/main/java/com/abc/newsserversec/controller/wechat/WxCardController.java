@@ -330,6 +330,26 @@ public class WxCardController {
     }
 
     /**
+     * 根据产品ID查询出产品的负责人的头像（产品列表页使用）
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/selectUserheadimgByProductId")
+    public String selectUserheadimgByProductId(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        Map<String, Object> map = new HashMap<>();
+        String productid = request.getParameter("productid");
+
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("productids","%"+productid+"%");
+        ArrayList<Map<String,Object>> list = userBusinessService.selectUserheadimgByProductId(dataMap);
+        map.put("headimgList",list);
+
+        return new GsonBuilder().create().toJson(map);
+    }
+
+    /**
      * 根据产品ID查询出产品的负责人
      * @param request
      * @param response
