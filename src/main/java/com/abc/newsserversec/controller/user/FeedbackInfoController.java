@@ -34,9 +34,10 @@ public class FeedbackInfoController {
         String weburl = request.getParameter("weburl");
         String content = request.getParameter("content");
         String contactway = request.getParameter("contactway");
-        if(userid == "" || userid == null || weburl == "" || weburl == null || content == "" || content == null || contactway == "" || contactway == null){
-            return "failed";
-        }
+
+        if(userid == null || weburl == null || content == null || contactway == null) return "failed";
+        if(userid.equals("") || weburl.equals("") ||  content.equals("") || contactway.equals("")) return "failed";
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         Map<String, Object> dataMap = new HashMap<>();
