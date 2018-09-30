@@ -181,8 +181,8 @@ public class WxCardController {
         String opertype = request.getParameter("opertype");//操作类型：点赞、查看、转发
         String num = request.getParameter("num");
         String size = request.getParameter("size");
-        if(userid == null || userid == ""){return "fail";}
-        if(opertype == null || opertype == ""){return "fail";}
+        if(userid == null || userid.equals("")){return "fail";}
+        if(opertype == null || opertype.equals("")){return "fail";}
         return queryUserByviewId(Long.parseLong(userid),"viewid",Integer.parseInt(opertype),num,size);
     }
 
@@ -199,8 +199,8 @@ public class WxCardController {
         String opertype = request.getParameter("opertype");//操作类型：点赞、查看、转发
         String num = request.getParameter("num");
         String size = request.getParameter("size");
-        if(userid == null || userid == ""){return "fail";}
-        if(opertype == null || opertype == ""){return "fail";}
+        if(userid == null || userid.equals("")){return "fail";}
+        if(opertype == null || opertype.equals("")){return "fail";}
         return queryUserByviewId(Long.parseLong(userid),"viewedid",Integer.parseInt(opertype),num,size);
     }
 
@@ -266,9 +266,9 @@ public class WxCardController {
         String viewid = request.getParameter("viewid");
         String viewedid = request.getParameter("viewedid");
         String opertype = request.getParameter("opertype");
-        if(viewid == null || viewid == ""){return -1;}
-        if(viewedid == null || viewedid == ""){return -1;}
-        if(opertype == null || opertype == ""){return -1;}
+        if(viewid == null || viewid.equals("")){return -1;}
+        if(viewedid == null || viewedid.equals("")){return -1;}
+        if(opertype == null || opertype.equals("")){return -1;}
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("viewid",viewid);
         dataMap.put("viewedid",viewedid);
@@ -288,9 +288,9 @@ public class WxCardController {
         String viewid = request.getParameter("viewid");
         String viewedid = request.getParameter("viewedid");
         String opertype = request.getParameter("opertype");
-        if(viewid == null || viewid == ""){return -1;}
-        if(viewedid == null || viewedid == ""){return -1;}
-        if(opertype == null || opertype == ""){return -1;}
+        if(viewid == null || viewid.equals("")){return -1;}
+        if(viewedid == null || viewedid.equals("")){return -1;}
+        if(opertype == null || opertype.equals("")){return -1;}
 
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("viewid",viewid);
@@ -318,9 +318,9 @@ public class WxCardController {
         String viewid = request.getParameter("viewid");
         String viewedid = request.getParameter("viewedid");
         String opertype = request.getParameter("opertype");
-        if(viewid == null || viewid == ""){return -1;}
-        if(viewedid == null || viewedid == ""){return -1;}
-        if(opertype == null || opertype == ""){return -1;}
+        if(viewid == null || viewid.equals("")){return -1;}
+        if(viewedid == null || viewedid.equals("")){return -1;}
+        if(opertype == null || opertype.equals("")){return -1;}
 
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("viewid",viewid);

@@ -131,7 +131,7 @@ public class WxSmallprogramController {
             map.put("headimg",headimg);
             map.put("openidCard",openid);
             map.put("id",userInfo.getId());
-            if(null == userInfo.getUsertype() || userInfo.getUsertype() == ""){
+            if(null == userInfo.getUsertype() || userInfo.getUsertype().equals("")){
                 map.put("usertype","WXSP");
             }
             userInfoService.updateUserInfo(map);
@@ -175,7 +175,7 @@ public class WxSmallprogramController {
             map.put("sex",sex);
             map.put("headimg",headimg);
             map.put("openidCard",openid);
-            if(null == userInfo.getUsertype() || userInfo.getUsertype() == ""){
+            if(null == userInfo.getUsertype() || userInfo.getUsertype().equals("")){
                 map.put("usertype","WXSP");
             }
             map.put("id",userInfo.getId());
@@ -190,7 +190,7 @@ public class WxSmallprogramController {
                 map.put("sex",sex);
                 map.put("headimg",headimg);
                 map.put("unionid",unionid);
-                if(null == user.getUsertype() || user.getUsertype() == ""){
+                if(null == user.getUsertype() || user.getUsertype().equals("")){
                     map.put("usertype","WXSP");
                 }
                 map.put("id",user.getId());
