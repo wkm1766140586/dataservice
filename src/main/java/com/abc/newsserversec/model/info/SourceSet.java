@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class SourceSet {
     private int matchCount = 0;
+    private int effectiveCount = 0;
     private List<Object> datas = new ArrayList<>();
     private List<Object> aggList = new ArrayList<>();
     private List<Object> provinceList = new ArrayList<>();
@@ -55,5 +56,13 @@ public class SourceSet {
 
     public void setPriceList(List<Object> priceList) {
         this.priceList = priceList;
+    }
+
+    public int getEffectiveCount() {
+        return effectiveCount;
+    }
+
+    public void setEffectiveCount(int effectiveCount) {
+        this.effectiveCount = effectiveCount;
     }
 }

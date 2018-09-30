@@ -12,9 +12,12 @@ public interface UserBusinessService {
     int updateidById(Map<String, Object> map);
     int deleteByUserId(long userid);
 
-    //根据产品ID查询出产品的负责人的头像（产品列表页使用）
+    //根据产品ID查询出产品的负责人的头像（名片）
     ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);
 
-    //根据企业名称查询该企业名片人员的头像
+    //根据企业名称查询该企业名片人员的头像（名片）
     ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
+
+    //根据用户id获得用户负责产品的信息（名片）
+    ArrayList<Map<String,Object>> selectProductInfosByUserid(long userid);
 }

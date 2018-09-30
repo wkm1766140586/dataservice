@@ -49,4 +49,9 @@ public class UserBusinessServiceImp implements UserBusinessService {
     public ArrayList<Map<String, Object>> selectUserheadimgByCompanyName(String companyname) {
         return userBusinessMapper.selectUserheadimgByCompanyName(companyname);
     }
+
+    @Override
+    public ArrayList<Map<String, Object>> selectProductInfosByUserid(long userid) {
+        return userBusinessMapper.selectProductInfosByUserid(userid);
+    }
 }

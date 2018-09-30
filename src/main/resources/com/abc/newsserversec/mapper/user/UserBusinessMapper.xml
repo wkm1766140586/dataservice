@@ -94,4 +94,8 @@
         where u.id = us.userid and u.id in (select userid from userservice where companyname = #{companyname})
         order by us.createtime desc limit 0,3
     </select>
+
+    <select id="selectProductInfosByUserid" parameterType="long" resultType="map">
+        select productids from userservice where userid = #{userid}
+    </select>
 </mapper>

@@ -21,4 +21,6 @@ public interface UserBusinessMapper {
     ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);
 
     ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
+
+    ArrayList<Map<String,Object>> selectProductInfosByUserid(long userid);
 }

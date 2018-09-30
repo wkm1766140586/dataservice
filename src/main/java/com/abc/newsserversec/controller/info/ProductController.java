@@ -427,16 +427,20 @@ public class ProductController {
 
         String num = request.getParameter("num");
         String keyword = request.getParameter("keyword");
-
         String product_state = request.getParameter("product_state");
+        String size = request.getParameter("size");
+        String userid = request.getParameter("userid");//名片使用
+
         if(product_state == null) product_state = "";
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
+
         Calendar current = Calendar.getInstance();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date current_date = current.getTime();
+        String userServicePro = "";
+        SourceSet productSet = new SourceSet();
 
-        String size = request.getParameter("size");
         String esRequest = StaticVariable.esRequest;
         int from = Integer.valueOf(num);
         if(size != null) { from = from * Integer.valueOf(size); }
@@ -445,7 +449,6 @@ public class ProductController {
         String filter = "";//名片中选择公司有效的产品
         if(product_state.equals("有效")) filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
         else if(product_state.equals("无效")) filter = "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
-
         String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
@@ -453,27 +456,33 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("approval_date","end_date");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
-        if(filter == ""){
-            esRequest = esRequest.replaceFirst("\"#filter\"","");
-        }else{
-            esRequest = esRequest.replaceFirst("\"#filter\"",filter);
-        }
+        esRequest = esRequest.replaceFirst("\"#filter\"",filter);
+
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
 
+        //根据用户id获得用户负责产品的信息
+        if(userid != null && !userid.equals("")){
+            ArrayList<Map<String,Object>> serviceList = userBusinessService.selectProductInfosByUserid(Long.parseLong(userid));
+            Map<String,Object> userService = serviceList.get(0);
+            userServicePro = (String) userService.get("productids");
+            userServicePro = userServicePro.substring(0,userServicePro.length()-1);
+            productSet.setEffectiveCount(userServicePro.split(",").length);
+        }
+
         String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
-        SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
             Map<String, Object> source = (Map<String, Object>) hit._source;
+            if(userid != null && !userid.equals("")) {
+                if (userServicePro.contains((String) source.get("id"))) source.put("selected", "true");
+                else source.put("selected", "false");
+            }
             try {
                 Date end_date = df.parse(String.valueOf(source.get("end_date")));
-                if (current_date.getTime() > end_date.getTime()){
-                    source.put("product_state", "无效");
-                }else{
-                    source.put("product_state", "有效");
-                }
+                if (current_date.getTime() > end_date.getTime()){ source.put("product_state", "无效"); }
+                else{ source.put("product_state", "有效"); }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -483,11 +492,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
-            if(filter == ""){
-                esCount = esCount.replaceFirst("\"#filter\"","");
-            }else{
-                esCount = esCount.replaceFirst("\"#filter\"",filter);
-            }
+            esCount = esCount.replaceFirst("\"#filter\"",filter);
 
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
@@ -528,11 +533,8 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("approval_date","end_date");
         esRequest = esRequest.replaceFirst("\"#includes\"",StaticVariable.searchProductIncludeFields);
         esRequest = esRequest.replaceFirst("\"#excludes\"","");
-        if(filter == ""){
-            esRequest = esRequest.replaceFirst("\"#filter\"","");
-        }else{
-            esRequest = esRequest.replaceFirst("\"#filter\"",filter);
-        }
+        esRequest = esRequest.replaceFirst("\"#filter\"",filter);
+
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
@@ -560,11 +562,7 @@ public class ProductController {
             //计数
             String esCount = StaticVariable.esCount;
             esCount = esCount.replaceFirst("#query", condition);
-            if(filter == ""){
-                esCount = esCount.replaceFirst("\"#filter\"","");
-            }else{
-                esCount = esCount.replaceFirst("\"#filter\"",filter);
-            }
+            esCount = esCount.replaceFirst("\"#filter\"",filter);
 
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
