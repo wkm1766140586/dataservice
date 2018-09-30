@@ -465,10 +465,13 @@ public class ProductController {
         //根据用户id获得用户负责产品的信息
         if(userid != null && !userid.equals("")){
             ArrayList<Map<String,Object>> serviceList = userBusinessService.selectProductInfosByUserid(Long.parseLong(userid));
-            Map<String,Object> userService = serviceList.get(0);
-            userServicePro = (String) userService.get("productids");
-            userServicePro = userServicePro.substring(0,userServicePro.length()-1);
-            productSet.setEffectiveCount(userServicePro.split(",").length);
+            if(serviceList.size() > 0){
+                Map<String,Object> userService = serviceList.get(0);
+                userServicePro = (String) userService.get("productids");
+                userServicePro = userServicePro.substring(0,userServicePro.length()-1);
+                productSet.setSelectedDatas(Arrays.asList(userServicePro.split(",")));
+            }
+
         }
 
         String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
