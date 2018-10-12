@@ -125,4 +125,24 @@
     <update id="updateidById" parameterType="map">
         UPDATE usercard SET userid = #{val} WHERE userid=#{userid}
     </update>
+    <select id="selectUserheadimgByCompanyName" parameterType="string" resultType="map">
+        SELECT
+            ui.id,
+            ui.headimg,
+            ui.nickname,
+            uc.realname,
+            uc.department,
+            uc.job,
+            uc.companyname
+        FROM
+            userinfo ui,
+            usercard uc
+        WHERE
+            ui.id = uc.userid
+        AND uc.companyname = #{companyname}
+        ORDER BY
+            uc.createtime DESC
+        LIMIT 0,
+         3
+    </select>
 </mapper>

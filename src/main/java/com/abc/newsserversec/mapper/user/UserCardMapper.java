@@ -3,6 +3,7 @@ package com.abc.newsserversec.mapper.user;
 import com.abc.newsserversec.model.user.UserCard;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -20,4 +21,6 @@ public interface UserCardMapper {
     void deleteUserCardById(long userid);
 
     int updateidById(Map<String, Object> map);
+
+    ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
 }

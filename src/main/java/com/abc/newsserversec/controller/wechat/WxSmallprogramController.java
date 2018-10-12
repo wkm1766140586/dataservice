@@ -1,11 +1,14 @@
 package com.abc.newsserversec.controller.wechat;
 
+import com.abc.newsserversec.common.AesCbcUtil;
+import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.model.wechat.WxaccessToken;
 import com.abc.newsserversec.model.wechat.WxspUserInfo;
 import com.abc.newsserversec.service.user.UserInfoService;
 import com.abc.newsserversec.service.wechat.WxspInfoService;
 import com.google.gson.GsonBuilder;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,12 +30,48 @@ import java.util.*;
 @RestController
 public class WxSmallprogramController {
 
+    public static String APPID = "wxfa5b20c93499db27";
+    public static String APPSECRET = "26bf61eee9181d83f03e4640de01c6bc";
     @Autowired
     private WxspInfoService wxspInfoService;
 
     @Autowired
     private UserInfoService userInfoService;
 
+    /**
+     * 获取unionid
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/decodeUserInfo")
+    public String decodeUserInfo(HttpServletRequest request, HttpServletResponse response)throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String code = request.getParameter("code");
+        String encryptedData = request.getParameter("encryptedData");
+        String iv = request.getParameter("iv");
+        if(code.equals("") || code == null){return "failed";}
+        if(encryptedData.equals("") || encryptedData == null){return "failed";}
+        if(iv.equals("") || iv == null){return "failed";}
+
+        //////////////// 1、向微信服务器 使用登录凭证 code 获取 session_key 和 openid ////////////////
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+APPID+"&secret="+APPSECRET+"&js_code="+code+"&grant_type=authorization_code";
+        String result = HttpHandler.sendGet(url);
+        //解析相应内容（转换成json对象）
+        JSONObject json = JSONObject.fromObject(result);
+        //获取会话密钥（session_key）
+        String session_key = json.get("session_key").toString();
+        //用户的唯一标识（openid）
+        String openid = json.get("openid").toString();
+        System.out.println("session_key："+session_key);
+        System.out.println("openid："+openid);
+
+        //////////////// 2、对encryptedData加密数据进行AES解密其中包含这openid和unionid ////////////////
+        String data = AesCbcUtil.decrypt(encryptedData,session_key,iv,"UTF-8");
+        System.out.println("data:"+data.toString());
+        return data;
+    }
     /*
       微信小程序登录
    */
@@ -43,11 +82,9 @@ public class WxSmallprogramController {
         BufferedReader read=null;//读取访问结果
         WxaccessToken wxaccessToken = null;
 
-        String appid = "wxfa5b20c93499db27";
-        String secret = "26bf61eee9181d83f03e4640de01c6bc";
         String code = request.getParameter("code");
         System.out.println(code);
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code="+code+"&grant_type=authorization_code";
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+APPID+"&secret="+APPSECRET+"&js_code="+code+"&grant_type=authorization_code";
 
         try {
             //创建url

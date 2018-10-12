@@ -9,6 +9,7 @@ import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
 import com.abc.newsserversec.service.company.CompanyInfoService;
 import com.abc.newsserversec.service.user.UserBusinessService;
+import com.abc.newsserversec.service.user.UserCardService;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class CompanyController {
     private CompanyInfoService companyInfoService;
 
     @Autowired
-    private UserBusinessService userBusinessService;
+    private UserCardService userCardService;
 
     /**
      * 根据企业名称获取企业列表信息
@@ -84,16 +85,11 @@ public class CompanyController {
         String web_type = request.getParameter("web_type");
 
         keyword = "%"+keyword+"%";
-        if(production_type != null){ production_type = "%"+production_type+"%"; }
-        if(manage_type != null){ manage_type = "%"+manage_type+"%"; }
-        if(web_type != null){ web_type = "%"+web_type+"%"; }
-
         map.put("company_name",keyword);
         map.put("num",num);
-        map.put("production_type",production_type);
-        map.put("manage_type",manage_type);
-        map.put("web_type",web_type);
-
+        if(production_type != null && !production_type.equals("")){ production_type = "%"+production_type+"%";map.put("production_type",production_type); }
+        if(manage_type != null && !manage_type.equals("")){ manage_type = "%"+manage_type+"%"; map.put("manage_type",manage_type);}
+        if(web_type != null && !manage_type.equals("")){ web_type = "%"+web_type+"%"; map.put("web_type",web_type);}
         if(num == 0) {
             int count = companyInfoService.selectCompanyInfoCountByCondition(map);
             dataMap.put("matchCount",count);
@@ -102,7 +98,7 @@ public class CompanyController {
 
         for(CompanyInfo companyInfo : companyInfos){
             String companyname = companyInfo.getCompany_name();
-            ArrayList<Map<String,Object>> list = userBusinessService.selectUserheadimgByCompanyName(companyname);
+            ArrayList<Map<String,Object>> list = userCardService.selectUserheadimgByCompanyName(companyname);
             companyInfo.setHeadimgList(list);
         }
         dataMap.put("datas",companyInfos);
@@ -189,6 +185,8 @@ public class CompanyController {
         for(Hit hit:retObj.hits.hits){
             Map map = (Map)hit._source;
             map.put("_id",hit._id);
+            String company_name = (String) map.get("company_name");
+            map.put("headimgList",userCardService.selectUserheadimgByCompanyName(company_name));
             productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);

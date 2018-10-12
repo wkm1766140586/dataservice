@@ -6,6 +6,7 @@ import com.abc.newsserversec.service.user.UserCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Service
@@ -35,5 +36,10 @@ public class UserCardServiceImp implements UserCardService{
     @Override
     public int updateidById(Map<String, Object> map) {
         return userCardMapper.updateidById(map);
+    }
+
+    @Override
+    public ArrayList<Map<String, Object>> selectUserheadimgByCompanyName(String companyname) {
+        return userCardMapper.selectUserheadimgByCompanyName(companyname);
     }
 }

@@ -6,7 +6,9 @@ import com.abc.newsserversec.model.info.ESResultRoot;
 import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
+import com.abc.newsserversec.service.user.UserCardService;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +23,8 @@ import java.util.Map;
 @RestController
 public class HospitalController {
 
+    @Autowired
+    private UserCardService userCardService;
     /**
      * 根据医院名称查找医院信息
      * @param
@@ -64,7 +68,10 @@ public class HospitalController {
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         SourceSet productSet = new SourceSet();
         for(Hit hit:retObj.hits.hits){
-            productSet.add(hit._source);
+            Map<String, Object> source = (Map<String, Object>) hit._source;
+            String hospital_name = (String) source.get("hospital_name");
+            source.put("headimgList",userCardService.selectUserheadimgByCompanyName(hospital_name));
+            productSet.add(source);
         }
         if(from == 0) {
             //计数
@@ -108,6 +115,8 @@ public class HospitalController {
         for(Hit hit:retObj.hits.hits){
             Map map = (Map)hit._source;
             map.put("_id",hit._id);
+            String hospital_name = (String) map.get("hospital_name");
+            map.put("headimgList",userCardService.selectUserheadimgByCompanyName(hospital_name));
             productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);

@@ -2,6 +2,7 @@ package com.abc.newsserversec.service.user;
 
 import com.abc.newsserversec.model.user.UserCard;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface UserCardService {
@@ -14,4 +15,6 @@ public interface UserCardService {
     void deleteUserCardById(long userid);
 
     int updateidById(Map<String, Object> map);
+
+    ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
 }
