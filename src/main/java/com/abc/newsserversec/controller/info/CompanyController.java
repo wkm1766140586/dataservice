@@ -50,6 +50,8 @@ public class CompanyController {
         Map<String,Object> map = new HashMap<>();
         int num = Integer.valueOf(num_string)*10;
 
+        keyword = keyword.replaceAll("（","(");
+        keyword = keyword.replaceAll("）",")");
         String regex = "(.{1})";
         keyword = keyword.replaceAll (regex, "$1%");
         System.out.println (keyword);
@@ -88,6 +90,8 @@ public class CompanyController {
         String manage_type = request.getParameter("manage_type");
         String web_type = request.getParameter("web_type");
 
+        keyword = keyword.replaceAll("（","(");
+        keyword = keyword.replaceAll("）",")");
         String regex = "(.{1})";
         keyword = keyword.replaceAll (regex, "$1%");
 
