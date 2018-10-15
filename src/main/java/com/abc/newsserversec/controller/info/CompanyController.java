@@ -50,7 +50,11 @@ public class CompanyController {
         Map<String,Object> map = new HashMap<>();
         int num = Integer.valueOf(num_string)*10;
 
-        keyword = "%"+keyword+"%";
+        String regex = "(.{1})";
+        keyword = keyword.replaceAll (regex, "$1%");
+        System.out.println (keyword);
+
+        keyword = "%"+keyword;
         map.put("company_name",keyword);
         map.put("num",num);
         if(num == 0) {
