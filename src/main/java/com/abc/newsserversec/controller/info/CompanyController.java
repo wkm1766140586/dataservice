@@ -88,7 +88,10 @@ public class CompanyController {
         String manage_type = request.getParameter("manage_type");
         String web_type = request.getParameter("web_type");
 
-        keyword = "%"+keyword+"%";
+        String regex = "(.{1})";
+        keyword = keyword.replaceAll (regex, "$1%");
+
+        keyword = "%"+keyword;
         map.put("company_name",keyword);
         map.put("num",num);
         if(production_type != null && !production_type.equals("")){ production_type = "%"+production_type+"%";map.put("production_type",production_type); }
