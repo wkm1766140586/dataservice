@@ -39,6 +39,16 @@ public class UserBusinessServiceImp implements UserBusinessService {
         return userBusinessMapper.deleteByUserId(userid);
     }
 
+    @Override
+    public int selectCountByCondition(Map<String, Object> map) {
+        return userBusinessMapper.selectCountByCondition(map);
+    }
+
+    @Override
+    public ArrayList<Map<String, Object>> selectUserCardByProductId(Map<String, Object> map) {
+        return userBusinessMapper.selectUserCardByProductId(map);
+    }
+
 
     @Override
     public ArrayList<Map<String, Object>> selectUserheadimgByProductId(Map<String, Object> map) {

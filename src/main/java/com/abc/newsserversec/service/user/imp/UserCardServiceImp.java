@@ -42,4 +42,14 @@ public class UserCardServiceImp implements UserCardService{
     public ArrayList<Map<String, Object>> selectUserheadimgByCompanyName(String companyname) {
         return userCardMapper.selectUserheadimgByCompanyName(companyname);
     }
+
+    @Override
+    public ArrayList<Map<String, Object>> selectUserCardByCompanyName(Map<String, Object> map) {
+        return userCardMapper.selectUserCardByCompanyName(map);
+    }
+
+    @Override
+    public int selectCountByCompanyName(Map<String, Object> map) {
+        return userCardMapper.selectCountByCompanyName(map);
+    }
 }

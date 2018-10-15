@@ -145,4 +145,34 @@
         LIMIT 0,
          3
     </select>
+    <select id="selectUserCardByCompanyName" parameterType="map" resultType="map">
+        SELECT
+            ui.id,
+            ui.headimg,
+            ui.nickname,
+            uc.realname,
+            uc.department,
+            uc.job,
+            uc.companyname
+        FROM
+            userinfo ui,
+            usercard uc
+        WHERE
+            ui.id = uc.userid
+        AND uc.companyname = #{companyname}
+        ORDER BY
+            uc.createtime DESC
+        LIMIT #{num},
+         #{size}
+    </select>
+    <select id="selectCountByCompanyName" parameterType="map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            userinfo ui,
+            usercard uc
+        WHERE
+            ui.id = uc.userid
+        AND uc.companyname = #{companyname}
+    </select>
 </mapper>

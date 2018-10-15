@@ -339,26 +339,21 @@ public class WxCardController {
     public String getUseByProductId(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String productid = request.getParameter("productid");
+        String num_string = request.getParameter("num");
+        String size = request.getParameter("size");
+        int num = Integer.parseInt(num_string)*Integer.parseInt(size);
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("productids",productid);
-        ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
-        ArrayList<Object> users = new ArrayList<>();
-        if(userBusinesses.size() > 0){
-            for (UserBusiness userBusiness : userBusinesses){
-                Map<String, Object> map = new HashMap<>();
-                map.put("id",userBusiness.getUserid());
-                map.put("userid",userBusiness.getUserid());
-                UserInfo userInfo = userInfoService.selectUserInfoByCondition(map);
-                UserCard userCard = userCardService.selectUserCardByCondition(map);
-                Map<String, Object> map1 = new HashMap<>();
-                if(userInfo != null){
-                    map1.put("userinfo",userInfo);
-                    map1.put("userCard",userCard);
-                    users.add(map1);
-                }
-            }
+        dataMap.put("num",num);
+        dataMap.put("size",Integer.parseInt(size));
+        Map<String ,Object> map = new HashMap<>();
+        ArrayList<Map<String ,Object>> usercards = userBusinessService.selectUserCardByProductId(dataMap);
+        map.put("datas",usercards);
+        if(num == 0){
+            int count = userBusinessService.selectCountByCondition(dataMap);
+            map.put("matchCount",count);
         }
-        return new GsonBuilder().create().toJson(users);
+        return new GsonBuilder().create().toJson(map);
     }
 
     @RequestMapping("/method/selectAllRegions")
@@ -373,6 +368,27 @@ public class WxCardController {
             arr.add(json);
         }
         return JSONArray.fromObject(arr).toString();
+    }
+
+    @RequestMapping("/method/queryCardByCompanyName")
+    public String queryCardByCompanyName(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String keyword = request.getParameter("keyword");
+        String num_string = request.getParameter("num");
+        String size = request.getParameter("size");
+        int num = Integer.parseInt(num_string)*Integer.parseInt(size);
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("companyname",keyword);
+        dataMap.put("num",num);
+        dataMap.put("size",Integer.parseInt(size));
+        Map<String, Object> map = new HashMap<>();
+        ArrayList<Map<String,Object>> usercards = userCardService.selectUserCardByCompanyName(dataMap);
+        map.put("datas",usercards);
+        if(num == 0){
+            int count = userCardService.selectCountByCompanyName(dataMap);
+            map.put("matchCount",count);
+        }
+        return new GsonBuilder().create().toJson(map);
     }
 
     public String queryCurrentTime(){

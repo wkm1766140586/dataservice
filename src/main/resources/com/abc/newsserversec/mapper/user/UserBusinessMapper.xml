@@ -19,6 +19,35 @@
         </if>
         <if test="productids != null">
             AND productids LIKE  CONCAT('%',#{productids},'%')
+            ORDER BY createtime desc limit #{num},#{size}
+        </if>
+    </select>
+    <select id="selectUserCardByProductId" parameterType="map" resultType="map">
+        SELECT
+            ui.id,
+            ui.headimg,
+            ui.nickname,
+            uc.realname,
+            uc.department,
+            uc.job,
+            uc.companyname
+        FROM
+            userinfo ui,
+            usercard uc,
+            userservice us
+        WHERE
+            ui.id = uc.userid
+        AND ui.id = us.userid
+        AND us.productids LIKE CONCAT('%',#{productids},'%')
+        ORDER BY
+            uc.createtime DESC
+        LIMIT #{num},
+         #{size}
+    </select>
+    <select id="selectCountByCondition" parameterType="map" resultType="int">
+        SELECT count(*) FROM userservice WHERE 1=1
+        <if test="productids != null">
+            AND productids LIKE  CONCAT('%',#{productids},'%')
         </if>
     </select>
     <insert id="insertUserBusiness" parameterType="map">

@@ -23,4 +23,8 @@ public interface UserCardMapper {
     int updateidById(Map<String, Object> map);
 
     ArrayList<Map<String,Object>> selectUserheadimgByCompanyName(String companyname);
+
+    ArrayList<Map<String,Object>> selectUserCardByCompanyName(Map<String, Object> map);
+
+    int selectCountByCompanyName(Map<String, Object> map);
 }

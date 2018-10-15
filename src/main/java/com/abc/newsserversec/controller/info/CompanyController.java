@@ -287,5 +287,4 @@ public class CompanyController {
         }
         return new GsonBuilder().create().toJson(productSet);
     }
-
 }
