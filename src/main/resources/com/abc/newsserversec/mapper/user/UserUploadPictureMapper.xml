@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.user.UserUploadPictureMapper">
+
+    <insert id="insertUserUploadPicture" parameterType="java.util.Map">
+        insert into user_upload_picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="objectname != null">
+                objectname,
+            </if>
+            <if test="objectid != null">
+                objectid,
+            </if>
+            <if test="picturename != null">
+                picturename,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="updatedate != null">
+                updatedate,
+            </if>
+            <if test="createdate != null">
+                createdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid},
+            </if>
+            <if test="objectname != null">
+                #{objectname},
+            </if>
+            <if test="objectid != null">
+                #{objectid},
+            </if>
+            <if test="picturename != null">
+                #{picturename},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="updatedate != null">
+                #{updatedate},
+            </if>
+            <if test="createdate != null">
+                #{createdate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UserUploadPicture">
+        select id,objectname,objectid,picturename,state,reason,createdate
+        from user_upload_picture where userid = #{userid}
+        order by createdate desc
+        limit #{num},10
+    </select>
+
+    <select id="selectAuditCountByCondition" parameterType="map" resultType="int">
+        select count(*) from user_upload_picture
+        <if test="userid != null">
+            where userid = #{userid}
+        </if>
+        <if test="objectid != null">
+            and objectid = #{objectid}
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+    </select>
+
+    <update id="recallAuditById" parameterType="long">
+        update user_upload_picture set state = '2' where id = #{id}
+    </update>
+
+</mapper>

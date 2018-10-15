@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,9 @@ public class UserInfoController {
     private UserBusinessService userBusinessService;
     @Autowired
     private UserCardService userCardService;
+
+    @Autowired
+    private UserUploadPictureService userUploadPictureService;
 
     //@ModelAttribute("user") User user
     @InitBinder({"user"})
@@ -697,5 +701,70 @@ public class UserInfoController {
 
         wxOperCardService.updateAllID(map);
         wxOperCardService.updateAllID(map1);
+    }
+
+    /**
+     * 根据用户id获得用户提交的审核信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/selectAuditByCondition")
+    public String selectAuditByUserId(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        Map<String,Object> temp = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+
+        String userid = request.getParameter("userid");
+        String num_string = request.getParameter("num");
+        int num = Integer.valueOf(num_string);
+
+        temp.put("userid",userid);
+        temp.put("num",num*10);
+
+        map.put("datas",userUploadPictureService.selectAuditByCondition(temp));
+        if(num == 0) map.put("count",userUploadPictureService.selectAuditCountByCondition(temp));
+        return new GsonBuilder().create().toJson(map);
+    }
+
+    /**
+     * 根据id撤回审核信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/recallAuditById")
+    public String recallAuditById(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String id = request.getParameter("id");
+        userUploadPictureService.recallAuditById(Long.valueOf(id));
+
+        return "";
+    }
+
+    /**
+     * 判断相同产品id的有没有正在审核中的信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/selectAuditCountByCondition")
+    public int selectAuditCountByCondition(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String objectid = request.getParameter("objectid");
+        String userid = request.getParameter("userid");
+
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("objectid",objectid);
+        temp.put("userid",userid);
+        temp.put("state","1");
+
+        return userUploadPictureService.selectAuditCountByCondition(temp);
     }
 }

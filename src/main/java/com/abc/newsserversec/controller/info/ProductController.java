@@ -7,20 +7,27 @@ import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
 import com.abc.newsserversec.service.user.UserBusinessService;
+import com.abc.newsserversec.service.user.UserUploadPictureService;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 
 /**
  * 产品数据查询控制器
@@ -30,6 +37,9 @@ public class ProductController {
 
     @Autowired
     private UserBusinessService userBusinessService;
+
+    @Autowired
+    private UserUploadPictureService userUploadPictureService;
 
     /**
      * 根据产品名称查找产品信息
@@ -661,4 +671,62 @@ public class ProductController {
         }
         return new GsonBuilder().create().toJson(productSet);
     }
+
+    /**
+     * 为产品上传图片
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/uploadPicture")
+    public String uploadPicture(@RequestParam("file") String file, HttpServletRequest request, HttpServletResponse response) {
+
+        String id = request.getParameter("id");
+        String userid = request.getParameter("userid");
+        String name = request.getParameter("name");
+        Decoder decoder = Base64.getDecoder();// 去掉base64编码的头部 如："data:image/jpeg;base64," 如果不去，转换的图片不可以查看
+        file = file.substring(23);
+        //解码
+        byte[] imgByte = decoder.decode(file);
+        String picturename = userid + getFileName();
+        String path ="/var/www/html/yixiecha/upload/" + id + File.separator + picturename;
+        File dir = new File(path);
+        if(!dir.getParentFile().exists()){
+            dir.getParentFile().mkdirs();
+        }
+
+        FileOutputStream out = null; // 输出文件路径
+        try {
+            out = new FileOutputStream(path);
+            out.write(imgByte);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        Map<String, Object> temp = new HashMap<>();
+        temp.put("userid", userid);
+        temp.put("objectname", name);
+        temp.put("objectid", id);
+        temp.put("picturename", picturename);
+        temp.put("type", "1");
+        temp.put("state", "1");
+        temp.put("updatedate", date);
+        temp.put("createdate", date);
+        userUploadPictureService.insertUserUploadPicture(temp);
+
+        return "success";
+    }
+
+    /** 创建文件名称 内容：时间戳+随机数 */
+    private String getFileName() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timeStr = sdf.format(new Date());
+        String str = RandomStringUtils.random(5,"abcdefghijklmnopqrstuvwxyz1234567890");
+        String name = timeStr + str + ".jpg";
+        return name;
+    }
+
 }
