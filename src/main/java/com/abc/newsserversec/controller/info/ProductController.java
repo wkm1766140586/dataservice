@@ -68,7 +68,7 @@ public class ProductController {
         if(keyword.indexOf(" ")>0 && !keyword.endsWith(" ")){
             String lkeyword = keyword.split(" ")[0];
             String rkeyword = keyword.split(" ")[1];
-            condition = "(product_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\")) AND (maker_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\"))";
+            condition = "(product_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\")) AND (maker_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\") OR agent:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\"))";
         }else{
             condition = "(product_name_ch:\\\\\""+keyword+"\\\\\") OR (product_mode:\\\\\""+keyword+"\\\\\")";
         }
@@ -193,7 +193,7 @@ public class ProductController {
         if(keyword.indexOf(" ")>0 && !keyword.endsWith(" ")){
             String lkeyword = keyword.split(" ")[0];
             String rkeyword = keyword.split(" ")[1];
-            condition =  "(maker_name_ch:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))" +
+            condition =  "(maker_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\") OR agent:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\"))" +
                     " AND (src_loc:" + src_loc + ") AND (main_class:" + main_class + ")";
             if(!product_name.equals("")){
                 condition = condition + " AND (product_name_agg:(\\\\\"" + lkeyword + "\\\\\" OR \\\\\"" + rkeyword + "\\\\\"))";
