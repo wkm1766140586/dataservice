@@ -376,6 +376,7 @@ public class WxCardController {
         String keyword = request.getParameter("keyword");
         String num_string = request.getParameter("num");
         String size = request.getParameter("size");
+
         int num = Integer.parseInt(num_string)*Integer.parseInt(size);
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("companyname",keyword);

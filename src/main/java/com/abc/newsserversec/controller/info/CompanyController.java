@@ -196,8 +196,6 @@ public class CompanyController {
         for(Hit hit:retObj.hits.hits){
             Map map = (Map)hit._source;
             map.put("_id",hit._id);
-            String company_name = (String) map.get("company_name");
-            map.put("headimgList",userCardService.selectUserheadimgByCompanyName(company_name));
             productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);

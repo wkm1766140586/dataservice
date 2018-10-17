@@ -115,8 +115,6 @@ public class HospitalController {
         for(Hit hit:retObj.hits.hits){
             Map map = (Map)hit._source;
             map.put("_id",hit._id);
-            String hospital_name = (String) map.get("hospital_name");
-            map.put("headimgList",userCardService.selectUserheadimgByCompanyName(hospital_name));
             productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);

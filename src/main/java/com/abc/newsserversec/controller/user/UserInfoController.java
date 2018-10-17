@@ -383,6 +383,10 @@ public class UserInfoController {
         String department = request.getParameter("department");
         String job = request.getParameter("job");
         String email = request.getParameter("email");
+
+        companyname = companyname.replaceAll("（","(");
+        companyname = companyname.replaceAll("）",")");
+
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("userid", Integer.parseInt(userid));
         UserCard userCard = userCardService.selectUserCardByCondition(dataMap);
@@ -656,6 +660,22 @@ public class UserInfoController {
         map.put("usercity", city);
         map.put("createdate",date);
         return userloginInfoService.insertUserloginInfo(map);
+    }
+
+    /**
+     * 添加微信小程序登录信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/insertWXUserLoginInfo")
+    public String insertWXUserLoginInfo(HttpServletRequest request,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        if(userid == "" || userid.equals("")){return "failed";}
+        userInfoService.updateLoginCountById(Long.parseLong(userid));
+        insertUserloginInfo(request,Long.parseLong(userid));
+        return "success";
     }
 
     //微信登录修改个人信息

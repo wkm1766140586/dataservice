@@ -680,7 +680,6 @@ public class ProductController {
      */
     @RequestMapping("/method/uploadPicture")
     public String uploadPicture(@RequestParam("file") String file, HttpServletRequest request, HttpServletResponse response) {
-
         String id = request.getParameter("id");
         String userid = request.getParameter("userid");
         String name = request.getParameter("name");
