@@ -20,4 +20,6 @@ public interface UserUploadPictureMapper {
     int selectAuditCountByCondition(Map<String,Object> map);
 
     int recallAuditById(long id);
+
+    int insertUploadCompanyCertificate(Map<String, Object> map);
 }

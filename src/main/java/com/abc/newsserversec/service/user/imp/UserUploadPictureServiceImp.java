@@ -36,4 +36,9 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     public int recallAuditById(long id) {
         return userUploadPictureMapper.recallAuditById(id);
     }
+
+    @Override
+    public int insertUploadCompanyCertificate(Map<String, Object> map) {
+        return userUploadPictureMapper.insertUploadCompanyCertificate(map);
+    }
 }

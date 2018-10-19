@@ -24,9 +24,6 @@
             <if test="state != null">
                 state,
             </if>
-            <if test="updatedate != null">
-                updatedate,
-            </if>
             <if test="createdate != null">
                 createdate,
             </if>
@@ -49,9 +46,6 @@
             </if>
             <if test="state != null">
                 #{state},
-            </if>
-            <if test="updatedate != null">
-                #{updatedate},
             </if>
             <if test="createdate != null">
                 #{createdate},
@@ -82,5 +76,49 @@
     <update id="recallAuditById" parameterType="long">
         update user_upload_picture set state = '2' where id = #{id}
     </update>
+
+    <insert id="insertUploadCompanyCertificate" parameterType="java.util.Map">
+        insert into upload_company_certificate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                userid,
+            </if>
+            <if test="companyname != null">
+                companyname,
+            </if>
+            <if test="picturename != null">
+                picturename,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createdate != null">
+                createdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">
+                #{userid},
+            </if>
+            <if test="companyname != null">
+                #{companyname},
+            </if>
+            <if test="picturename != null">
+                #{picturename},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="createdate != null">
+                #{createdate},
+            </if>
+        </trim>
+    </insert>
 
 </mapper>

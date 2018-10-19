@@ -712,7 +712,6 @@ public class ProductController {
         temp.put("picturename", picturename);
         temp.put("type", "1");
         temp.put("state", "1");
-        temp.put("updatedate", date);
         temp.put("createdate", date);
         userUploadPictureService.insertUserUploadPicture(temp);
 

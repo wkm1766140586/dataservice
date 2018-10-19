@@ -10,17 +10,26 @@ import com.abc.newsserversec.model.info.SourceSet;
 import com.abc.newsserversec.service.company.CompanyInfoService;
 import com.abc.newsserversec.service.user.UserBusinessService;
 import com.abc.newsserversec.service.user.UserCardService;
+import com.abc.newsserversec.service.user.UserUploadPictureService;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 
 /**
  * 企业数据查询控制器
@@ -33,6 +42,9 @@ public class CompanyController {
 
     @Autowired
     private UserCardService userCardService;
+
+    @Autowired
+    private UserUploadPictureService userUploadPictureService;
 
     /**
      * 根据企业名称获取企业列表信息
@@ -284,5 +296,63 @@ public class CompanyController {
             productSet.add(map);
         }
         return new GsonBuilder().create().toJson(productSet);
+    }
+
+    /**
+     * 为企业上传图片
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/uploadCompanyCertificate")
+    public String uploadCompanyCertificate(@RequestParam("file") String file,HttpServletRequest request, HttpServletResponse response) {
+        String userid = request.getParameter("userid");
+        String companyname = request.getParameter("company_name");
+        String type = request.getParameter("type");
+        System.out.println(userid+","+companyname+","+type);
+
+        if(userid == null || userid.equals("")) return "fail";
+
+        Decoder decoder = Base64.getDecoder();// 去掉base64编码的头部 如："data:image/jpeg;base64," 如果不去，转换的图片不可以查看\
+        file = file.substring(23);
+        //解码
+        byte[] imgByte = decoder.decode(file);
+
+        String picturename = userid + getFileName();
+        String path ="/var/www/html/yixiecha/upload/company/" + userid + File.separator + picturename;
+        File dir = new File(path);
+        if(!dir.getParentFile().exists()){
+            dir.getParentFile().mkdirs();
+        }
+
+        FileOutputStream out = null; // 输出文件路径
+        try {
+            out = new FileOutputStream(path);
+            out.write(imgByte);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        Map<String, Object> temp = new HashMap<>();
+        temp.put("userid", userid);
+        temp.put("companyname", companyname);
+        temp.put("picturename", picturename);
+        temp.put("type", type);
+        temp.put("state", "1");
+        temp.put("createdate", date);
+        userUploadPictureService.insertUploadCompanyCertificate(temp);
+        return "success";
+    }
+
+    /** 创建文件名称 内容：时间戳+随机数 */
+    private String getFileName() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timeStr = sdf.format(new Date());
+        String str = RandomStringUtils.random(5,"abcdefghijklmnopqrstuvwxyz1234567890");
+        String name = timeStr + str + ".jpg";
+        return name;
     }
 }
