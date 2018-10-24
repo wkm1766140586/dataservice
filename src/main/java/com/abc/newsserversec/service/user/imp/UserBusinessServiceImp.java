@@ -40,6 +40,11 @@ public class UserBusinessServiceImp implements UserBusinessService {
     }
 
     @Override
+    public int deleteBussiness(Map<String, Object> map) {
+        return userBusinessMapper.deleteBussiness(map);
+    }
+
+    @Override
     public int selectCountByCondition(Map<String, Object> map) {
         return userBusinessMapper.selectCountByCondition(map);
     }

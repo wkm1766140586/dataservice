@@ -6,6 +6,7 @@ import com.abc.newsserversec.model.info.ESResultRoot;
 import com.abc.newsserversec.model.info.Hit;
 import com.abc.newsserversec.common.HttpHandler;
 import com.abc.newsserversec.model.info.SourceSet;
+import com.abc.newsserversec.model.user.UserBusiness;
 import com.abc.newsserversec.service.user.UserBusinessService;
 import com.abc.newsserversec.service.user.UserUploadPictureService;
 import com.google.gson.GsonBuilder;
@@ -474,14 +475,24 @@ public class ProductController {
 
         //根据用户id获得用户负责产品的信息
         if(userid != null && !userid.equals("")){
-            ArrayList<Map<String,Object>> serviceList = userBusinessService.selectProductInfosByUserid(Long.parseLong(userid));
+            /*ArrayList<Map<String,Object>> serviceList = userBusinessService.selectProductInfosByUserid(Long.parseLong(userid));
             if(serviceList.size() > 0){
                 Map<String,Object> userService = serviceList.get(0);
                 userServicePro = (String) userService.get("productids");
                 userServicePro = userServicePro.substring(0,userServicePro.length()-1);
                 productSet.setSelectedDatas(Arrays.asList(userServicePro.split(",")));
+            }*/
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("userid",userid);
+            dataMap.put("companyname",keyword);
+            ArrayList<UserBusiness> serviceList = userBusinessService.selectUserBusinessByCondition(dataMap);
+            if(serviceList.size() > 0){
+               UserBusiness userService = serviceList.get(0);
+                userServicePro = userService.getProductids();
+                userServicePro = userServicePro.substring(0,userServicePro.length()-1);
+                productSet.setSelectedDatas(Arrays.asList(userServicePro.split(",")));
+                productSet.setSelectedDatasName(Arrays.asList(userService.getProductnames().substring(0,userService.getProductnames().length()-1).split(",")));
             }
-
         }
 
         String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);

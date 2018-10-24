@@ -17,6 +17,7 @@ public interface UserBusinessMapper {
     ArrayList<UserBusiness> selectUserBusinessByCondition(Map<String, Object> map);
     int updateidById(Map<String, Object> map);
     int deleteByUserId(long userid);
+    int deleteBussiness(Map<String, Object> map);
     ArrayList<Map<String,Object>> selectUserCardByProductId(Map<String, Object> map);
     int selectCountByCondition(Map<String, Object> map);
     ArrayList<Map<String,Object>> selectUserheadimgByProductId(Map<String,Object> map);

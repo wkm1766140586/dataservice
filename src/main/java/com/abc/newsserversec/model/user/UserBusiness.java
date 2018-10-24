@@ -7,8 +7,17 @@ public class UserBusiness {
     private int userid;
     private String companyname;
     private String productids;
+    private String productnames;
     private String areaids;
     private String createtime;
+
+    public String getProductnames() {
+        return productnames;
+    }
+
+    public void setProductnames(String productnames) {
+        this.productnames = productnames;
+    }
 
     public int getId() {
         return id;

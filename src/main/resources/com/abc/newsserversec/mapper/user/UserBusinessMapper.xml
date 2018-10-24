@@ -6,6 +6,8 @@
         <result property="id" column="id"/>
         <result property="userid" column="userid"/>
         <result property="productids" column="productids"/>
+        <result property="productnames" column="productnames"/>
+        <result property="companyname" column="companyname"/>
         <result property="areaids" column="areaids"/>
         <result property="createtime" column="createtime"/>
     </resultMap>
@@ -16,6 +18,9 @@
         </if>
         <if test="userid != null">
             AND userid = #{userid}
+        </if>
+        <if test="companyname != null">
+            AND companyname = #{companyname}
         </if>
         <if test="productids != null">
             AND productids LIKE  CONCAT('%',#{productids},'%')
@@ -62,6 +67,9 @@
             <if test="productids != null">
                 productids,
             </if>
+            <if test="productnames != null">
+                productnames,
+            </if>
             <if test="areaids != null">
                 areaids,
             </if>
@@ -79,6 +87,9 @@
             <if test="productids != null">
                 #{productids},
             </if>
+            <if test="productnames != null">
+                #{productnames},
+            </if>
             <if test="areaids != null">
                 #{areaids},
             </if>
@@ -90,11 +101,11 @@
     <update id="updateUserBusiness" parameterType="map">
         UPDATE userservice
         <set>
-            <if test="companyname != null">
-                companyname = #{companyname},
-            </if>
             <if test="productids != null">
                 productids = #{productids},
+            </if>
+            <if test="productnames != null">
+                productnames = #{productnames},
             </if>
             <if test="areaids != null">
                 areaids = #{areaids},
@@ -104,12 +115,21 @@
             </if>
         </set>
         where userid = #{userid}
+        <if test="type != null">
+           AND companyname = #{companyname}
+        </if>
     </update>
     <update id="updateidById" parameterType="map">
         UPDATE userservice SET userid = #{val} WHERE userid=#{userid}
     </update>
     <delete id="deleteByUserId" parameterType="long">
        DELETE FROM userservice WHERE userid = #{userid}
+       <if test="companyname != null">
+           AND companyname = #{companyname}
+       </if>
+    </delete>
+    <delete id="deleteBussiness" parameterType="map">
+        DELETE FROM userservice WHERE userid = #{userid} AND companyname = #{companyname}
     </delete>
 
     <select id="selectUserheadimgByProductId" parameterType="map" resultType="map">

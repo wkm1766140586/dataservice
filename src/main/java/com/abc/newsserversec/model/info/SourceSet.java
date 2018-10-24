@@ -10,6 +10,7 @@ import java.util.Map;
 public class SourceSet {
     private int matchCount = 0;
     private List<Object> selectedDatas = new ArrayList<>();
+    private List<Object> selectedDatasName = new ArrayList<>();//存放产品名称
     private List<Object> datas = new ArrayList<>();
     private List<Object> aggList = new ArrayList<>();
     private List<Object> provinceList = new ArrayList<>();
@@ -65,5 +66,13 @@ public class SourceSet {
 
     public void setSelectedDatas(List<Object> selectedDatas) {
         this.selectedDatas = selectedDatas;
+    }
+
+    public List<Object> getSelectedDatasName() {
+        return selectedDatasName;
+    }
+
+    public void setSelectedDatasName(List<Object> selectedDatasName) {
+        this.selectedDatasName = selectedDatasName;
     }
 }

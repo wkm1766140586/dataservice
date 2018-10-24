@@ -55,6 +55,37 @@ public class UserBusinessController {
     }
 
     /**
+     * 添加信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/insertBusiness")
+    public int insertBussinessInfo(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        String productids = request.getParameter("productids");
+        String productnames = request.getParameter("productnames");
+        String companyname = request.getParameter("companyname");
+        String areaids = request.getParameter("areaids");
+        if(userid == null || productids == null){return -1;}
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("userid",userid);
+        dataMap.put("companyname",companyname);
+        ArrayList<UserBusiness> userBusiness = userBusinessService.selectUserBusinessByCondition(dataMap);
+        dataMap.put("productnames",productnames);
+        dataMap.put("productids",productids);
+        dataMap.put("createtime",queryCurrentTime());
+        if(userBusiness.size() == 0){//没有添加任何业务
+            dataMap.put("areaids",areaids);
+            return userBusinessService.insertUserBusiness(dataMap);
+        }else{
+            dataMap.put("type","companyName");
+            return userBusinessService.updateUserBusiness(dataMap);
+        }
+    }
+
+    /**
      * 解除绑定
      * @param request
      * @param response
@@ -65,6 +96,23 @@ public class UserBusinessController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String userid = request.getParameter("userid");
         return userBusinessService.deleteByUserId(Long.parseLong(userid));
+    }
+
+    /**
+     * 删除绑定
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/deleteBusiness")
+    public int deleteService(HttpServletRequest request, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        String companyname = request.getParameter("companyname");
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("userid",userid);
+        dataMap.put("companyname",companyname);
+        return userBusinessService.deleteBussiness(dataMap);
     }
 
     /**
@@ -84,7 +132,7 @@ public class UserBusinessController {
         dataMap.put("areaids",areaids);
         return userBusinessService.updateUserBusiness(dataMap);
     }
-    @RequestMapping("method/selectInfoById")
+    @RequestMapping("/method/selectInfoById")
     public String selectInfoById(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
         String userid = request.getParameter("userid");
