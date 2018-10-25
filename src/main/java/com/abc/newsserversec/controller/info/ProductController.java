@@ -627,6 +627,7 @@ public class ProductController {
 
         String num = request.getParameter("num");
         String keyword = request.getParameter("keyword");
+        String id = request.getParameter("id");
         if(num == null || keyword == null) return "fail";
         if(num.equals("") || keyword.equals("")) return "fail";
 
@@ -653,6 +654,12 @@ public class ProductController {
         esRequest = esRequest.replaceFirst("\"#filter\"","");
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
+
+        if(id != null && !id.equals("")){
+            String must_not = "{\"term\": { \"id\":    \"" + id + "\"}}";
+            int index = postbody.indexOf("must_not");
+            postbody = postbody.substring(0,index+10) + must_not + postbody.substring(index+13);
+        }
         System.out.println(postbody);
 
         String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
@@ -678,6 +685,7 @@ public class ProductController {
             esCount = esCount.replaceFirst("\"#filter\"","");
             String countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
             ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            if(id !=null && !id.equals("")) esCt.count--;
             productSet.setMatchCount(esCt.count);
         }
         return new GsonBuilder().create().toJson(productSet);
