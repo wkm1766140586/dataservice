@@ -160,22 +160,43 @@ public class UserBusinessController {
         dataMap.put("userid",userid);
         ArrayList<UserBusiness> userBusinesses = userBusinessService.selectUserBusinessByCondition(dataMap);
         if(userBusinesses.size() > 0){
-            String productids = userBusinesses.get(0).getProductids();
+            String productids = "";
+            for (int i = 0;i < userBusinesses.size();i++){
+                productids += userBusinesses.get(i).getProductids();
+            }
             String[] productidArr = productids.split(",");
             int count = 0;
-            if(!size.equals("")){
+            if(!size.equals("")){//前两条
                 if(Integer.parseInt(size) < productidArr.length){
                     count = Integer.parseInt(size);
                 }else{
                     count = productidArr.length;
                 }
-            }else{
-                count = productidArr.length;
+                for(int i = 0;i < count;i++){
+                    JSONObject json = JSONObject.fromObject(this.searchProductById(productidArr[i]));
+                    array.add(JSONArray.fromObject(json.get("datas")).get(0));
+                }
+                return new GsonBuilder().create().toJson(array);
+            }else{//所有的
+                //count = productidArr.length
+                for (int i = 0;i < userBusinesses.size();i++){
+                    JSONObject map = new JSONObject();
+                    String ids = userBusinesses.get(i).getProductids();
+                    String[] productArr = ids.split(",");
+                    map.put("companyname",userBusinesses.get(i).getCompanyname());
+                    ArrayList<Object> list = new ArrayList<>();
+                    for (int j = 0;j < productArr.length;j++){
+                        list.add(this.searchProductById(productArr[j]));
+                    }
+                    map.put("data",list);
+                    array.add(map);
+                }
+                return new GsonBuilder().create().toJson(array);
             }
-            for(int i = 0;i < count;i++){
+            /*for(int i = 0;i < count;i++){
                 JSONObject json = JSONObject.fromObject(this.searchProductById(productidArr[i]));
                 array.add(JSONArray.fromObject(json.get("datas")).get(0));
-            }
+            }*/
         }
         return new GsonBuilder().create().toJson(array);
     }
