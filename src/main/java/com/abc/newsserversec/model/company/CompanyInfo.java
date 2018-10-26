@@ -25,6 +25,9 @@ public class CompanyInfo {
 
     private ArrayList<Map<String,Object>> headimgList;
 
+    /*展位信息*/
+    private Map<String,Object> exhibitionInfo;
+
     public long getId() {
         return id;
     }
@@ -87,5 +90,13 @@ public class CompanyInfo {
 
     public void setHeadimgList(ArrayList<Map<String, Object>> headimgList) {
         this.headimgList = headimgList;
+    }
+
+    public Map<String, Object> getExhibitionInfo() {
+        return exhibitionInfo;
+    }
+
+    public void setExhibitionInfo(Map<String, Object> exhibitionInfo) {
+        this.exhibitionInfo = exhibitionInfo;
     }
 }

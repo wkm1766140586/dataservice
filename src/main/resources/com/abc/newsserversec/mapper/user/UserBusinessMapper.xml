@@ -130,9 +130,11 @@
     </delete>
 
     <select id="selectUserheadimgByProductId" parameterType="map" resultType="map">
-        select u.headimg as headimg from userinfo u,userservice us
+        <!--select u.headimg as headimg from userinfo u,userservice us
         where u.id = us.userid and u.id in (select userid from userservice where productids like #{productids})
-        order by us.createtime desc limit 0,3
+        order by us.createtime desc limit 0,3-->
+        select u.headimg as headimg from userinfo u,userservice us
+        where u.id = us.userid AND us.productids LIKE #{productids}
     </select>
 
     <select id="selectUserheadimgByCompanyName" parameterType="string" resultType="map">
