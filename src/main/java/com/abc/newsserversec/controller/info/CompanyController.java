@@ -11,6 +11,7 @@ import com.abc.newsserversec.service.company.CompanyInfoService;
 import com.abc.newsserversec.service.user.UserBusinessService;
 import com.abc.newsserversec.service.user.UserCardService;
 import com.abc.newsserversec.service.user.UserUploadPictureService;
+import com.abc.newsserversec.service.wechat.ExhibitionService;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class CompanyController {
 
     @Autowired
     private UserUploadPictureService userUploadPictureService;
+
+    @Autowired
+    private ExhibitionService exhibitionService;
 
     /**
      * 根据企业名称获取企业列表信息
@@ -123,6 +127,8 @@ public class CompanyController {
             String companyname = companyInfo.getCompany_name();
             ArrayList<Map<String,Object>> list = userCardService.selectUserheadimgByCompanyName(companyname);
             companyInfo.setHeadimgList(list);
+            companyInfo.setExhibitionInfo(exhibitionService.selectExhibitionByName(companyname));//查询公司的展位信息
+
         }
         dataMap.put("datas",companyInfos);
 
