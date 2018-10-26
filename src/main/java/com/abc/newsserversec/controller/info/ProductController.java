@@ -707,7 +707,7 @@ public class ProductController {
         //解码
         byte[] imgByte = decoder.decode(file);
         String picturename = userid + getFileName();
-        String path ="/var/www/html/yixiecha/upload/product/" + id + File.separator + picturename;
+        String path ="/var/www/html/yixiecha/upload/" + id + File.separator + picturename;
         File dir = new File(path);
         if(!dir.getParentFile().exists()){
             dir.getParentFile().mkdirs();
