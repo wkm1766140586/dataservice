@@ -18,9 +18,6 @@
             <if test="picturename != null">
                 picturename,
             </if>
-            <if test="type != null">
-                type,
-            </if>
             <if test="state != null">
                 state,
             </if>
@@ -40,9 +37,6 @@
             </if>
             <if test="picturename != null">
                 #{picturename},
-            </if>
-            <if test="type != null">
-                #{type},
             </if>
             <if test="state != null">
                 #{state},
