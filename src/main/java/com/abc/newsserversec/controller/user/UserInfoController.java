@@ -249,7 +249,7 @@ public class UserInfoController {
                     temp.put("username",userInfo1.getUsername());
                     temp.put("email",userInfo1.getEmail());
                     temp.put("nickname",userInfo1.getNickname());
-                    temp.put("password",userInfo.getPassword());
+                    temp.put("password",userInfo1.getPassword());
                     return new GsonBuilder().create().toJson(temp);
                 }else {
                     return "fail";
