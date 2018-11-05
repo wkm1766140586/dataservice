@@ -47,17 +47,25 @@
         </trim>
     </insert>
 
-    <select id="selectAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UserUploadPicture">
+    <select id="selectProductAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UserUploadPicture">
         select id,objectname,objectid,picturename,state,reason,createdate
         from user_upload_picture where userid = #{userid}
+        and delflag = '0'
+        <if test="keyword != null">
+            and objectname like #{keyword}
+        </if>
         order by createdate desc
-        limit #{num},10
+        limit #{num},#{size}
     </select>
 
-    <select id="selectAuditCountByCondition" parameterType="map" resultType="int">
+    <select id="selectProductAuditCountByCondition" parameterType="map" resultType="int">
         select count(*) from user_upload_picture
+        where delflag = '0'
         <if test="userid != null">
-            where userid = #{userid}
+            and userid = #{userid}
+        </if>
+        <if test="keyword != null">
+            and objectname like #{keyword}
         </if>
         <if test="objectid != null">
             and objectid = #{objectid}
@@ -114,5 +122,64 @@
             </if>
         </trim>
     </insert>
+
+    <select id="selectCompanyAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UploadCompanyPicture">
+        select id,companyname,reason,picturename,type,state,createdate
+        from upload_company_certificate
+        where delflag = '0'
+        <if test="userid != null">
+            and userid = #{userid}
+        </if>
+        <if test="keyword != null">
+            and companyname like #{keyword}
+        </if>
+        order by createdate desc
+        limit #{num},#{size}
+    </select>
+
+    <select id="selectCompanyAuditCountByCondition" parameterType="map" resultType="int">
+        select count(*) from upload_company_certificate
+        where delflag = '0'
+        <if test="userid != null">
+            and userid = #{userid}
+        </if>
+        <if test="keyword != null">
+            and companyname like #{keyword}
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+    </select>
+
+    <select id="selectAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UploadInfo">
+        select id,companyname as name,"com" as classtype,createdate from upload_company_certificate
+        where delflag = '0' and userid = #{userid}
+        <if test="keyword != null">
+            and companyname like #{keyword}
+        </if>
+        union select id,objectname,"pro" as classtype,createdate from user_upload_picture
+        where delflag = '0' and userid = #{userid}
+        <if test="keyword != null">
+            and objectname like #{keyword}
+        </if>
+        order by createdate desc
+        limit #{num},#{size}
+    </select>
+
+    <select id="selectAuditCountByCondition" parameterType="map" resultType="int">
+        select sum(tmpcount) as count from (
+        select count(*) as tmpcount from upload_company_certificate
+        where delflag = '0' and userid = #{userid}
+        <if test="keyword != null">
+            and companyname like #{keyword}
+        </if>
+        union all
+        select count(*) as tmpcount from user_upload_picture
+        where delflag = '0' and userid = #{userid}
+        <if test="keyword != null">
+            and objectname like #{keyword}
+        </if>
+        ) a
+    </select>
 
 </mapper>

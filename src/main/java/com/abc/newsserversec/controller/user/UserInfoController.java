@@ -723,32 +723,6 @@ public class UserInfoController {
     }
 
     /**
-     * 根据用户id获得用户提交的审核信息
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping("/method/selectAuditByCondition")
-    public String selectAuditByUserId(HttpServletRequest request,HttpServletResponse response) throws Exception{
-        response.setHeader("Access-Control-Allow-Origin", "*");
-
-        Map<String,Object> temp = new HashMap<>();
-        Map<String,Object> map = new HashMap<>();
-
-        String userid = request.getParameter("userid");
-        String num_string = request.getParameter("num");
-        int num = Integer.valueOf(num_string);
-
-        temp.put("userid",userid);
-        temp.put("num",num*10);
-
-        map.put("datas",userUploadPictureService.selectAuditByCondition(temp));
-        if(num == 0) map.put("count",userUploadPictureService.selectAuditCountByCondition(temp));
-        return new GsonBuilder().create().toJson(map);
-    }
-
-    /**
      * 根据id撤回审核信息
      * @param request
      * @param response

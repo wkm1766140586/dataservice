@@ -68,9 +68,9 @@ public class CompanyController {
 
         keyword = keyword.replaceAll("（","(");
         keyword = keyword.replaceAll("）",")");
+        keyword = keyword.replaceAll(" ","");
         String regex = "(.{1})";
         keyword = keyword.replaceAll (regex, "$1%");
-        System.out.println (keyword);
 
         keyword = "%"+keyword;
         map.put("company_name",keyword);
@@ -108,6 +108,7 @@ public class CompanyController {
 
         keyword = keyword.replaceAll("（","(");
         keyword = keyword.replaceAll("）",")");
+        keyword = keyword.replaceAll(" ","");
         String regex = "(.{1})";
         keyword = keyword.replaceAll (regex, "$1%");
 
@@ -177,7 +178,6 @@ public class CompanyController {
             companyInfo.setProduct_count(String.valueOf(esCt.count));
         }
         dataMap.put("datas",companyInfos);
-        System.out.println();
         return new GsonBuilder().create().toJson(dataMap);
     }
 
@@ -314,7 +314,6 @@ public class CompanyController {
         String userid = request.getParameter("userid");
         String companyname = request.getParameter("company_name");
         String type = request.getParameter("type");
-        System.out.println(userid+","+companyname+","+type);
 
         if(userid == null || userid.equals("")) return "fail";
 

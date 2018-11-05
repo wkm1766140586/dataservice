@@ -2,6 +2,8 @@ package com.abc.newsserversec.service.user.imp;
 
 import com.abc.newsserversec.mapper.user.UserCardMapper;
 import com.abc.newsserversec.mapper.user.UserUploadPictureMapper;
+import com.abc.newsserversec.model.user.UploadCompanyPicture;
+import com.abc.newsserversec.model.user.UploadInfo;
 import com.abc.newsserversec.model.user.UserCard;
 import com.abc.newsserversec.model.user.UserUploadPicture;
 import com.abc.newsserversec.service.user.UserCardService;
@@ -23,13 +25,13 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     }
 
     @Override
-    public ArrayList<UserUploadPicture> selectAuditByCondition(Map<String,Object> map) {
-        return userUploadPictureMapper.selectAuditByCondition(map);
+    public ArrayList<UserUploadPicture> selectProductAuditByCondition(Map<String,Object> map) {
+        return userUploadPictureMapper.selectProductAuditByCondition(map);
     }
 
     @Override
-    public int selectAuditCountByCondition(Map<String, Object> map) {
-        return userUploadPictureMapper.selectAuditCountByCondition(map);
+    public int selectProductAuditCountByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.selectProductAuditCountByCondition(map);
     }
 
     @Override
@@ -40,5 +42,25 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     @Override
     public int insertUploadCompanyCertificate(Map<String, Object> map) {
         return userUploadPictureMapper.insertUploadCompanyCertificate(map);
+    }
+
+    @Override
+    public ArrayList<UploadCompanyPicture> selectCompanyAuditByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.selectCompanyAuditByCondition(map);
+    }
+
+    @Override
+    public int selectCompanyAuditCountByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.selectCompanyAuditCountByCondition(map);
+    }
+
+    @Override
+    public ArrayList<UploadInfo> selectAuditByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.selectAuditByCondition(map);
+    }
+
+    @Override
+    public int selectAuditCountByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.selectAuditCountByCondition(map);
     }
 }

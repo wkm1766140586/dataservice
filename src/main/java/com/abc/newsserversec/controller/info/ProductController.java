@@ -212,9 +212,10 @@ public class ProductController {
 
         if(!company_name.equals("") && !company_name.equals("yes")) condition = condition+ " AND company_name_agg:\\\\\""+company_name+"\\\\\"";
         if(!class_code.equals("") && !class_code.equals("yes")) condition = condition+ " AND class_code:\\\\\""+class_code+"\\\\\"";
+//        String filter = "{\"range\":{\"approval_date\":{\"gt\":\"1990-10-01\",\"lt\":\"2190-01-01\"}}}";;
         String filter = "";
-        if(product_state.equals("有效")) filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
-        else if(product_state.equals("无效")) filter = "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
+        if(product_state.equals("有效")) filter += "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
+        else if(product_state.equals("无效")) filter += "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
 
         int from = Integer.valueOf(num);
         if(size != null) { from = from * Integer.valueOf(size); }
@@ -239,7 +240,6 @@ public class ProductController {
         }
         System.out.println(postbody);
         ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", postbody);
-        System.out.println(ret);
         ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
         for(Hit hit:retObj.hits.hits){
             Map<String, Object> source = (Map<String, Object>) hit._source;
