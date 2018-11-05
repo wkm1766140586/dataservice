@@ -20,8 +20,9 @@ public interface UserUploadPictureService {
     //根据条件获得产品上传数量
     int selectProductAuditCountByCondition(Map<String,Object> map);
 
-    //撤回产品上图信息
-    int recallAuditById(long id);
+    //撤回信息
+    int updateProductAuditByCondition(Map<String,Object> map);
+
 
     //企业资质
     //插入信息
@@ -32,6 +33,10 @@ public interface UserUploadPictureService {
 
     //根据条件获得企业上传数量
     int selectCompanyAuditCountByCondition(Map<String,Object> map);
+
+    //撤回信息
+    int updateCompanyAuditByCondition(Map<String,Object> map);
+
 
     //消息中心
     //根据条件获得消息中心信息

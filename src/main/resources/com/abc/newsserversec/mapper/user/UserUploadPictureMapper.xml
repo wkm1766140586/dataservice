@@ -75,8 +75,17 @@
         </if>
     </select>
 
-    <update id="recallAuditById" parameterType="long">
-        update user_upload_picture set state = '2' where id = #{id}
+    <update id="updateProductAuditByCondition" parameterType="map">
+        update user_upload_picture
+        <set>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="delflag != null">
+                delflag = #{delflag},
+            </if>
+        </set>
+        where id = #{id}
     </update>
 
     <insert id="insertUploadCompanyCertificate" parameterType="java.util.Map">
@@ -150,6 +159,19 @@
             and state = #{state}
         </if>
     </select>
+
+    <update id="updateCompanyAuditByCondition" parameterType="map">
+        update upload_company_certificate
+        <set>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="delflag != null">
+                delflag = #{delflag},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
     <select id="selectAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UploadInfo">
         select id,companyname as name,"com" as classtype,createdate from upload_company_certificate

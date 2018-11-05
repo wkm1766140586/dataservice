@@ -723,23 +723,6 @@ public class UserInfoController {
     }
 
     /**
-     * 根据id撤回审核信息
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping("/method/recallAuditById")
-    public String recallAuditById(HttpServletRequest request,HttpServletResponse response) throws Exception{
-        response.setHeader("Access-Control-Allow-Origin", "*");
-
-        String id = request.getParameter("id");
-        userUploadPictureService.recallAuditById(Long.valueOf(id));
-
-        return "";
-    }
-
-    /**
      * 判断相同产品id的有没有正在审核中的信息
      * @param request
      * @param response

@@ -61,4 +61,48 @@ public class UploadInfoController {
 
         return new GsonBuilder().create().toJson(map);
     }
+
+    /**
+     * 根据条件撤回审核信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/recallAuditById")
+    public String recallAuditById(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String id = request.getParameter("id");
+        String classtype = request.getParameter("classtype");
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("id",id);
+        temp.put("state","2");
+        if(classtype.equals("pro")) userUploadPictureService.updateProductAuditByCondition(temp);
+        else if(classtype.equals("com")) userUploadPictureService.updateCompanyAuditByCondition(temp);
+
+        return "";
+    }
+
+    /**
+     * 根据条件删除审核信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/deleteAuditById")
+    public String deleteAuditById(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String id = request.getParameter("id");
+        String classtype = request.getParameter("classtype");
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("id",id);
+        temp.put("delflag","1");
+        if(classtype.equals("pro")) userUploadPictureService.updateProductAuditByCondition(temp);
+        else if(classtype.equals("com")) userUploadPictureService.updateCompanyAuditByCondition(temp);
+
+        return "";
+    }
 }

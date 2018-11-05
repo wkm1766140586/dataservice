@@ -21,13 +21,17 @@ public interface UserUploadPictureMapper {
 
     int selectProductAuditCountByCondition(Map<String,Object> map);
 
-    int recallAuditById(long id);
+    int updateProductAuditByCondition(Map<String,Object> map);
+
 
     int insertUploadCompanyCertificate(Map<String, Object> map);
 
     ArrayList<UploadCompanyPicture> selectCompanyAuditByCondition(Map<String,Object> map);
 
     int selectCompanyAuditCountByCondition(Map<String,Object> map);
+
+    int updateCompanyAuditByCondition(Map<String,Object> map);
+
 
     ArrayList<UploadInfo> selectAuditByCondition(Map<String,Object> map);
 

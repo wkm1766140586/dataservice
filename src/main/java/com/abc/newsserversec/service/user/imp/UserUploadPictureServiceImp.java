@@ -35,8 +35,8 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     }
 
     @Override
-    public int recallAuditById(long id) {
-        return userUploadPictureMapper.recallAuditById(id);
+    public int updateProductAuditByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.updateProductAuditByCondition(map);
     }
 
     @Override
@@ -52,6 +52,11 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     @Override
     public int selectCompanyAuditCountByCondition(Map<String, Object> map) {
         return userUploadPictureMapper.selectCompanyAuditCountByCondition(map);
+    }
+
+    @Override
+    public int updateCompanyAuditByCondition(Map<String, Object> map) {
+        return userUploadPictureMapper.updateCompanyAuditByCondition(map);
     }
 
     @Override
