@@ -127,8 +127,7 @@ public class CompanyController {
             String companyname = companyInfo.getCompany_name();
             ArrayList<Map<String,Object>> list = userCardService.selectUserheadimgByCompanyName(companyname);
             companyInfo.setHeadimgList(list);
-            companyInfo.setExhibitionInfo(exhibitionService.selectExhibitionByName(companyname));//查询公司的展位信息
-
+            //companyInfo.setExhibitionInfo(exhibitionService.selectExhibitionByName(companyname));//查询公司的展位信
         }
         dataMap.put("datas",companyInfos);
 
