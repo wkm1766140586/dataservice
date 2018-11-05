@@ -23,6 +23,8 @@ public interface UserUploadPictureMapper {
 
     int updateProductAuditByCondition(Map<String,Object> map);
 
+    int deleteProductAuditById(long id);
+
 
     int insertUploadCompanyCertificate(Map<String, Object> map);
 
@@ -31,6 +33,8 @@ public interface UserUploadPictureMapper {
     int selectCompanyAuditCountByCondition(Map<String,Object> map);
 
     int updateCompanyAuditByCondition(Map<String,Object> map);
+
+    int deleteCompanyAuditById(long id);
 
 
     ArrayList<UploadInfo> selectAuditByCondition(Map<String,Object> map);

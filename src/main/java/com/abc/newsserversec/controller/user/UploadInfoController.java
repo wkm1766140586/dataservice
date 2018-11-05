@@ -1,5 +1,7 @@
 package com.abc.newsserversec.controller.user;
 
+import com.abc.newsserversec.model.user.UploadCompanyPicture;
+import com.abc.newsserversec.model.user.UserUploadPicture;
 import com.abc.newsserversec.service.user.UserUploadPictureService;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,6 +106,49 @@ public class UploadInfoController {
         temp.put("delflag","1");
         if(classtype.equals("pro")) userUploadPictureService.updateProductAuditByCondition(temp);
         else if(classtype.equals("com")) userUploadPictureService.updateCompanyAuditByCondition(temp);
+
+        return "";
+    }
+
+    /**
+     * 根据条件删除审核信息
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/method/againUploadByCondition")
+    public String againUploadByCondition(HttpServletRequest request,HttpServletResponse response) throws Exception{
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String id = request.getParameter("id");
+        String classtype = request.getParameter("classtype");
+        Map<String,Object> temp = new HashMap<>();
+        temp.put("id",id);
+
+        if(classtype.equals("pro")){
+            ArrayList<UserUploadPicture> datas = userUploadPictureService.selectProductAuditByCondition(temp);
+            if(datas.size() > 0){
+                UserUploadPicture userUploadPicture = datas.get(0);
+                String picturename = userUploadPicture.getObjectid()+"/"+userUploadPicture.getPicturename();
+                String basePath="/var/www/html/yixiecha/upload/product/"+picturename;
+                File file = new File(basePath);
+                if (file.exists()) file.delete();
+            }
+            userUploadPictureService.deleteProductAuditById(Long.parseLong(id));
+        }
+        else if(classtype.equals("com")){
+            ArrayList<UploadCompanyPicture> datas = userUploadPictureService.selectCompanyAuditByCondition(temp);
+            if(datas.size() > 0){
+                UploadCompanyPicture uploadCompanyPicture = datas.get(0);
+                String picturename = uploadCompanyPicture.getUserid()+"/"+uploadCompanyPicture.getPicturename();
+                String basePath="/var/www/html/yixiecha/upload/company/"+picturename;
+                File file = new File(basePath);
+                if (file.exists()) file.delete();
+            }
+            userUploadPictureService.deleteCompanyAuditById(Long.parseLong(id));
+        }
+
 
         return "";
     }

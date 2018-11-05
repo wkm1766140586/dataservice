@@ -49,13 +49,20 @@
 
     <select id="selectProductAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UserUploadPicture">
         select id,objectname,objectid,picturename,state,reason,createdate
-        from user_upload_picture where userid = #{userid}
-        and delflag = '0'
+        from user_upload_picture where delflag = '0'
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="userid != null">
+            and userid = #{userid}
+        </if>
         <if test="keyword != null">
             and objectname like #{keyword}
         </if>
         order by createdate desc
-        limit #{num},#{size}
+        <if test="num != null">
+            limit #{num},#{size}
+        </if>
     </select>
 
     <select id="selectProductAuditCountByCondition" parameterType="map" resultType="int">
@@ -87,6 +94,10 @@
         </set>
         where id = #{id}
     </update>
+
+    <delete id="deleteProductAuditById" parameterType="long">
+        delete from user_upload_picture where id = #{id}
+    </delete>
 
     <insert id="insertUploadCompanyCertificate" parameterType="java.util.Map">
         insert into upload_company_certificate
@@ -133,9 +144,12 @@
     </insert>
 
     <select id="selectCompanyAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UploadCompanyPicture">
-        select id,companyname,reason,picturename,type,state,createdate
+        select id,userid,companyname,reason,picturename,type,state,createdate
         from upload_company_certificate
         where delflag = '0'
+        <if test="id != null">
+            and id = #{id}
+        </if>
         <if test="userid != null">
             and userid = #{userid}
         </if>
@@ -143,7 +157,9 @@
             and companyname like #{keyword}
         </if>
         order by createdate desc
-        limit #{num},#{size}
+        <if test="num != null">
+            limit #{num},#{size}
+        </if>
     </select>
 
     <select id="selectCompanyAuditCountByCondition" parameterType="map" resultType="int">
@@ -172,6 +188,10 @@
         </set>
         where id = #{id}
     </update>
+
+    <delete id="deleteCompanyAuditById" parameterType="long">
+        delete from upload_company_certificate where id = #{id}
+    </delete>
 
     <select id="selectAuditByCondition" parameterType="map" resultType="com.abc.newsserversec.model.user.UploadInfo">
         select id,companyname as name,"com" as classtype,createdate from upload_company_certificate

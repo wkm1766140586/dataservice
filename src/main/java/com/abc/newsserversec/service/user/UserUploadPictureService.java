@@ -23,6 +23,9 @@ public interface UserUploadPictureService {
     //撤回信息
     int updateProductAuditByCondition(Map<String,Object> map);
 
+    //删除信息
+    int deleteProductAuditById(long id);
+
 
     //企业资质
     //插入信息
@@ -36,6 +39,9 @@ public interface UserUploadPictureService {
 
     //撤回信息
     int updateCompanyAuditByCondition(Map<String,Object> map);
+
+    //删除信息
+    int deleteCompanyAuditById(long id);
 
 
     //消息中心

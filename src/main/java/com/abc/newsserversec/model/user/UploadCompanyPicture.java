@@ -6,6 +6,8 @@ public class UploadCompanyPicture {
     private long id;
     //名称
     private String companyname;
+    //用户id
+    private long userid;
     //原因
     private String reason;
     //图片
@@ -19,6 +21,14 @@ public class UploadCompanyPicture {
 
     public long getId() {
         return id;
+    }
+
+    public long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(long userid) {
+        this.userid = userid;
     }
 
     public void setId(long id) {

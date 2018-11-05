@@ -40,6 +40,11 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     }
 
     @Override
+    public int deleteProductAuditById(long id) {
+        return userUploadPictureMapper.deleteProductAuditById(id);
+    }
+
+    @Override
     public int insertUploadCompanyCertificate(Map<String, Object> map) {
         return userUploadPictureMapper.insertUploadCompanyCertificate(map);
     }
@@ -57,6 +62,11 @@ public class UserUploadPictureServiceImp implements UserUploadPictureService{
     @Override
     public int updateCompanyAuditByCondition(Map<String, Object> map) {
         return userUploadPictureMapper.updateCompanyAuditByCondition(map);
+    }
+
+    @Override
+    public int deleteCompanyAuditById(long id) {
+        return userUploadPictureMapper.deleteCompanyAuditById(id);
     }
 
     @Override
