@@ -99,19 +99,31 @@ public class UploadInfoController {
     public String deleteAuditById(HttpServletRequest request,HttpServletResponse response) throws Exception{
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        String id = request.getParameter("id");
+        String ids = request.getParameter("ids");
         String classtype = request.getParameter("classtype");
+        String[] idSize = ids.split(",");
         Map<String,Object> temp = new HashMap<>();
-        temp.put("id",id);
         temp.put("delflag","1");
-        if(classtype.equals("pro")) userUploadPictureService.updateProductAuditByCondition(temp);
-        else if(classtype.equals("com")) userUploadPictureService.updateCompanyAuditByCondition(temp);
+        if(classtype.equals("pro")){
+            for(int i = 0; i < idSize.length; i++){
+                String id = idSize[i];
+                temp.put("id",id);
+                userUploadPictureService.updateProductAuditByCondition(temp);
+            }
+        }
+        else if(classtype.equals("com")){
+            for(int i = 0; i < idSize.length; i++){
+                String id = idSize[i];
+                temp.put("id",id);
+                userUploadPictureService.updateCompanyAuditByCondition(temp);
+            }
+        }
 
         return "";
     }
 
     /**
-     * 根据条件删除审核信息
+     * 重新上传
      * @param request
      * @param response
      * @return
