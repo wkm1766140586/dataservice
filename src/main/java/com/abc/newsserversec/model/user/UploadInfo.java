@@ -6,11 +6,21 @@ public class UploadInfo {
     private long id;
     //名称
     private String name;
+    //类型
+    private String classtype;
     //创建时间
     private String createdate;
 
     public long getId() {
         return id;
+    }
+
+    public String getClasstype() {
+        return classtype;
+    }
+
+    public void setClasstype(String classtype) {
+        this.classtype = classtype;
     }
 
     public void setId(long id) {
