@@ -741,6 +741,6 @@ public class UserInfoController {
         temp.put("userid",userid);
         temp.put("state","1");
 
-        return userUploadPictureService.selectAuditCountByCondition(temp);
+        return userUploadPictureService.selectProductAuditCountByCondition(temp);
     }
 }
