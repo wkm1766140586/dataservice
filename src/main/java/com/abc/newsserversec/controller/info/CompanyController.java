@@ -91,7 +91,7 @@ public class CompanyController {
     @RequestMapping("/method/search_company_filter_condition")
     public String searchCompanyFilterCondition(HttpServletRequest request, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
-
+//        long startTime=System.currentTimeMillis();
         String keyword = request.getParameter("keyword");
         String num_string = request.getParameter("num");
 
@@ -124,13 +124,31 @@ public class CompanyController {
         }
         ArrayList<CompanyInfo> companyInfos = companyInfoService.selectCompanyInfoByCondition(map);
 
+        String esCount = "";
+        String condition = "";
+        String countRet = null;
         for(CompanyInfo companyInfo : companyInfos){
             String companyname = companyInfo.getCompany_name();
             ArrayList<Map<String,Object>> list = userCardService.selectUserheadimgByCompanyName(companyname);
             companyInfo.setHeadimgList(list);
             //companyInfo.setExhibitionInfo(exhibitionService.selectExhibitionByName(companyname));//查询公司的展位信
+            esCount = StaticVariable.esCount;
+            condition = "company_name_agg:\\\\\""+companyInfo.getCompany_name()+"\\\\\"";
+            esCount = esCount.replaceFirst("#query", condition);
+            esCount = esCount.replaceFirst("\"#filter\"","");
+
+            try {
+                countRet = HttpHandler.httpPostCall("http://localhost:9200/product/_count", esCount);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ESCount esCt = new GsonBuilder().create().fromJson(countRet, ESCount.class);
+            companyInfo.setProduct_count(String.valueOf(esCt.count));
         }
         dataMap.put("datas",companyInfos);
+//        long endTime=System.currentTimeMillis(); //获取结束时间
+
+//        System.out.println("程序运行时间： "+(endTime-startTime)+"ms");
 
         return new GsonBuilder().create().toJson(dataMap);
     }

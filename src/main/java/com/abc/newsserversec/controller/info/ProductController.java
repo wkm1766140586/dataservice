@@ -472,7 +472,6 @@ public class ProductController {
         String postbody = esRequest.replaceFirst("#query",condition);
         postbody = postbody.replaceFirst("\"#aggs\"","{}");
         System.out.println("postbody="+postbody);
-
         //根据用户id获得用户负责产品的信息
         if(userid != null && !userid.equals("")){
             /*ArrayList<Map<String,Object>> serviceList = userBusinessService.selectProductInfosByUserid(Long.parseLong(userid));
