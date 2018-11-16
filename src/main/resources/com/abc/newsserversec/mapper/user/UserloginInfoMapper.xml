@@ -18,6 +18,9 @@
             <if test="usercity != null">
                 usercity,
             </if>
+            <if test="logintype != null">
+                logintype,
+            </if>
             <if test="createdate != null">
                 createdate,
             </if>
@@ -34,6 +37,9 @@
             </if>
             <if test="usercity != null">
                 #{usercity},
+            </if>
+            <if test="logintype != null">
+                #{logintype},
             </if>
             <if test="createdate != null">
                 #{createdate},

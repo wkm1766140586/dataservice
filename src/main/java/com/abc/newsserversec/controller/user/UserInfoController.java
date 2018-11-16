@@ -1,7 +1,6 @@
 package com.abc.newsserversec.controller.user;
 
 import com.abc.newsserversec.common.CusAccessObjectUtil;
-import com.abc.newsserversec.model.common.IpGeograAddress;
 import com.abc.newsserversec.model.user.UserCard;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.service.user.*;
@@ -14,12 +13,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -647,9 +645,6 @@ public class UserInfoController {
         JSONObject json = JSONObject.fromObject(json_result.substring(34,json_result.length()-3));
         String region = json.get("pro").toString();
         String city = json.get("city").toString();
-        //IpGeograAddress ipGeograAddress = new GsonBuilder().create().fromJson(json_result, IpGeograAddress.class);
-        //String region = String.valueOf(ipGeograAddress.data.get("region"));
-        //String city = String.valueOf(ipGeograAddress.data.get("city"));
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = df.format(new Date());
         Map<String, Object> map = new HashMap<>();
@@ -657,6 +652,7 @@ public class UserInfoController {
         map.put("userip", ip);
         map.put("userregion", region);
         map.put("usercity", city);
+        map.put("logintype", "PC");
         map.put("createdate",date);
         return userloginInfoService.insertUserloginInfo(map);
     }
@@ -674,6 +670,36 @@ public class UserInfoController {
         if(userid == "" || userid.equals("")){return "failed";}
         userInfoService.updateLoginCountById(Long.parseLong(userid));
         insertUserloginInfo(request,Long.parseLong(userid));
+        return "success";
+    }
+    @RequestMapping("/method/insertUserLoginInfo")
+    public String insertWXUser(HttpServletRequest request,HttpServletResponse response) throws UnknownHostException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String userid = request.getParameter("userid");
+        String ip = request.getParameter("ip");
+        if(userid == "" || userid.equals("")){return "failed";}
+        if(ip == "" || ip.equals("")){return "failed";}
+        userInfoService.updateLoginCountById(Long.parseLong(userid));
+
+        String json_result = "";
+        try {
+            json_result = CusAccessObjectUtil.getAddresses("ip=" + ip, "gb2312");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        JSONObject json = JSONObject.fromObject(json_result.substring(34,json_result.length()-3));
+        String region = json.get("pro").toString();
+        String city = json.get("city").toString();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = df.format(new Date());
+        Map<String, Object> map = new HashMap<>();
+        map.put("userid", userid);
+        map.put("userip", ip);
+        map.put("userregion", region);
+        map.put("usercity", city);
+        map.put("logintype", "XCX");
+        map.put("createdate",date);
+        userloginInfoService.insertUserloginInfo(map);
         return "success";
     }
 
