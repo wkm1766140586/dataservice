@@ -460,7 +460,7 @@ public class ProductController {
         String filter = "";//名片中选择公司有效的产品
         if(product_state.equals("有效")) filter = "{\"range\":{\"end_date\":{\"gte\":\""+df.format(current_date)+"\"}}}";
         else if(product_state.equals("无效")) filter = "{\"range\":{\"end_date\":{\"lte\":\""+df.format(current_date)+"\"}}}";
-        String condition = "company_name_agg:\\\\\""+keyword+"\\\\\"";
+        String condition = "company_name_agg:\\\\\""+keyword+"\\\\\" OR agent_agg:\\\\\""+keyword+"\\\\\"";
         esRequest = esRequest.replaceFirst("\"#from\"",String.valueOf(from));
         if(size == null){ esRequest = esRequest.replaceFirst("\"#size\"","10"); }
         else{ esRequest = esRequest.replaceFirst("\"#size\"",size); }
