@@ -71,7 +71,7 @@ public class ProductController {
             String rkeyword = keyword.split(" ")[1];
             condition = "(product_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\")) AND (maker_name_ch:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\") OR agent:(\\\\\""+lkeyword+"\\\\\" OR \\\\\""+rkeyword+"\\\\\"))";
         }else{
-            condition = "(product_name_ch:\\\\\""+keyword+"\\\\\") OR (product_mode:\\\\\""+keyword+"\\\\\")";
+            condition = "(product_name_ch:\\\\\""+keyword+"\\\\\") OR (product_mode:\\\\\""+keyword+"\\\\\") OR (register_code:\\\\\\\\\\\"\"+keyword+\"\\\\\\\\\\\")";
         }
         int from = Integer.valueOf(num);
         if(size != null) { from = from * Integer.valueOf(size); }
