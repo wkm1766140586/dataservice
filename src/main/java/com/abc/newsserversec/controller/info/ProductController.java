@@ -206,7 +206,7 @@ public class ProductController {
             if(!product_name.equals("")) {
                 condition = condition + " AND (product_name_agg:\\\\\"" + product_name + "\\\\\")";
             }else {
-                condition = condition + " AND ((product_name_ch:\\\\\"" + keyword + "\\\\\") OR (product_mode:\\\\\"" + keyword + "\\\\\"))";
+                condition = condition + " AND ((product_name_ch:\\\\\"" + keyword + "\\\\\") OR (product_mode:\\\\\"" + keyword + "\\\\\") OR (register_code:\\\\\""+keyword+"\\\\\"))";
             }
         }
 
