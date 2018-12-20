@@ -508,6 +508,7 @@ public class UserInfoController {
                         temp.put("username",userInfo1.getUsername());
                         temp.put("nickname",userInfo1.getNickname());
                         temp.put("email",userInfo1.getEmail());
+                        temp.put("headimg",headimgurl);
                         return new GsonBuilder().create().toJson(temp);
                     }else {
                         return "fail";
@@ -525,6 +526,7 @@ public class UserInfoController {
                 temp.put("username",userInfoO.getUsername());
                 temp.put("nickname",userInfoO.getNickname());
                 temp.put("email",userInfoO.getEmail());
+                temp.put("headimg",headimgurl);
                 return new GsonBuilder().create().toJson(temp);
             }
         }else{
@@ -538,6 +540,7 @@ public class UserInfoController {
                 temp.put("username",userInfoU.getUsername());
                 temp.put("nickname",userInfoU.getNickname());
                 temp.put("email",userInfoU.getEmail());
+                temp.put("headimg",headimgurl);
                 return new GsonBuilder().create().toJson(temp);
             }else{//
                 long useridO = userInfoO.getId();
@@ -551,6 +554,7 @@ public class UserInfoController {
                     temp.put("username",userInfoU.getUsername());
                     temp.put("nickname",userInfoU.getNickname());
                     temp.put("email",userInfoU.getEmail());
+                    temp.put("headimg",headimgurl);
                     return new GsonBuilder().create().toJson(temp);
                 }else{
                     userInfoService.updateLoginCountById(useridO);
@@ -563,6 +567,7 @@ public class UserInfoController {
                     temp.put("username",userInfoO.getUsername());
                     temp.put("nickname",userInfoO.getNickname());
                     temp.put("email",userInfoO.getEmail());
+                    temp.put("headimg",headimgurl);
                     return new GsonBuilder().create().toJson(temp);
                 }
             }
