@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.standard.StandardInfoMapper">
+
+    <insert id="insertStandardInfo" parameterType="com.abc.newsserversec.model.standard.StandardData">
+        insert into standard_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="source_web != null">
+                source_web,
+            </if>
+            <if test="web_title != null">
+                web_title,
+            </if>
+            <if test="standard_name != null">
+                standard_name,
+            </if>
+            <if test="english_name != null">
+                english_name,
+            </if>
+            <if test="standard_code != null">
+                standard_code,
+            </if>
+            <if test="standard_state != null">
+                standard_state,
+            </if>
+            <if test="replace_info != null">
+                replace_info,
+            </if>
+            <if test="standard_intro != null">
+                standard_intro,
+            </if>
+            <if test="bid_classify != null">
+                bid_classify,
+            </if>
+            <if test="ics_classify != null">
+                ics_classify,
+            </if>
+            <if test="adopt_info != null">
+                adopt_info,
+            </if>
+            <if test="release_dept != null">
+                release_dept,
+            </if>
+            <if test="release_date != null">
+                release_date,
+            </if>
+            <if test="implement_date != null">
+                implement_date,
+            </if>
+            <if test="invalid_date != null">
+                invalid_date,
+            </if>
+            <if test="start_date != null">
+                start_date,
+            </if>
+            <if test="review_date != null">
+                review_date,
+            </if>
+            <if test="raise_dept != null">
+                raise_dept,
+            </if>
+            <if test="attribute_dept != null">
+                attribute_dept,
+            </if>
+            <if test="director_dept != null">
+                director_dept,
+            </if>
+            <if test="draft_dept != null">
+                draft_dept,
+            </if>
+            <if test="draft_person != null">
+                draft_person,
+            </if>
+            <if test="page_num != null">
+                page_num,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="press != null">
+                press,
+            </if>
+            <if test="book_number != null">
+                book_number,
+            </if>
+            <if test="publish_date != null">
+                publish_date,
+            </if>
+            <if test="download_url_one != null">
+                download_url_one,
+            </if>
+            <if test="download_url_two != null">
+                download_url_two,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="source_web != null">
+                #{source_web},
+            </if>
+            <if test="web_title != null">
+                #{web_title},
+            </if>
+            <if test="standard_name != null">
+                #{standard_name},
+            </if>
+            <if test="english_name != null">
+                #{english_name},
+            </if>
+            <if test="standard_code != null">
+                #{standard_code},
+            </if>
+            <if test="standard_state != null">
+                #{standard_state},
+            </if>
+            <if test="replace_info != null">
+                #{replace_info},
+            </if>
+            <if test="standard_intro != null">
+                #{standard_intro},
+            </if>
+            <if test="bid_classify != null">
+                #{bid_classify},
+            </if>
+            <if test="ics_classify != null">
+                #{ics_classify},
+            </if>
+            <if test="adopt_info != null">
+                #{adopt_info},
+            </if>
+            <if test="release_dept != null">
+                #{release_dept},
+            </if>
+            <if test="release_date != null">
+                #{release_date},
+            </if>
+            <if test="implement_date != null">
+                #{implement_date},
+            </if>
+            <if test="invalid_date != null">
+                #{invalid_date},
+            </if>
+            <if test="start_date != null">
+                #{start_date},
+            </if>
+            <if test="review_date != null">
+                #{review_date},
+            </if>
+            <if test="raise_dept != null">
+                #{raise_dept},
+            </if>
+            <if test="attribute_dept != null">
+                #{attribute_dept},
+            </if>
+            <if test="director_dept != null">
+                #{director_dept},
+            </if>
+            <if test="draft_dept != null">
+                #{draft_dept},
+            </if>
+            <if test="draft_person != null">
+                #{draft_person},
+            </if>
+            <if test="page_num != null">
+                #{page_num},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="press != null">
+                #{press},
+            </if>
+            <if test="book_number != null">
+                #{book_number},
+            </if>
+            <if test="publish_date != null">
+                #{publish_date},
+            </if>
+            <if test="download_url_one != null">
+                #{download_url_one},
+            </if>
+            <if test="download_url_two != null">
+                #{download_url_two},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStandardInfo" parameterType="java.util.Map">
+        update standard_info
+        <set>
+            <if test="download_url_one != null">
+                download_url_one = #{download_url_one},
+            </if>
+            <if test="download_url_two != null">
+                download_url_two = #{download_url_two},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectStandardInfo" parameterType="map" resultType="com.abc.newsserversec.model.standard.StandardData">
+        select * from standard_info
+        where id is not null
+        <if test="standard_code != null">
+            and standard_code like #{standard_code}
+        </if>
+        <if test="standard_state != null">
+            and standard_state like #{standard_state}
+        </if>
+        <if test="standard_nature != null">
+            and standard_nature = #{standard_nature}
+        </if>
+        limit #{num},10
+    </select>
+
+    <select id="selectStandardInfoCountByCondition" parameterType="map" resultType="int">
+        select count(*) from standard_info
+        where id is not null
+        <if test="standard_code != null">
+            and standard_code like #{standard_code}
+        </if>
+        <if test="standard_state != null">
+            and standard_state like #{standard_state}
+        </if>
+        <if test="standard_nature != null">
+            and standard_nature = #{standard_nature}
+        </if>
+    </select>
+</mapper>
