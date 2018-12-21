@@ -54,7 +54,7 @@
         SELECT * FROM usersearchinfo WHERE userid = #{userid}
     </select>
     <select id="selectUsersearchWordByCondition" resultType="string" parameterType="java.util.Map">
-        select keyword from usersearchinfo where DATEDIFF(createdate,NOW())>-30 and DATEDIFF(createdate,NOW())&lt;=0
+        select keyword from usersearchinfo where DATEDIFF(createdate,NOW())>-7 and DATEDIFF(createdate,NOW())&lt;=0
         <if test="classtype != null">
             and classtype = #{classtype}
         </if>

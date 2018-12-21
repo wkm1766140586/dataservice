@@ -139,6 +139,7 @@ public class UserInfoController {
                     temp.put("username",userInfo1.getUsername());
                     temp.put("email",userInfo1.getEmail());
                     temp.put("nickname",userInfo1.getNickname());
+                    temp.put("headimg",userInfo1.getHeadimg());
                     return new GsonBuilder().create().toJson(temp);
                 }else {
                     return "fail";
@@ -207,6 +208,7 @@ public class UserInfoController {
             temp.put("email",userInfo.getEmail());
             temp.put("openid",userInfo.getOpenid());
             temp.put("nickname",userInfo.getNickname());
+            temp.put("headimg",userInfo.getHeadimg());
             return new GsonBuilder().create().toJson(temp);
         }else{
             return "fail";
@@ -248,6 +250,7 @@ public class UserInfoController {
                     temp.put("email",userInfo1.getEmail());
                     temp.put("nickname",userInfo1.getNickname());
                     temp.put("password",userInfo1.getPassword());
+                    temp.put("headimg",userInfo1.getHeadimg());
                     return new GsonBuilder().create().toJson(temp);
                 }else {
                     return "fail";
@@ -263,6 +266,7 @@ public class UserInfoController {
             temp.put("email",userInfo.getEmail());
             temp.put("nickname",userInfo.getNickname());
             temp.put("password",userInfo.getPassword());
+            temp.put("headimg",userInfo.getHeadimg());
             return new GsonBuilder().create().toJson(temp);
         }
     }
