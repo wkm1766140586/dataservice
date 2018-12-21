@@ -201,6 +201,9 @@
     <select id="selectStandardInfo" parameterType="map" resultType="com.abc.newsserversec.model.standard.StandardData">
         select * from standard_info
         where id is not null
+        <if test="keyword != null">
+            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword})
+        </if>
         <if test="standard_code != null">
             and standard_code like #{standard_code}
         </if>
@@ -216,6 +219,9 @@
     <select id="selectStandardInfoCountByCondition" parameterType="map" resultType="int">
         select count(*) from standard_info
         where id is not null
+        <if test="keyword != null">
+            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword})
+        </if>
         <if test="standard_code != null">
             and standard_code like #{standard_code}
         </if>
@@ -225,5 +231,12 @@
         <if test="standard_nature != null">
             and standard_nature = #{standard_nature}
         </if>
+    </select>
+    <select id="selectStandardInfoByCode" parameterType="String" resultType="com.abc.newsserversec.model.standard.StandardData">
+        SELECT * FROM standard_info
+        WHERE standard_code = #{standard_code}
+    </select>
+    <select id="selectRecentStandardInfo" resultType="com.abc.newsserversec.model.standard.StandardData">
+        SELECT standard_code,standard_name FROM standard_info ORDER BY implement_date DESC LIMIT 6
     </select>
 </mapper>

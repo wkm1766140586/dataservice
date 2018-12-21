@@ -65,6 +65,16 @@ public class StandardData {
     //下载地址二
     private String download_url_two;
 
+    private int standard_nature;
+
+    public int getStandard_nature() {
+        return standard_nature;
+    }
+
+    public void setStandard_nature(int standard_nature) {
+        this.standard_nature = standard_nature;
+    }
+
     public String getDownload_url_one() {
         return download_url_one;
     }

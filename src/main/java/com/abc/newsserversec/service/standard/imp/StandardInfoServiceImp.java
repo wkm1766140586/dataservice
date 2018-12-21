@@ -38,4 +38,14 @@ public class StandardInfoServiceImp implements StandardInfoService {
     public int selectStandardInfoCountByCondition(Map<String, Object> map) {
         return standardInfoMapper.selectStandardInfoCountByCondition(map);
     }
+
+    @Override
+    public StandardData selectStandardInfoByCode(String code) {
+        return standardInfoMapper.selectStandardInfoByCode(code);
+    }
+
+    @Override
+    public ArrayList<StandardData> selectRecentStandardInfo() {
+        return standardInfoMapper.selectRecentStandardInfo();
+    }
 }

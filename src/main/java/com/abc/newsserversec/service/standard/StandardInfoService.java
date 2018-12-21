@@ -20,4 +20,10 @@ public interface StandardInfoService {
 
     //计数
     int selectStandardInfoCountByCondition(Map<String,Object> map);
+
+    //通过code找信息
+    StandardData selectStandardInfoByCode(String code);
+
+    /*首页查找最新的六条*/
+    ArrayList<StandardData> selectRecentStandardInfo();
 }

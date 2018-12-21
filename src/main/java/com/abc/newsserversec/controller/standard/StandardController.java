@@ -34,6 +34,7 @@ public class StandardController {
     public String selectStandardDataByCondition(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
+        String keyword = request.getParameter("keyword");
         String standard_type = request.getParameter("standard_type");
         String standard_nature = request.getParameter("standard_nature");
         String standard_state = request.getParameter("standard_state");
@@ -57,9 +58,11 @@ public class StandardController {
 
         if(standard_state != null && standard_state.equals("废止")) standard_state = "%废%";
 
+        if(keyword != null && !keyword.equals("")) map.put("keyword","%"+keyword+"%");
         if(standard_code != null && !standard_code.equals("")) map.put("standard_code","%"+standard_code+"%");
         if(standard_state != null && !standard_state.equals("")) map.put("standard_state",standard_state);
         if(standard_nature != null && !standard_nature.equals("")) map.put("standard_nature",standard_nature);
+
         map.put("num",num);
         if(num == 0) {
             int count = standardInfoService.selectStandardInfoCountByCondition(map);
@@ -70,6 +73,37 @@ public class StandardController {
         dataMap.put("datas",list);
 
         return new GsonBuilder().create().toJson(dataMap);
+    }
+
+    /**
+     * 通过code找标准
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/selectStandardByCode")
+    public String selectStandardByCode(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        String code = request.getParameter("code");
+        if(code == null && "".equals(code)){
+            return "error!";
+        }
+        StandardData standardData = standardInfoService.selectStandardInfoByCode(code);
+        return new GsonBuilder().create().toJson(standardData);
+    }
+
+    /**
+     * 首页底部的信息：实施时间最近的六条信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/method/selectRecentStandardInfo")
+    public String selectRecentStandardInfo(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        ArrayList<StandardData> list = standardInfoService.selectRecentStandardInfo();
+        return new GsonBuilder().create().toJson(list);
     }
 
 //    /**

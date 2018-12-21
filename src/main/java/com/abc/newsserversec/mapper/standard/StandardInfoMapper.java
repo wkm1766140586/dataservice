@@ -17,4 +17,8 @@ public interface StandardInfoMapper {
     ArrayList<StandardData> selectStandardInfo(Map<String,Object> map);
 
     int selectStandardInfoCountByCondition(Map<String,Object> map);
+
+    StandardData selectStandardInfoByCode(String code);
+
+    ArrayList<StandardData> selectRecentStandardInfo();
 }
