@@ -3,14 +3,9 @@ package com.abc.newsserversec.controller.standard;
 import com.abc.newsserversec.model.standard.StandardData;
 import com.abc.newsserversec.service.standard.StandardInfoService;
 import com.google.gson.GsonBuilder;
-import com.sun.xml.internal.bind.api.impl.NameConverter;
-import net.sf.json.JSONObject;
-import org.apache.catalina.core.StandardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

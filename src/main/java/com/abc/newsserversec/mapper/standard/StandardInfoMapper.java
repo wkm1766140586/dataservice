@@ -1,6 +1,5 @@
 package com.abc.newsserversec.mapper.standard;
 
-import com.abc.newsserversec.model.company.CompanyInfo;
 import com.abc.newsserversec.model.standard.StandardData;
 import org.apache.ibatis.annotations.Mapper;
 

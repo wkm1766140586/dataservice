@@ -1,10 +1,7 @@
 package com.abc.newsserversec.service.standard.imp;
 
-import com.abc.newsserversec.mapper.company.CompanyInfoMapper;
 import com.abc.newsserversec.mapper.standard.StandardInfoMapper;
-import com.abc.newsserversec.model.company.CompanyInfo;
 import com.abc.newsserversec.model.standard.StandardData;
-import com.abc.newsserversec.service.company.CompanyInfoService;
 import com.abc.newsserversec.service.standard.StandardInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
