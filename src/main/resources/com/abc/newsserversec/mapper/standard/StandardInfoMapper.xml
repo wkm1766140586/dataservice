@@ -202,7 +202,7 @@
         select * from standard_info
         where id is not null
         <if test="keyword != null">
-            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword})
+            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword} OR adopt_info like #{keyword})
         </if>
         <if test="standard_code != null">
             and standard_code like #{standard_code}
@@ -213,6 +213,7 @@
         <if test="standard_nature != null">
             and standard_nature = #{standard_nature}
         </if>
+        ORDER BY order_id DESC
         limit #{num},10
     </select>
 
@@ -220,7 +221,7 @@
         select count(*) from standard_info
         where id is not null
         <if test="keyword != null">
-            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword})
+            and (standard_code like #{keyword} OR standard_name like #{keyword} OR english_name like #{keyword} OR adopt_info like #{keyword})
         </if>
         <if test="standard_code != null">
             and standard_code like #{standard_code}
@@ -237,6 +238,6 @@
         WHERE standard_code = #{standard_code}
     </select>
     <select id="selectRecentStandardInfo" resultType="com.abc.newsserversec.model.standard.StandardData">
-        SELECT standard_code,standard_name FROM standard_info ORDER BY implement_date DESC LIMIT 6
+        SELECT standard_code,standard_name FROM standard_info WHERE standard_state = "现行" ORDER BY implement_date DESC LIMIT 6
     </select>
 </mapper>

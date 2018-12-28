@@ -1,6 +1,7 @@
 package com.abc.newsserversec.controller.user;
 
 import com.abc.newsserversec.common.CusAccessObjectUtil;
+import com.abc.newsserversec.common.RedisUtil;
 import com.abc.newsserversec.model.user.UserCard;
 import com.abc.newsserversec.model.user.UserInfo;
 import com.abc.newsserversec.service.user.*;
@@ -8,14 +9,20 @@ import com.abc.newsserversec.service.wechat.WxOperCardService;
 import com.google.gson.GsonBuilder;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sun.misc.BASE64Decoder;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -46,6 +53,9 @@ public class UserInfoController {
 
     @Autowired
     private UserUploadPictureService userUploadPictureService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     //@ModelAttribute("user") User user
     @InitBinder({"user"})
@@ -178,7 +188,7 @@ public class UserInfoController {
      * @return
      */
     @RequestMapping("/method/commonUserLogin")
-    public String commonUserLogin(HttpServletRequest request, HttpServletResponse response){
+    public String commonUserLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ScriptException {
         response.setHeader("Access-Control-Allow-Origin", "*");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -209,6 +219,7 @@ public class UserInfoController {
             temp.put("openid",userInfo.getOpenid());
             temp.put("nickname",userInfo.getNickname());
             temp.put("headimg",userInfo.getHeadimg());
+
             return new GsonBuilder().create().toJson(temp);
         }else{
             return "fail";

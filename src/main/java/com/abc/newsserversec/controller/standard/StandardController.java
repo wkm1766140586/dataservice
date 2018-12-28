@@ -6,7 +6,9 @@ import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.BASE64Decoder;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -48,12 +50,18 @@ public class StandardController {
 
         if(standard_nature != null) {
             if (standard_nature.equals("强制性")) standard_nature = "0";
-            else if (standard_type.equals("推荐性")) standard_nature = "1";
+            else if (standard_nature.equals("推荐性")) standard_nature = "1";
         }
 
         if(standard_state != null && standard_state.equals("废止")) standard_state = "%废%";
 
-        if(keyword != null && !keyword.equals("")) map.put("keyword","%"+keyword+"%");
+        if(keyword != null && !keyword.equals("")) {
+            StringBuffer res = new StringBuffer("%");
+            for(int i = 0;i<keyword.length();i++){
+                res.append(keyword.substring(i,i+1)+"%");
+            }
+            map.put("keyword",res.toString());
+        }
         if(standard_code != null && !standard_code.equals("")) map.put("standard_code","%"+standard_code+"%");
         if(standard_state != null && !standard_state.equals("")) map.put("standard_state",standard_state);
         if(standard_nature != null && !standard_nature.equals("")) map.put("standard_nature",standard_nature);
@@ -77,14 +85,22 @@ public class StandardController {
      * @return
      */
     @RequestMapping("/method/selectStandardByCode")
-    public String selectStandardByCode(HttpServletRequest request, HttpServletResponse response) {
+    public String selectStandardByCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         String code = request.getParameter("code");
         if(code == null && "".equals(code)){
             return "error!";
         }
-        StandardData standardData = standardInfoService.selectStandardInfoByCode(code);
+        StandardData standardData = null;
+
+        BASE64Decoder base64Decoder = new BASE64Decoder();
+        String code_str = new String(base64Decoder.decodeBuffer(code));
+        if(!"".equals(code_str)){
+            if(code_str.length() > 14){
+                standardData = standardInfoService.selectStandardInfoByCode(code_str.substring(14));
+            }
+        }
         return new GsonBuilder().create().toJson(standardData);
     }
 
@@ -99,6 +115,36 @@ public class StandardController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         ArrayList<StandardData> list = standardInfoService.selectRecentStandardInfo();
         return new GsonBuilder().create().toJson(list);
+    }
+
+    public String doLogin(HttpServletRequest request,HttpServletResponse response){
+        String username = request.getParameter("username");
+        String password = request.getParameter("passwrod");
+        if(checkLogin(username,password)){
+            Cookie cookie = new Cookie("ssocookie","sso");
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            return "";
+        }
+        return "";
+    }
+
+    public boolean checkLogin(String username,String password){
+        if(username.equals("wanyong") && password.equals("123456")){
+            return true;
+        }
+        return false;
+    }
+    public boolean checkCookie(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals("ssocookie") && cookie.getValue().equals("sso")){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 //    /**
