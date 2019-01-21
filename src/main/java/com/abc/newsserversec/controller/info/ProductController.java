@@ -691,6 +691,100 @@ public class ProductController {
     }
 
     /**
+     * 根据年份和管理类别聚合产品数据
+     * @param
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/method/agg_product")
+    public String AggProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        String keyword = request.getParameter("keyword");
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        c.setTime(new Date());
+        c.add(Calendar.YEAR, 1);
+        Date y = c.getTime();
+        String year = df.format(y);
+        String esRequest = "{" +
+                "\"version\": true," +
+                "\"size\": 0," +
+                "\"query\": {" +
+                "\"bool\": {" +
+                "\"must\": [{" +
+                "\"query_string\":{"+
+                "\"analyze_wildcard\":true,"+
+                "\"query\":"+"\"product_name_ch:\\\""+keyword+"\\\" OR product_mode:\\\""+keyword+"\\\" OR register_code: \\\""+keyword+ "\\\"\","+
+                "\"phrase_slop\":5"+
+                "}"+
+                "}]," +
+                "\"filter\": [{" +
+                "\"range\": {" +
+                "\"approval_date\": {" +
+                "\"gte\": \"2008-01-01\"," +
+                "\"lte\":\""+ year + "\"" +
+                "}" +
+                "}" +
+                "}]" +
+                "}" +
+                "}," +
+                "\"aggs\": {" +
+                "\"tags\": {" +
+                "\"date_histogram\": {" +
+                "\"field\": \"approval_date\"," +
+                "\"interval\": \"year\"," +
+                "\"format\": \"yyyy\"" +
+                "}," +
+                "\"aggs\":{" +
+                "\"main_class\":{" +
+                "\"terms\":{" +
+                "\"field\": \"main_class\"" +
+                "}" +
+                "}" +
+                "}" +
+                "}" +
+                "}" +
+                "}";
+        HashMap<String,Object> map = new HashMap<>();
+        ArrayList<String> yearList = new ArrayList<>();
+        ArrayList<Integer> oneClassList = new ArrayList<>();
+        ArrayList<Integer> twoClassList = new ArrayList<>();
+        ArrayList<Integer> threeClassList = new ArrayList<>();
+
+        String ret = HttpHandler.httpPostCall("http://localhost:9200/product/_search", esRequest);
+        ESResultRoot retObj = new GsonBuilder().create().fromJson(ret, ESResultRoot.class);
+        ArrayList<Map> productBuckets = (ArrayList<Map>) ((Map) retObj.aggregations.get("tags")).get("buckets");
+        int i = 1;
+        for (Map temp : productBuckets) {
+            String name = (String) temp.get("key_as_string");
+            int product_count = (new Double((Double) temp.get("doc_count"))).intValue();
+            yearList.add(name);
+            if (product_count != 0) {
+                Map main_class = (Map) temp.get("main_class");
+                ArrayList<Map> main_class_list = (ArrayList<Map>) main_class.get("buckets");
+                for (Map mainClassMap : main_class_list) {
+                    String mainName = (String) mainClassMap.get("key");
+                    int count = (new Double((Double) mainClassMap.get("doc_count"))).intValue();
+                    if (mainName.equals("1")) oneClassList.add(count);
+                    else if (mainName.equals("2")) twoClassList.add(count);
+                    else if (mainName.equals("3")) threeClassList.add(count);
+                }
+            }
+
+            if(oneClassList.size() != i) oneClassList.add(0);
+            if(twoClassList.size() != i) twoClassList.add(0);
+            if(threeClassList.size() != i) threeClassList.add(0);
+            i++;
+        }
+        map.put("yearList",yearList);
+        map.put("oneClassList",oneClassList);
+        map.put("twoClassList",twoClassList);
+        map.put("threeClassList",threeClassList);
+        System.out.println("year:"+yearList.size()+",one:"+oneClassList.size()+",two:"+twoClassList.size()+",three:"+threeClassList.size());
+        return new GsonBuilder().create().toJson(map);
+    }
+
+    /**
      * 为产品上传图片
      * @param request
      * @param response

@@ -160,6 +160,7 @@ public class WxSmallprogramController {
             dataMap.put("createdate",date);
             dataMap.put("openidCard",openid);
             dataMap.put("usertype","WXSP");
+            dataMap.put("integral",10);
             userInfoService.insertUserInfo(dataMap);
         }else{//已微信登录的用户
             Map<String,Object> map = new HashMap<>();
@@ -246,6 +247,7 @@ public class WxSmallprogramController {
                 dataMap.put("openidCard",openid);
                 dataMap.put("createdate",date);
                 dataMap.put("usertype","WXSP");
+                dataMap.put("integral",10);
                 userInfoService.insertUserInfo(dataMap);
                 Map<String, Object> map1 = new HashMap<>();
                 map1.put("unionid", unionid);

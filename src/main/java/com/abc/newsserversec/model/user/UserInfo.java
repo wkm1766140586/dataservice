@@ -71,6 +71,8 @@ public class UserInfo {
     /*用户时名片用户*/
     private int iscard;
 
+    private int integral;
+
     public String getUsertype() {
         return usertype;
     }
@@ -175,4 +177,11 @@ public class UserInfo {
 
     public void setLogincount(long logincount) { this.logincount = logincount; }
 
+    public int getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(int integral) {
+        this.integral = integral;
+    }
 }

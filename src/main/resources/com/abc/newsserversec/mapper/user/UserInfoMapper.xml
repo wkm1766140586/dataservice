@@ -39,6 +39,7 @@
     <insert id="insertUserInfo" parameterType="java.util.Map">
         insert into userinfo
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            integral,
             <if test="username != null">
                 username,
             </if>
@@ -77,6 +78,7 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{integral},
             <if test="username != null">
                 #{username},
             </if>
@@ -174,6 +176,9 @@
             </if>
             <if test="openidCard != null">
                 openidcard = #{openidCard},
+            </if>
+            <if test="integral != null">
+                integral = integral + #{integral},
             </if>
         </set>
         where id = #{id}

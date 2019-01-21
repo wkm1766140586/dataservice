@@ -85,6 +85,7 @@ public class UserInfoController {
             dataMap.put("password", password);
             dataMap.put("createdate", date);
             dataMap.put("usertype", "ZH");
+            dataMap.put("integral",10);
 
             int count = userInfoService.insertUserInfo(dataMap);
             if(count != 1){ return "fail"; }
@@ -133,6 +134,7 @@ public class UserInfoController {
             dataMap.put("password", password);
             dataMap.put("createdate", date);
             dataMap.put("usertype", "ZH");
+            dataMap.put("integral",10);
 
             int count = userInfoService.insertUserInfo(dataMap);
             if(count != 1){ return "fail"; }
@@ -245,6 +247,7 @@ public class UserInfoController {
             String date = df.format(new Date());
             dataMap.put("createdate", date);
             dataMap.put("usertype", "ZH");
+            dataMap.put("integral",10);
             int count = userInfoService.insertUserInfo(dataMap);
             if(count != 1){ return "fail"; }
             else{
@@ -305,6 +308,7 @@ public class UserInfoController {
             String date = df.format(new Date());
             dataMap.put("password",password);
             dataMap.put("createdate", date);
+            dataMap.put("integral",10);
             int count = userInfoService.insertUserInfo(dataMap);
             if(count != 1){return "fail";}
         }else{
@@ -505,6 +509,7 @@ public class UserInfoController {
                 dataMap.put("sex",sex);
                 dataMap.put("createdate",date);
                 dataMap.put("usertype","ZH");
+                dataMap.put("integral",10);
                 int count = userInfoService.insertUserInfo(dataMap);
                 if(count == 1){
                     Map<String, Object> map1 = new HashMap<>();
