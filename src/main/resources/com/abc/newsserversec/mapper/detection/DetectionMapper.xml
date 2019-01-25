@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.abc.newsserversec.mapper.detection.DetectionMapper">
+    <insert id="insertDetectionInfo" parameterType="map">
+        INSERT INTO detection_institution (
+            id,institution_name,registration_number,institution_other_name,effective_date,expiry_date,unavailable_item,cert_update_date,
+            valid_date,attach_update_date,contact,phone,fax,website,email,address,postal_code,date
+        )
+        VALUES
+            (#{id},#{institution_name},#{registration_number},#{institution_other_name},#{effective_date},#{expiry_date},#{unavailable_item},
+            #{cert_update_date},#{valid_date},#{attach_update_date},#{contact},#{phone},#{fax},#{website},#{email},#{address},
+            #{postal_code},#{date})
+    </insert>
+
+    <insert id="insertDetectionDetailInfo" parameterType="map">
+        INSERT INTO detection_instition_detail (
+            id,
+            pid,
+            scope,
+            list_number,
+            test_object,
+            item_number,
+            item_content,
+            standard_or_method,
+            note,
+            item_state,
+            institution_name,
+            date
+        )
+        VALUES
+            (#{id},#{pid},#{scope},#{list_number},#{test_object},#{item_number},#{item_content},#{standard_or_method},#{note},
+            #{item_state},#{institution_name},#{date})
+    </insert>
+    
+    <select id="selectDetectionInfoByMap" parameterType="map" resultType="map">
+        SELECT
+            did.pid,
+            did.test_object,
+            did.institution_name,
+            did.item_content,
+            did.standard_or_method,
+            did.note
+        FROM
+            detection_instition_detail did,
+            detection_institution di
+        WHERE
+            did.pid = di.id
+        <if test="keyword != null">
+            AND (did.institution_name LIKE CONCAT('%',#{keyword},'%')
+            OR did.test_object LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="key != null">
+            AND did.test_object LIKE CONCAT('%',#{key},'%')
+        </if>
+        <if test="province != null">
+            AND di.address LIKE CONCAT('%',#{province},'%')
+        </if>
+        <if test="institution_name != null">
+            AND did.institution_name =#{institution_name}
+        </if>
+        ORDER BY
+            did.date DESC
+        LIMIT #{startnum},#{size}
+    </select>
+    <select id="selectDetectionInfoCountByMap" parameterType="map" resultType="int">
+        SELECT
+           COUNT(*)
+        FROM
+            detection_instition_detail did,
+            detection_institution di
+        WHERE
+            did.pid = di.id
+        <if test="keyword != null">
+            AND (did.institution_name LIKE CONCAT('%',#{keyword},'%')
+            OR did.test_object LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="key != null">
+            AND did.test_object LIKE CONCAT('%',#{key},'%')
+        </if>
+        <if test="province != null">
+            AND di.address LIKE CONCAT('%',#{province},'%')
+        </if>
+        <if test="institution_name != null">
+            AND did.institution_name =#{institution_name}
+        </if>
+    </select>
+    <select id="selectDetectionInfoById" parameterType="String" resultType="map">
+        SELECT * FROM detection_institution WHERE id = #{id}
+    </select>
+</mapper>
