@@ -47,11 +47,17 @@
         WHERE
             did.pid = di.id
         <if test="keyword != null">
-            AND (did.institution_name LIKE CONCAT('%',#{keyword},'%')
-            OR did.test_object LIKE CONCAT('%',#{keyword},'%'))
+            AND (did.test_object LIKE CONCAT('%',#{keyword},'%')
+            OR did.item_content LIKE CONCAT('%',#{keyword},'%')
+            OR did.standard_or_method LIKE CONCAT('%',#{keyword},'%')
+            OR did.note LIKE CONCAT('%',#{keyword},'%')
+            OR did.institution_name LIKE CONCAT('%',#{keyword},'%'))
         </if>
         <if test="key != null">
-            AND did.test_object LIKE CONCAT('%',#{key},'%')
+            AND (did.test_object LIKE CONCAT('%',#{key},'%')
+            OR did.item_content LIKE CONCAT('%',#{key},'%')
+            OR did.standard_or_method LIKE CONCAT('%',#{key},'%')
+            OR did.note LIKE CONCAT('%',#{key},'%'))
         </if>
         <if test="province != null">
             AND di.address LIKE CONCAT('%',#{province},'%')
@@ -72,11 +78,17 @@
         WHERE
             did.pid = di.id
         <if test="keyword != null">
-            AND (did.institution_name LIKE CONCAT('%',#{keyword},'%')
-            OR did.test_object LIKE CONCAT('%',#{keyword},'%'))
+            AND (did.test_object LIKE CONCAT('%',#{keyword},'%')
+            OR did.item_content LIKE CONCAT('%',#{keyword},'%')
+            OR did.standard_or_method LIKE CONCAT('%',#{keyword},'%')
+            OR did.note LIKE CONCAT('%',#{keyword},'%')
+            OR did.institution_name LIKE CONCAT('%',#{keyword},'%'))
         </if>
         <if test="key != null">
-            AND did.test_object LIKE CONCAT('%',#{key},'%')
+            AND (did.test_object LIKE CONCAT('%',#{key},'%')
+            OR did.item_content LIKE CONCAT('%',#{key},'%')
+            OR did.standard_or_method LIKE CONCAT('%',#{key},'%')
+            OR did.note LIKE CONCAT('%',#{key},'%'))
         </if>
         <if test="province != null">
             AND di.address LIKE CONCAT('%',#{province},'%')
